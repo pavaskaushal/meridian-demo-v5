@@ -7,7 +7,39 @@ function initDashboard() {
     renderKPICards();
     renderAlertList();
     renderCharts();
+    generateAutoInsight();
 }
+
+function generateAutoInsight() {
+    var riskEl = document.getElementById('auto-insight-risk');
+    var arpuEl = document.getElementById('auto-insight-arpu');
+    if (!riskEl || !arpuEl) return;
+
+    // Find top risk from RAFM alerts
+    var topAlert = window.RAFM_ALERTS ? window.RAFM_ALERTS[0] : null;
+    var riskText = topAlert
+        ? '<strong>' + topAlert.title + '</strong> — ' + topAlert.amount + ' exposure. ' + topAlert.description.substring(0, 120) + '...'
+        : 'Six active RAFM alerts represent <strong>₹9.32 Cr</strong> in combined revenue exposure. Priority: ₹4.8 Cr interconnect discrepancy with Jio.';
+
+    // Build ARPU opportunity insight from KPI data
+    var arpu = window.KPI_DATA ? window.KPI_DATA.find(function(k) { return k.id === 'arpu'; }) : null;
+    var arpuText = arpu
+        ? 'ARPU at <strong>' + arpu.value + arpu.unit + '</strong> growing ' + arpu.delta + ' YoY. 5G subscribers generating 2.4× blended ARPU (₹312). Accelerating 5G migration is the highest-value revenue lever available.'
+        : 'ARPU grown <strong>₹11/month over 12 months</strong> — 6.5% improvement. 5G ARPU of ₹312 (2.4× blended) makes 5G migration the primary growth lever.';
+
+    riskEl.innerHTML = riskText;
+    arpuEl.innerHTML = arpuText;
+}
+        'Give me exactly 2 insights for the CFO morning briefing. First: the single biggest revenue risk right now in one sentence. Second: the single biggest revenue opportunity in one sentence. Be specific with numbers.',
+        null,
+        function(response) {
+            var lines = response.split('\n').filter(function(l) { return l.trim().length > 10; });
+            riskEl.innerHTML = formatGeminiResponse(lines[0] || response.substring(0, 200));
+            arpuEl.innerHTML = formatGeminiResponse(lines[1] || '');
+        },
+        function() {
+            // Silently fail — show static insight instead
+        }
 
 function renderKPICards() {
     var grid = document.getElementById('kpi-grid');
@@ -18,7 +50,8 @@ function renderKPICards() {
         return '<div class="kpi-card" onclick="openKPIModal(\'' + kpi.id + '\')" style="cursor:pointer;" title="Click to expand">' +
             '<div class="kpi-card-accent" style="background:' + kpi.accentColor + '"></div>' +
             '<div class="kpi-label">' + kpi.label + '</div>' +
-            '<div class="kpi-value">' + kpi.value +
+            '<div class="kpi-value">' +
+                '<span id="kpi-val-' + kpi.id + '">0</span>' +
                 '<span style="font-size:14px;color:var(--text-secondary);font-weight:400;">' + kpi.unit + '</span>' +
             '</div>' +
             '<div class="kpi-delta ' + deltaClass + '">' + kpi.delta +
@@ -27,6 +60,54 @@ function renderKPICards() {
             '<div style="position:absolute;top:8px;right:8px;opacity:0.3;font-size:10px;color:var(--text-muted);">↗</div>' +
         '</div>';
     }).join('');
+
+    // Animate counters after cards render
+    setTimeout(function() {
+        KPI_DATA.forEach(function(kpi) {
+            animateCounter('kpi-val-' + kpi.id, kpi.value);
+        });
+    }, 100);
+}
+
+/*
+   animateCounter
+   ──────────────
+   Counts up from 0 to target value over 1 second.
+   Handles values like "181", "1,183", "34.6", "2,340"
+   Strips currency symbols and commas before parsing.
+*/
+function animateCounter(elementId, targetStr) {
+    var el = document.getElementById(elementId);
+    if (!el) return;
+
+    // Extract numeric value — strip ₹ and commas
+    var clean  = String(targetStr).replace(/[₹,]/g, '');
+    var target = parseFloat(clean);
+    if (isNaN(target)) { el.textContent = targetStr; return; }
+
+    var isDecimal  = clean.indexOf('.') !== -1;
+    var decimals   = isDecimal ? (clean.split('.')[1] || '').length : 0;
+    var hasComma   = String(targetStr).replace(/[₹]/g, '').indexOf(',') !== -1;
+    var hasRupee   = String(targetStr).indexOf('₹') !== -1;
+    var duration   = 1000; // ms
+    var steps      = 60;
+    var increment  = target / steps;
+    var current    = 0;
+    var step       = 0;
+
+    var timer = setInterval(function() {
+        step++;
+        current = step >= steps ? target : current + increment;
+
+        var display = isDecimal
+            ? current.toFixed(decimals)
+            : Math.round(current).toLocaleString('en-IN');
+
+        if (hasRupee) display = '₹' + display;
+        el.textContent = display;
+
+        if (step >= steps) clearInterval(timer);
+    }, duration / steps);
 }
 
 function renderAlertList() {

@@ -1,3 +1,5 @@
+// DEV ONLY — remove before sharing publicly
+
 /* ============================================================
    MERIDIAN · DATA
    Expanded dataset for Apex Telecom demo

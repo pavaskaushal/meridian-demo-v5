@@ -20,7 +20,8 @@ function showScreen(screenId, navEl) {
         scenario:   ['AI Scenario Studio',   'What-if modelling · Live P&L cascade'],
         regulatory: ['Regulatory Calendar',  'TRAI filing tracker · Auto-readiness scoring'],
         connectors: ['Connector Status',     'System health · Data source monitoring · Platform engines'],
-        issues:     ['Issues & Requests',    'Maintenance requests · SLA tracking · KPMG GRCS Managed Services']
+        issues:        ['Issues & Requests',      'Maintenance requests · SLA tracking · KPMG GRCS Managed Services'],
+        benchmarking:  ['Industry Benchmarking',  'Apex Telecom vs TRAI benchmarks · Airtel · Jio · Vi · BSNL']
     };
 
     if (titles[screenId]) {
@@ -34,7 +35,8 @@ function showScreen(screenId, navEl) {
         if (screenId === 'scenario')    initScenario();
         if (screenId === 'regulatory')  initRegulatory();
         if (screenId === 'connectors')  initConnectors();
-        if (screenId === 'issues')      initIssues();
+        if (screenId === 'issues')        initIssues();
+        if (screenId === 'benchmarking')  initBenchmarking();
         CURRENT_SCREEN = screenId;
     });
 }
@@ -49,8 +51,8 @@ function loadScreen(screenId, callback) {
             '<span style="color:var(--text-muted);font-size:13px;">Loading...</span>' +
         '</div>';
 
-    // Use cache if available
-    if (SCREEN_CACHE[screenId]) {
+    // Use cache if available (disable in DEV_MODE)
+    if (SCREEN_CACHE[screenId] && typeof DEV_MODE !== 'undefined' && !DEV_MODE) {
         container.innerHTML = SCREEN_CACHE[screenId];
         if (callback) callback();
         return;
