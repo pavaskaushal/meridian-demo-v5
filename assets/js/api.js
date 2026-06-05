@@ -11,12 +11,14 @@ var APEX_CONTEXT = function() {
         "FCF: ₹2,340 Cr | Quarterly Revenue: ₹3,420 Cr | Market Share: 22.4%",
         "Competitors: Airtel ₹194 ARPU, Jio ₹168, Vi ₹156, BSNL ₹98",
         "RAFM exposure: ₹9.32 Cr across 6 active alerts",
-        "Answer professionally in 3-5 sentences. Use actual numbers. Speak to the CFO directly."
+        "Answer professionally in 3-5 sentences. Use actual numbers.",
+        "CRITICAL: Never start with greetings like 'Dear CFO', 'Hello', 'Hi', or any salutation.",
+        "Jump straight into the answer. No preamble. No sign-off. Just the insight."
     ].join("\n");
 };
 
 function callGemini(prompt, context, callback, onError) {
-    var apiKey = window.GEMINI_API_KEY;
+    var apiKey = window.GROQ_API_KEY;
     if (!apiKey) { onError("No API key."); return; }
 
     var fullPrompt = APEX_CONTEXT() + "\n\n" +
@@ -24,21 +26,26 @@ function callGemini(prompt, context, callback, onError) {
         "USER QUESTION: " + prompt;
 
     fetch(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey,
+        "https://api.groq.com/openai/v1/chat/completions",
         {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + apiKey
+            },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: fullPrompt }] }],
-                generationConfig: { temperature: 0.7, maxOutputTokens: 512 }
+                model: "llama-3.3-70b-versatile",
+                messages: [{ role: "user", content: fullPrompt }],
+                temperature: 0.7,
+                max_tokens: 512
             })
         }
     )
     .then(function(r) {
-        if (!r.ok) return r.json().then(function(e) { throw new Error(e.error.message); });
+        if (!r.ok) return r.json().then(function(e) { throw new Error(e.error.message || 'API error'); });
         return r.json();
     })
-    .then(function(d) { callback(d.candidates[0].content.parts[0].text); })
+    .then(function(d) { callback(d.choices[0].message.content); })
     .catch(function(e) { onError(e.message); });
 }
 
@@ -51,7 +58,7 @@ function formatGeminiResponse(text) {
 }
 
 function showApiKeyPrompt(callback) {
-    if (window.GEMINI_API_KEY) { callback(); return; }
+    if (window.GROQ_API_KEY) { callback(); return; }
 
     var modal = document.getElementById('modal-box');
     modal.innerHTML =
@@ -59,7 +66,7 @@ function showApiKeyPrompt(callback) {
             '<div><div class="modal-title">Enter Gemini API Key</div></div>' +
         '</div>' +
         '<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:20px;">Enter your Google Gemini API key to enable AI responses. Stored in memory only.</p>' +
-        '<input type="password" id="api-key-input" placeholder="AIzaSy..." ' +
+        '<input type="password" id="api-key-input" placeholder="gsk_..." ' +
             'style="width:100%;background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;color:var(--text-primary);margin-bottom:16px;box-sizing:border-box;">' +
         '<div style="display:flex;gap:12px;">' +
             '<button class="btn btn-primary" onclick="saveApiKey()">Connect</button>' +
@@ -74,7 +81,7 @@ function showApiKeyPrompt(callback) {
 function saveApiKey() {
     var key = document.getElementById('api-key-input').value.trim();
     if (!key) return;
-    window.GEMINI_API_KEY = key;
+    window.GROQ_API_KEY = key;
     closeModal();
     if (window._apiKeyCallback) { window._apiKeyCallback(); window._apiKeyCallback = null; }
 }

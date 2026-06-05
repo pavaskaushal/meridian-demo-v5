@@ -59,10 +59,35 @@ function handleScenarioQuery() {
     var query = input.value.trim();
     if (!query) return;
 
-    resp.style.display = 'block';
-    resp.innerHTML = '<div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);display:flex;align-items:center;gap:12px;"><div class="loading-spinner" style="width:20px;height:20px;border-width:2px;"></div><span style="color:var(--text-muted);font-size:13px;">Modelling scenario...</span></div>';
+    var sliderContext = '';
+    var arpuEl     = document.getElementById('slider-arpu-change');
+    var churnEl    = document.getElementById('slider-churn-change');
+    var spectrumEl = document.getElementById('slider-spectrum-cost');
+    var priceEl    = document.getElementById('slider-price-increase');
 
-    setTimeout(function() {
-        resp.innerHTML = '<div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);border-left:3px solid var(--kpmg-cyan);"><div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);margin-bottom:10px;text-transform:uppercase;">Scenario Analysis</div><div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">If Jio cuts ARPU by 15% to ₹143, competitive pressure would likely force Apex to respond with a 6–8% reduction (₹167–170 range). This reduces quarterly revenue by <strong style="color:var(--danger);">₹205–275 Cr</strong> and compresses EBITDA margin by <strong style="color:var(--danger);">180–220 bps</strong>. Recommend a targeted postpaid retention campaign (est. ₹40–60 Cr) before implementing any price response.</div></div>';
-    }, 1500);
+    if (arpuEl) {
+        sliderContext = 'CURRENT SCENARIO SLIDERS: ARPU Change: ' + arpuEl.value + '%, Churn Change: ' + churnEl.value + '%, Spectrum Cost: ' + spectrumEl.value + '%, Price Increase: ' + priceEl.value + '%. Factor these into your analysis.';
+    }
+
+    showApiKeyPrompt(function() {
+        resp.style.display = 'block';
+        resp.innerHTML = '<div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);display:flex;align-items:center;gap:12px;"><div class="loading-spinner" style="width:20px;height:20px;border-width:2px;"></div><span style="color:var(--text-muted);font-size:13px;">Modelling scenario with Groq AI...</span></div>';
+
+        callGemini(query, sliderContext,
+            function(response) {
+                resp.innerHTML =
+                    '<div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);border-left:3px solid var(--kpmg-cyan);">' +
+                        '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);margin-bottom:10px;text-transform:uppercase;">Scenario Analysis · Groq AI</div>' +
+                        '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">' + formatGeminiResponse(response) + '</div>' +
+                        '<div style="font-size:10px;color:var(--text-muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">Apex Telecom · Powered by Groq AI</div>' +
+                    '</div>';
+            },
+            function(error) {
+                resp.innerHTML =
+                    '<div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid rgba(253,52,156,0.3);border-left:3px solid #FD349C;">' +
+                        '<div style="font-size:13px;color:#FD349C;">Error: ' + error + '</div>' +
+                    '</div>';
+            }
+        );
+    });
 }
