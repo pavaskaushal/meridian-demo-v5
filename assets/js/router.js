@@ -20,7 +20,8 @@ function showScreen(screenId, navEl) {
         rafm:       ['RAFM Risk Monitor',    'Revenue Assurance & Fraud Management · Live detection'],
         scenario:   ['AI Scenario Studio',   'What-if modelling · Live P&L cascade'],
         regulatory: ['Regulatory Calendar',  'TRAI filing tracker · Auto-readiness scoring'],
-        connectors: ['Connector Status',     'System health · Data source monitoring · Platform engines']
+        connectors: ['Connector Status',     'System health · Data source monitoring · Platform engines'],
+        issues:     ['Issues & Requests',    'Maintenance requests · SLA tracking · KPMG GRCS Managed Services']
     };
 
     if (titles[screenId]) {
@@ -32,4 +33,5 @@ function showScreen(screenId, navEl) {
     if (screenId === 'scenario')   initScenario();
     if (screenId === 'regulatory') initRegulatory();
     if (screenId === 'connectors') initConnectors();
+    if (screenId === 'issues')     initIssues();
 }

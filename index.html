@@ -62,8 +62,12 @@
                 <span class="nav-label">Regulatory Calendar</span>
             </div>
             <div class="nav-item" data-screen="connectors" onclick="showScreen('connectors',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="8" height="8" rx="1"/><rect x="14" y="2" width="8" height="8" rx="1"/><rect x="2" y="14" width="8" height="8" rx="1"/><rect x="14" y="14" width="8" height="8" rx="1"/></svg></span>
+                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/></svg></span>
                 <span class="nav-label">Connector Status</span>
+            </div>
+            <div class="nav-item" data-screen="issues" onclick="showScreen('issues',this)">
+                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                <span class="nav-label">Issues & Requests</span>
             </div>
         </nav>
         <div class="sidebar-footer">
@@ -84,6 +88,14 @@
             </div>
             <div class="topbar-right">
                 <div class="operator-tag">APEX TELECOM · 22 CIRCLES</div>
+                <button class="btn btn-secondary" onclick="generateBoardPack()" style="font-size:11px;padding:4px 12px;display:flex;align-items:center;gap:6px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Board Pack
+                </button>
+                <button class="btn btn-secondary" onclick="openWidgetEditor()" style="font-size:11px;padding:4px 12px;display:flex;align-items:center;gap:6px;">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    Customise
+                </button>
                 <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle">
                     <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="12" cy="12" r="5"/>
@@ -384,6 +396,7 @@
                                         <th style="padding:10px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;">Records</th>
                                         <th style="padding:10px 16px;text-align:right;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;">Latency</th>
                                         <th style="padding:10px 24px;text-align:right;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;">Uptime</th>
+                                        <th style="padding:10px 24px;text-align:right;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="connector-tbody"></tbody>
@@ -433,6 +446,28 @@
                 </div>
             </div>
 
+        <!-- SCREEN 6: ISSUES & REQUESTS -->
+            <div id="screen-issues" class="screen" style="display:none;">
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-title">Issues & Maintenance Requests</div>
+                        <div class="section-subtitle">Raised issues · SLA tracking · KPMG GRCS Managed Services</div>
+                    </div>
+                    <div style="display:flex;gap:12px;margin-bottom:24px;" id="issues-summary"></div>
+                </div>
+                <div class="section">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                        <div style="font-size:13px;font-weight:600;color:var(--text-primary);">All Issues</div>
+                        <button class="btn btn-primary" style="font-size:12px;" onclick="openRaiseIssueModal('Manual','User Raised Issue','Please describe the issue.','high')">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:4px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            Raise New Issue
+                        </button>
+                    </div>
+                    <div id="issues-list"></div>
+                </div>
+            </div>
+            <!-- END SCREEN 6 -->
+
         </div>
     </main>
 
@@ -445,6 +480,7 @@
 
 <!-- SCRIPTS — loaded in dependency order -->
 <script src="assets/libs/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/utils.js"></script>
 <script src="assets/js/charts.js"></script>
@@ -456,6 +492,8 @@
 <script src="assets/js/scenario.js"></script>
 <script src="assets/js/regulatory.js"></script>
 <script src="assets/js/connectors.js"></script>
+<script src="assets/js/issues.js"></script>
+<script src="assets/js/pdf.js"></script>
 <script src="assets/js/router.js"></script>
 
 <script>

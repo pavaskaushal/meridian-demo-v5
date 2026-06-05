@@ -11,13 +11,13 @@ function initRafm() {
     interconnect.innerHTML = RAFM_ALERTS.filter(function(a) {
         return a.type.includes('INTERCONNECT');
     }).map(function(alert) {
-        return buildAlertItem(alert);
+        return buildAlertItemWithRaise(alert);
     }).join('') || '<div style="padding:24px;text-align:center;color:var(--text-muted);">No active alerts</div>';
 
     roaming.innerHTML = RAFM_ALERTS.filter(function(a) {
         return a.type.includes('ROAMING');
     }).map(function(alert) {
-        return buildAlertItem(alert);
+        return buildAlertItemWithRaise(alert);
     }).join('') || '<div style="padding:24px;text-align:center;color:var(--text-muted);">No active alerts</div>';
 
     renderVendorHeatmap();
@@ -34,6 +34,23 @@ function buildAlertItem(alert) {
         '</div>' +
         '<div class="alert-amount" style="color:' + color + '">' + alert.amount + '</div>' +
         '<div class="alert-arrow">›</div>' +
+    '</div>';
+}
+
+function buildAlertItemWithRaise(alert) {
+    var color = getSeverityColor(alert.severity);
+    return '<div class="alert-item">' +
+        '<div class="alert-severity-bar" style="background:' + color + '"></div>' +
+        '<div class="alert-content" onclick="openModal(\'' + alert.id + '\')" style="cursor:pointer;flex:1;">' +
+            '<div class="alert-title">' + alert.title + '</div>' +
+            '<div class="alert-description">' + alert.description.substring(0, 90) + '...</div>' +
+            '<div class="alert-meta"><span class="badge badge-' + alert.severity + '">' + alert.severity.toUpperCase() + '</span><span>' + alert.detectedAt + '</span></div>' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;padding:12px;">' +
+            '<div class="alert-amount" style="color:' + color + '">' + alert.amount + '</div>' +
+            '<button onclick="openRaiseIssueModal(\'RAFM Alert\',\'' + alert.title.replace(/'/g,"\\'") + '\',\'' + alert.description.substring(0,100).replace(/'/g,"\\'") + '\',\'' + alert.severity + '\')" ' +
+                'style="font-size:10px;padding:3px 10px;background:' + color + '18;border:1px solid ' + color + '44;border-radius:4px;color:' + color + ';cursor:pointer;white-space:nowrap;">Raise Issue</button>' +
+        '</div>' +
     '</div>';
 }
 

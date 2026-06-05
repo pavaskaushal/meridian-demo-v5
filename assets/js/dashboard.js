@@ -84,3 +84,111 @@ function setQuery(text) {
     document.getElementById('ai-query-input').value = text;
     handleQuery();
 }
+
+/* ── WIDGET EDITOR ─────────────────────────────────────────
+   Allows CFO to customise which KPIs appear on dashboard
+*/
+
+// Track which KPIs are currently active
+var ACTIVE_KPIS = window.KPI_LIBRARY
+    ? window.KPI_LIBRARY.filter(function(k) { return k.default; }).map(function(k) { return k.id; })
+    : ['arpu','churn','ebitda','spectrum','fcf','subscribers'];
+
+function openWidgetEditor() {
+    var modal = document.getElementById('modal-box');
+
+    modal.innerHTML =
+        '<div class="modal-header">' +
+            '<div>' +
+                '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);margin-bottom:6px;text-transform:uppercase;">Dashboard Customisation</div>' +
+                '<div class="modal-title">Manage KPI Widgets</div>' +
+            '</div>' +
+            '<div class="modal-close" onclick="closeModal()">✕</div>' +
+        '</div>' +
+        '<div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">Select which KPIs to display on your dashboard. Choose up to 12.</div>' +
+        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">' +
+            window.KPI_LIBRARY.map(function(kpi) {
+                var isActive = ACTIVE_KPIS.indexOf(kpi.id) !== -1;
+                return '<div onclick="toggleWidget(\'' + kpi.id + '\')" id="widget-toggle-' + kpi.id + '" ' +
+                    'style="background:' + (isActive ? 'rgba(0,192,174,0.1)' : 'var(--bg)') + ';' +
+                    'border:1px solid ' + (isActive ? '#00C0AE' : 'var(--border)') + ';' +
+                    'border-radius:8px;padding:12px;cursor:pointer;transition:all 0.15s;position:relative;">' +
+                    '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">' +
+                        '<div style="width:8px;height:8px;border-radius:50%;background:' + kpi.accentColor + ';margin-top:3px;"></div>' +
+                        '<div style="width:16px;height:16px;border-radius:50%;background:' + (isActive ? '#00C0AE' : 'var(--border)') + ';display:flex;align-items:center;justify-content:center;" id="widget-check-' + kpi.id + '">' +
+                            (isActive ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : '') +
+                        '</div>' +
+                    '</div>' +
+                    '<div style="font-size:11px;font-weight:600;color:var(--text-primary);">' + kpi.label + '</div>' +
+                    '<div style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:' + kpi.accentColor + ';margin-top:2px;">' + kpi.value + kpi.unit + '</div>' +
+                '</div>';
+            }).join('') +
+        '</div>' +
+        '<div style="display:flex;gap:12px;align-items:center;">' +
+            '<button class="btn btn-primary" onclick="applyWidgets()">Apply Changes</button>' +
+            '<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>' +
+            '<span style="font-size:11px;color:var(--text-muted);margin-left:auto;" id="widget-count">' + ACTIVE_KPIS.length + ' of 18 selected</span>' +
+        '</div>';
+
+    document.getElementById('modal-overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function toggleWidget(kpiId) {
+    var idx = ACTIVE_KPIS.indexOf(kpiId);
+    if (idx === -1) {
+        if (ACTIVE_KPIS.length >= 12) {
+            alert('Maximum 12 KPIs allowed. Remove one first.');
+            return;
+        }
+        ACTIVE_KPIS.push(kpiId);
+    } else {
+        if (ACTIVE_KPIS.length <= 1) {
+            alert('At least 1 KPI must be selected.');
+            return;
+        }
+        ACTIVE_KPIS.splice(idx, 1);
+    }
+
+    var isNowActive = ACTIVE_KPIS.indexOf(kpiId) !== -1;
+    var card  = document.getElementById('widget-toggle-' + kpiId);
+    var check = document.getElementById('widget-check-' + kpiId);
+    var kpi   = window.KPI_LIBRARY.find(function(k) { return k.id === kpiId; });
+
+    card.style.background = isNowActive ? 'rgba(0,192,174,0.1)' : 'var(--bg)';
+    card.style.border     = '1px solid ' + (isNowActive ? '#00C0AE' : 'var(--border)');
+    check.style.background = isNowActive ? '#00C0AE' : 'var(--border)';
+    check.innerHTML = isNowActive
+        ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '';
+
+    document.getElementById('widget-count').textContent = ACTIVE_KPIS.length + ' of 18 selected';
+}
+
+function applyWidgets() {
+    closeModal();
+    var grid = document.getElementById('kpi-grid');
+    if (!grid) return;
+
+    grid.innerHTML = ACTIVE_KPIS.map(function(kpiId) {
+        var kpi = window.KPI_LIBRARY.find(function(k) { return k.id === kpiId; });
+        if (!kpi) return '';
+        var deltaClass = getDeltaClass(kpi.delta, kpi.id === 'churn' || kpi.id === 'calldrop' || kpi.id === 'capexratio');
+        return '<div class="kpi-card" onclick="openKPIModal(\'' + kpi.id + '\')" style="cursor:pointer;" title="Click to expand">' +
+            '<div class="kpi-card-accent" style="background:' + kpi.accentColor + '"></div>' +
+            '<div class="kpi-label">' + kpi.label + '</div>' +
+            '<div class="kpi-value">' + kpi.value +
+                '<span style="font-size:14px;color:var(--text-secondary);font-weight:400;">' + kpi.unit + '</span>' +
+            '</div>' +
+            '<div class="kpi-delta ' + deltaClass + '">' + kpi.delta +
+                ' <span class="kpi-delta-label">' + kpi.deltaLabel + '</span>' +
+            '</div>' +
+            '<div style="position:absolute;top:8px;right:8px;opacity:0.3;font-size:10px;color:var(--text-muted);">↗</div>' +
+        '</div>';
+    }).join('');
+
+    // Update grid columns based on count
+    var count = ACTIVE_KPIS.length;
+    var cols = count <= 3 ? count : count <= 6 ? 3 : count <= 8 ? 4 : count <= 12 ? 6 : 6;
+    grid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+}

@@ -542,3 +542,92 @@ const ACTIVITY_LOG = [
 window.CONNECTOR_DATA_LIST = CONNECTOR_DATA_LIST;
 window.ENGINE_DATA         = ENGINE_DATA;
 window.ACTIVITY_LOG        = ACTIVITY_LOG;
+
+/* ══════════════════════════════════════════════════════════
+   15. EXTENDED KPI LIBRARY
+   ══════════════════════════════════════════════════════════ */
+
+const KPI_LIBRARY = [
+    { id: "arpu",         label: "ARPU (Blended)",      value: "₹181",   unit: "/mo",   delta: "+₹12",    deltaLabel: "vs last year", accentColor: "#00C0AE", default: true  },
+    { id: "churn",        label: "Monthly Churn",        value: "1.42",   unit: "%",     delta: "-0.18%",  deltaLabel: "vs last year", accentColor: "#FD349C", default: true  },
+    { id: "ebitda",       label: "EBITDA Margin",        value: "34.6",   unit: "%",     delta: "+2.1%",   deltaLabel: "vs last year", accentColor: "#76D2FF", default: true  },
+    { id: "spectrum",     label: "Spectrum Coverage",    value: "2.8",    unit: "×",     delta: "+0.3×",   deltaLabel: "vs last year", accentColor: "#B497FF", default: true  },
+    { id: "fcf",          label: "Free Cash Flow",       value: "₹2,340", unit: " Cr",   delta: "+₹340 Cr",deltaLabel: "vs last year", accentColor: "#63EBDA", default: true  },
+    { id: "subscribers",  label: "Active Subscribers",   value: "312",    unit: "M",     delta: "+18M",    deltaLabel: "vs last year", accentColor: "#1E49E2", default: true  },
+    { id: "netrevenue",   label: "Net Revenue",          value: "₹3,420", unit: " Cr",   delta: "+₹240 Cr",deltaLabel: "vs last year", accentColor: "#00B8F5", default: false },
+    { id: "grossadds",    label: "Monthly Gross Adds",   value: "5.1",    unit: "M",     delta: "+0.4M",   deltaLabel: "vs last year", accentColor: "#00C0AE", default: false },
+    { id: "prepaidarpu",  label: "Prepaid ARPU",         value: "₹162",   unit: "/mo",   delta: "+₹8",     deltaLabel: "vs last year", accentColor: "#63EBDA", default: false },
+    { id: "postpaidarpu", label: "Postpaid ARPU",        value: "₹312",   unit: "/mo",   delta: "+₹24",    deltaLabel: "vs last year", accentColor: "#B497FF", default: false },
+    { id: "fiveg",        label: "5G Subscribers",       value: "38",     unit: "M",     delta: "+12M",    deltaLabel: "vs last year", accentColor: "#1E49E2", default: false },
+    { id: "volte",        label: "VoLTE Penetration",    value: "68.4",   unit: "%",     delta: "+8.2%",   deltaLabel: "vs last year", accentColor: "#76D2FF", default: false },
+    { id: "calldrop",     label: "Call Drop Rate",       value: "1.42",   unit: "%",     delta: "-0.24%",  deltaLabel: "vs last year", accentColor: "#F59E0B", default: false },
+    { id: "datarevenue",  label: "Data Revenue %",       value: "58.4",   unit: "%",     delta: "+4.2%",   deltaLabel: "vs last year", accentColor: "#00B8F5", default: false },
+    { id: "uptime",       label: "Network Uptime",       value: "99.94",  unit: "%",     delta: "+0.02%",  deltaLabel: "vs last year", accentColor: "#00C0AE", default: false },
+    { id: "b2brevenue",   label: "B2B Revenue",          value: "₹390",   unit: " Cr",   delta: "+₹48 Cr", deltaLabel: "vs last year", accentColor: "#B497FF", default: false },
+    { id: "capexratio",   label: "Capex / Revenue",      value: "9.9",    unit: "%",     delta: "-1.2%",   deltaLabel: "vs last year", accentColor: "#F59E0B", default: false },
+    { id: "fcfyield",     label: "FCF Yield",            value: "68.4",   unit: "%",     delta: "+4.1%",   deltaLabel: "vs last year", accentColor: "#63EBDA", default: false }
+];
+
+window.KPI_LIBRARY = KPI_LIBRARY;
+
+/* ══════════════════════════════════════════════════════════
+   16. ISSUES / MAINTENANCE REQUESTS
+   Pre-seeded sample issues for demo
+   ══════════════════════════════════════════════════════════ */
+
+var ISSUES_LOG = [
+    {
+        id:          "ISS-2025-0038",
+        type:        "RAFM Alert",
+        source:      "Interconnect Billing Discrepancy — Jio",
+        priority:    "critical",
+        status:      "in-progress",
+        raisedBy:    "CFO Dashboard",
+        raisedAt:    "05 Jun 2025 · 09:22 IST",
+        assignedTo:  "KPMG GRCS — Revenue Assurance Team",
+        slaHours:    4,
+        slaRemaining:"1h 42m",
+        description: "CDR reconciliation flagged ₹4.8 Cr billing discrepancy with Jio on Mumbai-Delhi route. Requires urgent investigation and formal dispute filing."
+    },
+    {
+        id:          "ISS-2025-0037",
+        type:        "Connector Warning",
+        source:      "Ariba / Coupa — Latency Spike",
+        priority:    "high",
+        status:      "open",
+        raisedBy:    "System Monitor",
+        raisedAt:    "05 Jun 2025 · 07:38 IST",
+        assignedTo:  "KPMG GRCS — Managed Services",
+        slaHours:    8,
+        slaRemaining:"4h 18m",
+        description: "Procurement connector latency spiked to 142ms — 10× normal. Sync delays affecting PO approval workflows."
+    },
+    {
+        id:          "ISS-2025-0036",
+        type:        "PPP Violation",
+        source:      "Split PO — CloudHost Infra Ltd",
+        priority:    "critical",
+        status:      "open",
+        raisedBy:    "PPP Policy Engine",
+        raisedAt:    "03 Jun 2025 · 14:22 IST",
+        assignedTo:  "KPMG GRCS — Internal Audit",
+        slaHours:    2,
+        slaRemaining:"OVERDUE",
+        description: "4 consecutive POs to CloudHost Infra Ltd each valued at ₹48L — just below ₹50L CFO approval threshold. Potential split-PO fraud."
+    },
+    {
+        id:          "ISS-2025-0035",
+        type:        "RAFM Alert",
+        source:      "TAP File Leakage — Zone 3",
+        priority:    "high",
+        status:      "resolved",
+        raisedBy:    "CFO Dashboard",
+        raisedAt:    "02 Jun 2025 · 11:14 IST",
+        assignedTo:  "KPMG GRCS — Roaming Operations",
+        slaHours:    8,
+        slaRemaining:"Resolved",
+        description: "TAP file mismatch in South India zone. ₹1.2 Cr unbilled roaming events identified and recovered."
+    }
+];
+
+window.ISSUES_LOG = ISSUES_LOG;

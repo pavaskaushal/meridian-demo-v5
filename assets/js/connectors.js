@@ -55,6 +55,10 @@ function renderConnectorTable() {
         var statusLabel  = c.status === 'live' ? 'LIVE' : c.status === 'warning' ? 'WARNING' : 'ERROR';
         var latencyColor = parseInt(c.latency) > 100 ? '#F59E0B' : '#00C0AE';
 
+        var raiseBtn = c.status !== 'live'
+            ? '<button onclick="openRaiseIssueModal(\'Connector Warning\',\'' + c.name + '\',\'Connector ' + c.name + ' is showing ' + c.status + ' status. Last sync: ' + c.lastSync + '. Latency: ' + c.latency + '.\',\'' + (c.status === 'error' ? 'critical' : 'high') + '\')" style="font-size:10px;padding:3px 10px;background:' + statusColor + '18;border:1px solid ' + statusColor + '44;border-radius:4px;color:' + statusColor + ';cursor:pointer;">Raise Issue</button>'
+            : '';
+
         return '<tr style="border-bottom:1px solid var(--border);transition:background 0.15s;" ' +
             'onmouseover="this.style.background=\'var(--bg-hover)\'" onmouseout="this.style.background=\'transparent\'">' +
             '<td style="padding:12px 24px;"><div style="font-size:13px;font-weight:600;color:var(--text-primary);">' + c.name + '</div></td>' +
@@ -64,6 +68,7 @@ function renderConnectorTable() {
             '<td style="padding:12px 16px;text-align:right;font-size:12px;color:var(--text-primary);font-family:var(--font-mono);">' + c.records + '</td>' +
             '<td style="padding:12px 16px;text-align:right;font-family:var(--font-mono);font-size:12px;font-weight:600;color:' + latencyColor + ';">' + c.latency + '</td>' +
             '<td style="padding:12px 24px;text-align:right;font-family:var(--font-mono);font-size:12px;color:var(--text-secondary);">' + c.uptime + '</td>' +
+            '<td style="padding:12px 24px;text-align:right;">' + raiseBtn + '</td>' +
         '</tr>';
     }).join('');
 }
