@@ -111,6 +111,10 @@
                     <span id="theme-label">LIGHT MODE</span>
                 </button>
                 <div class="topbar-timestamp" id="topbar-timestamp"></div>
+                <button onclick="logout()" style="background:transparent;border:1px solid #2A2A2A;border-radius:6px;padding:4px 10px;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--text-muted);font-size:11px;transition:all 0.15s;" onmouseover="this.style.borderColor='#FD349C';this.style.color='#FD349C'" onmouseout="this.style.borderColor='#2A2A2A';this.style.color='var(--text-muted)'">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Logout
+                </button>
             </div>
         </header>
 
@@ -480,6 +484,7 @@
 
 <!-- SCRIPTS — loaded in dependency order -->
 <script src="assets/libs/chart.min.js"></script>
+<script src="assets/js/auth.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/utils.js"></script>
