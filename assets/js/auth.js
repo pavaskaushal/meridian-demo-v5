@@ -375,14 +375,23 @@ function logout() {
 
 /* ── INIT ───────────────────────────────────────────────── */
 
+/* Set true to skip auth during development
+   Set false before presentation / commit    */
+var DEV_MODE = true;
+
 document.addEventListener('DOMContentLoaded', function() {
+    if (DEV_MODE) {
+        AUTH.unlocked = true;
+        return;
+    }
+
     injectAuthScreens();
 
-    // Hide main app initially
     var app = document.querySelector('.app-wrapper');
     if (app) {
-        app.style.opacity    = '0';
+        app.style.display    = 'none';
         app.style.visibility = 'hidden';
+        app.style.opacity    = '0';
     }
 
     runSplash();
