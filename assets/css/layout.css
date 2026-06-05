@@ -1,0 +1,295 @@
+/* ============================================================
+   MERIDIAN · LAYOUT
+   Defines the page structure — sidebar and main content area.
+   Does not control decorative styles (colours, fonts etc.)
+   Those live in components.css.
+   ============================================================ */
+
+
+/* ── APP WRAPPER ───────────────────────────────────────────
+   This is the outermost container that holds everything.
+   display: flex        turns on flexbox — children sit
+                        side by side automatically
+   height: 100vh        100vh = 100% of the viewport height
+                        so the app always fills the full screen
+                        "vh" stands for "viewport height"
+   width: 100vw         fills full screen width
+                        "vw" stands for "viewport width"
+   overflow: hidden     no scrollbar on the outer wrapper —
+                        each section manages its own scrolling
+*/
+.app-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg);
+}
+
+
+/* ── SIDEBAR ───────────────────────────────────────────────
+   The left navigation panel.
+
+   width                fixed at our --sidebar-width variable
+                        (240px, defined in variables.css)
+   flex-shrink: 0       tells flexbox "never shrink this"
+                        without this, the sidebar would
+                        compress as the window gets smaller
+   display: flex        sidebar itself is also a flex container
+   flex-direction:      children (logo, nav items) stack
+     column             top to bottom
+   height: 100vh        sidebar fills the full screen height
+   overflow-y: auto     if nav items overflow, add a scrollbar
+                        (won't happen with 4 items but
+                        important for when we add more later)
+   position: relative   needed for any absolutely-positioned
+                        children we might add later
+   z-index: 100         sidebar stays on top of content
+                        if anything overlaps
+*/
+.sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  position: relative;
+  z-index: 100;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border);
+}
+
+
+/* ── SIDEBAR HEADER ────────────────────────────────────────
+   The top section of the sidebar containing the
+   Meridian logo and operator name.
+
+   padding              space inside the header area
+   border-bottom        the dividing line between header
+                        and the nav items below it
+   flex-shrink: 0       never compress this section
+*/
+.sidebar-header {
+  padding: var(--space-lg) var(--space-md);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+
+/* ── SIDEBAR NAV ───────────────────────────────────────────
+   The navigation links section.
+
+   flex: 1              takes up all remaining sidebar space
+                        pushes the footer to the bottom
+   padding              breathing room around nav items
+   display: flex        nav items stack vertically
+   flex-direction:
+     column
+   gap                  space between each nav item
+*/
+.sidebar-nav {
+  flex: 1;
+  padding: var(--space-md) var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+
+/* ── SIDEBAR FOOTER ────────────────────────────────────────
+   The bottom section of the sidebar.
+   Shows KPMG branding and version info.
+
+   margin-top: auto     pushes footer to the very bottom
+                        of the sidebar regardless of how
+                        many nav items there are above it
+*/
+.sidebar-footer {
+  padding: var(--space-md);
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+
+/* ── MAIN CONTENT AREA ─────────────────────────────────────
+   Everything to the right of the sidebar.
+
+   flex: 1              takes ALL remaining horizontal space
+                        (total width minus sidebar's 240px)
+   display: flex        main area is also a flex container
+   flex-direction:      its children stack top to bottom
+     column
+   overflow: hidden     the main area itself does not scroll —
+                        only the content INSIDE it scrolls
+   height: 100vh        fills full screen height
+*/
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100vh;
+}
+
+
+/* ── TOPBAR ────────────────────────────────────────────────
+   A thin bar at the top of the main content area.
+   Shows current screen title, timestamp, and operator info.
+
+   height               fixed height using our variable
+   flex-shrink: 0       never compress
+   display: flex        items inside sit side by side
+   align-items:         vertically centre everything inside
+     center
+   justify-content:     space items evenly left and right
+     space-between
+   padding              horizontal breathing room
+   border-bottom        separates topbar from screen content
+*/
+.topbar {
+  height: var(--topbar-height);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-xl);
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+}
+
+
+/* ── SCREEN CONTAINER ──────────────────────────────────────
+   The scrollable area where each screen's content lives.
+
+   flex: 1              fills all remaining vertical space
+                        (everything below the topbar)
+   overflow-y: auto     THIS is where vertical scrolling
+                        happens — not on the outer page
+   padding              breathing room around screen content
+*/
+.screen-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xl);
+}
+
+
+/* ── SCREEN PANELS ─────────────────────────────────────────
+   Each screen (dashboard, rafm, scenario, regulatory)
+   is a div with class "screen".
+
+   display: none        all screens hidden by default
+   opacity: 0           fully transparent (invisible)
+   The router.js file adds class "active" to show one screen.
+*/
+.screen {
+  display: none;
+}
+
+
+/* ── ACTIVE SCREEN ─────────────────────────────────────────
+   When router.js adds class "active" to a screen,
+   these styles apply — making it visible.
+
+   display: block       screen appears in the layout
+   opacity: 1           fully visible
+   animation            fades in smoothly when switching screens
+                        "fadeIn" defined below in @keyframes
+*/
+.screen.active {
+  display: block;
+}
+
+
+/* ── FADE IN ANIMATION ─────────────────────────────────────
+   @keyframes defines what the animation actually does.
+   "from" is the start state — transparent and slightly lower
+   "to" is the end state — fully visible and in position
+
+   translateY(-8px) → translateY(0)
+   This means the screen starts 8px higher than normal
+   and slides down into position as it fades in.
+   Subtle but makes screen transitions feel polished.
+*/
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ── GRID LAYOUTS ──────────────────────────────────────────
+   CSS Grid is a two-dimensional layout system.
+   We use it for arranging KPI cards in rows and columns.
+
+   .grid-kpi   6 KPI cards in a row
+               repeat(6, 1fr) means 6 equal columns
+               1fr = "one fraction of available space"
+               so all 6 cards share the width equally
+
+   .grid-2     Two equal columns side by side
+               Used for charts sitting next to each other
+
+   .grid-3     Three equal columns
+               Used for the RAFM alert queues
+
+   gap         Space between grid items
+               Uses our spacing variable for consistency
+*/
+.grid-kpi {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--space-md);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+}
+
+/* A special 2-column layout where left column is wider.
+   Used for the main chart (wider) next to alerts (narrower).
+   2fr means "twice as wide as 1fr"
+*/
+.grid-2-1 {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-md);
+}
+
+
+/* ── SECTION SPACING ───────────────────────────────────────
+   Consistent vertical space between sections on each screen.
+   We use a utility class rather than adding margin
+   directly to each element — cleaner and reusable.
+*/
+.section {
+  margin-bottom: var(--space-xl);
+}
+
+.section:last-child {
+  margin-bottom: 0;
+  /* no extra space after the last section on a screen */
+}
+/* ── SCREEN CONTAINER ──────────────────────────────────────
+   The scrollable area where screen content lives.
+*/
+.screen-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-xl);
+  min-height: 0;
+}

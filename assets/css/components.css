@@ -1,0 +1,847 @@
+/* ============================================================
+   MERIDIAN · COMPONENTS
+   Every reusable UI component lives here.
+   Screens just use these class names — no styling in screens.
+   ============================================================ */
+
+
+/* ══════════════════════════════════════════════════════════
+   1. SIDEBAR COMPONENTS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── BRAND MARK ────────────────────────────────────────────
+   The "MERIDIAN" logo text at the top of the sidebar.
+*/
+.brand-mark {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.brand-mark .brand-name {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  /* wide letter spacing gives it a premium, logo-like feel */
+  color: var(--text-primary);
+  text-transform: uppercase;
+}
+
+.brand-mark .brand-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ── LIVE BADGE ─────────────────────────────────────────────
+   The pulsing "● LIVE" indicator in the sidebar header.
+   Shows the demo feels like a real-time system.
+*/
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: rgba(0, 192, 174, 0.08);
+  /* 8% opacity of our --positive colour */
+  border: 1px solid rgba(0, 192, 174, 0.25);
+  border-radius: var(--radius-full);
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--positive);
+  margin-top: var(--space-sm);
+  width: fit-content;
+  /* shrinks to fit content rather than stretching full width */
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--positive);
+  animation: livePulse 1.5s ease-in-out infinite alternate;
+  /* alternate means it goes: dim → bright → dim → bright
+     instead of: dim → bright → jump back to dim */
+}
+
+@keyframes livePulse {
+  from { opacity: 0.3; }
+  to   { opacity: 1; }
+}
+
+/* ── NAV ITEMS ──────────────────────────────────────────────
+   The clickable navigation links in the sidebar.
+
+   The structure of each nav item is:
+   <div class="nav-item">
+     <span class="nav-icon">icon</span>
+     <span class="nav-label">Label</span>
+   </div>
+*/
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 10px var(--space-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast),
+              color var(--transition-fast);
+  /* transition on two properties simultaneously */
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  position: relative;
+  /* needed for the active indicator line */
+  border-left: 2px solid transparent;
+  /* 2px transparent border always present
+     prevents text from jumping when active border appears */
+}
+
+.nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.nav-item.active {
+  background: rgba(30, 73, 226, 0.12);
+  /* 12% opacity of --kpmg-blue */
+  color: var(--kpmg-cyan);
+  border-left-color: var(--kpmg-cyan);
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 15px;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+  /* never compress the icon — always stays 20px wide */
+}
+
+.nav-label {
+  flex: 1;
+  /* takes remaining space so icon stays on left */
+}
+
+/* ── SIDEBAR FOOTER TEXT ────────────────────────────────────
+*/
+.sidebar-footer-text {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.sidebar-footer-text strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+/* ══════════════════════════════════════════════════════════
+   2. TOPBAR COMPONENTS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── TOPBAR LEFT ────────────────────────────────────────────
+   Screen title and breadcrumb on the left side of topbar.
+*/
+.topbar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topbar-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+}
+
+.topbar-sub {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── TOPBAR RIGHT ───────────────────────────────────────────
+   Timestamp and operator tag on the right side.
+*/
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.topbar-timestamp {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* ── OPERATOR TAG ───────────────────────────────────────────
+   Small badge showing "APEX TELECOM · 22 CIRCLES"
+*/
+.operator-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+/* ══════════════════════════════════════════════════════════
+   3. KPI CARDS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── KPI CARD CONTAINER ─────────────────────────────────────
+   The outer card box.
+
+   position: relative   allows the accent bar to be positioned
+                        at the top of the card using absolute
+   overflow: hidden     clips the accent bar so it doesn't
+                        extend outside the card boundary
+   transition           card lifts slightly on hover
+*/
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast),
+              box-shadow var(--transition-fast),
+              border-color var(--transition-fast);
+  cursor: default;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  /* card moves 2px upward — subtle lift effect */
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-light);
+}
+
+/* ── ACCENT BAR ─────────────────────────────────────────────
+   The thin coloured line at the top of each KPI card.
+   Each card gets a different colour via inline style.
+
+   position: absolute   positions relative to .kpi-card
+   top, left, right: 0  stretches the full width at the top
+   height: 3px          thin line — prominent but not heavy
+*/
+.kpi-card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  /* rounded only on top corners to match the card */
+}
+
+/* ── KPI LABEL ──────────────────────────────────────────────
+   The small text above the number. e.g. "ARPU (BLENDED)"
+*/
+.kpi-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+/* ── KPI VALUE ──────────────────────────────────────────────
+   The big number. The most important element on the card.
+   Uses --font-mono because it's a data number.
+*/
+.kpi-value {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.1;
+  /* tight line height — number needs no extra space above/below */
+  margin-bottom: var(--space-xs);
+}
+
+/* ── KPI DELTA ──────────────────────────────────────────────
+   The change indicator below the number.
+   e.g. "▲ +5 pts vs last year"
+
+   We use two modifier classes to colour it:
+   .delta-positive → green (good change)
+   .delta-negative → red (bad change)
+   .delta-neutral  → muted (no change)
+*/
+.kpi-delta {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.kpi-delta.positive { color: var(--positive); }
+.kpi-delta.negative { color: var(--danger); }
+.kpi-delta.neutral  { color: var(--text-muted); }
+
+.kpi-delta-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* ── SPARKLINE AREA ─────────────────────────────────────────
+   A tiny inline chart inside the KPI card.
+   Just a canvas element — Chart.js draws into it.
+*/
+.kpi-sparkline {
+  margin-top: var(--space-sm);
+  height: 36px;
+  /* fixed height — Chart.js fills this exactly */
+}
+/* ══════════════════════════════════════════════════════════
+   4. GENERAL DATA CARDS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── DATA CARD ──────────────────────────────────────────────
+   A general-purpose container used throughout the app.
+   Charts, alert queues, and tables all sit inside data-cards.
+*/
+.data-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  /* clips children to the card boundary */
+}
+
+/* ── CARD HEADER ────────────────────────────────────────────
+   The title bar at the top of a data card.
+*/
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border);
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.card-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ── CARD BODY ──────────────────────────────────────────────
+   The content area inside the card, below the header.
+*/
+.card-body {
+  padding: var(--space-lg);
+  width: 100%;
+}
+
+.card-body-sm {
+  padding: var(--space-md);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   5. BADGES AND STATUS PILLS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── BASE BADGE ─────────────────────────────────────────────
+   Small label showing a status or category.
+   Always used with a modifier class for colour.
+*/
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* Modifier classes — add one of these alongside .badge */
+.badge-critical {
+  background: rgba(253, 52, 156, 0.12);
+  color: var(--kpmg-pink);
+  border: 1px solid rgba(253, 52, 156, 0.3);
+}
+
+.badge-high {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-medium {
+  background: rgba(0, 184, 245, 0.12);
+  color: var(--kpmg-cyan);
+  border: 1px solid rgba(0, 184, 245, 0.3);
+}
+
+.badge-low {
+  background: rgba(0, 192, 174, 0.12);
+  color: var(--positive);
+  border: 1px solid rgba(0, 192, 174, 0.3);
+}
+
+.badge-live {
+  background: rgba(0, 192, 174, 0.1);
+  color: var(--positive);
+  border: 1px solid rgba(0, 192, 174, 0.25);
+  animation: livePulse 1.5s ease-in-out infinite alternate;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   6. BUTTONS
+   ══════════════════════════════════════════════════════════ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 8px var(--space-md);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 1px solid transparent;
+}
+
+/* Primary button — filled KPMG blue */
+.btn-primary {
+  background: var(--kpmg-blue);
+  color: white;
+  border-color: var(--kpmg-blue);
+}
+
+.btn-primary:hover {
+  background: #1a3fd4;
+  /* slightly darker on hover */
+  box-shadow: var(--glow-blue);
+}
+
+/* Secondary button — outlined */
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-light);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border-color: var(--kpmg-cyan);
+}
+
+/* Ghost button — no border, text only */
+.btn-ghost {
+  background: transparent;
+  color: var(--kpmg-cyan);
+  border-color: transparent;
+  padding: 8px var(--space-sm);
+}
+
+.btn-ghost:hover {
+  background: rgba(0, 184, 245, 0.08);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   7. ALERT ITEMS
+   The clickable rows in the RAFM alert queues.
+   ══════════════════════════════════════════════════════════ */
+
+.alert-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  position: relative;
+}
+
+.alert-item:last-child {
+  border-bottom: none;
+  /* no border on the last item in a list */
+}
+
+.alert-item:hover {
+  background: var(--bg-hover);
+}
+
+/* The coloured vertical bar on the left of each alert */
+.alert-severity-bar {
+  width: 3px;
+  align-self: stretch;
+  /* stretches to full height of the alert item */
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.alert-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.alert-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-xs);
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.alert-amount {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 700;
+  flex-shrink: 0;
+  text-align: right;
+}
+
+/* ── ALERT ARROW ────────────────────────────────────────────
+   The "›" chevron on the right of each alert.
+   Signals to the user that clicking opens a detail view.
+*/
+.alert-arrow {
+  color: var(--text-muted);
+  font-size: 18px;
+  align-self: center;
+  transition: transform var(--transition-fast),
+              color var(--transition-fast);
+}
+
+.alert-item:hover .alert-arrow {
+  transform: translateX(3px);
+  /* arrow slides right on hover — invites clicking */
+  color: var(--kpmg-cyan);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   8. PROGRESS BARS
+   Used in the Regulatory Calendar screen.
+   ══════════════════════════════════════════════════════════ */
+
+.progress-container {
+  width: 100%;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xs);
+}
+
+.progress-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.progress-value {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* The grey track behind the bar */
+.progress-track {
+  width: 100%;
+  height: 6px;
+  background: var(--bg);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+/* The filled bar inside the track */
+.progress-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow);
+  /* animates from 0% to the actual value on load */
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   9. MODAL
+   The popup that opens when you click an alert.
+   ══════════════════════════════════════════════════════════ */
+
+/* ── MODAL OVERLAY ──────────────────────────────────────────
+   The semi-transparent dark background behind the modal.
+   Clicking it closes the modal.
+
+   position: fixed      stays in place even when page scrolls
+   inset: 0             shorthand for top:0 right:0 bottom:0 left:0
+                        covers the entire viewport
+   z-index: 1000        sits above everything else on the page
+   display: none        hidden until needed
+*/
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  /* 70% opacity black — content behind is visible but dimmed */
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  backdrop-filter: blur(4px);
+  /* backdrop-filter: blur blurs everything behind the overlay
+     This is the "frosted glass" Palantir effect */
+}
+
+/* When modal is active, switch display from none to flex */
+.modal-overlay.active {
+  display: flex;
+  animation: fadeIn var(--transition-mid) ease;
+}
+
+/* ── MODAL BOX ──────────────────────────────────────────────
+   The actual white-ish box that contains the modal content.
+*/
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  width: 100%;
+  max-width: 560px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  font-size: 20px;
+  color: var(--text-muted);
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition-fast),
+              background var(--transition-fast);
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+/* ── MODAL DATA ROWS ────────────────────────────────────────
+   Label + value pairs inside the modal.
+*/
+.modal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.modal-row:last-child {
+  border-bottom: none;
+}
+
+.modal-row-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.modal-row-value {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   10. SECTION HEADERS
+   The title + subtitle above each content section.
+   ══════════════════════════════════════════════════════════ */
+
+.section-header {
+  margin-bottom: var(--space-md);
+}
+
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.section-subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   11. UTILITY CLASSES
+   Small single-purpose classes used inline anywhere.
+   ══════════════════════════════════════════════════════════ */
+
+/* Text colours */
+.text-primary   { color: var(--text-primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted     { color: var(--text-muted); }
+.text-positive  { color: var(--positive); }
+.text-warning   { color: var(--warning); }
+.text-danger    { color: var(--danger); }
+.text-cyan      { color: var(--kpmg-cyan); }
+.text-blue      { color: var(--kpmg-blue); }
+
+/* Font families */
+.font-mono { font-family: var(--font-mono); }
+.font-sans { font-family: var(--font-sans); }
+
+/* Font weights */
+.font-normal  { font-weight: 400; }
+.font-medium  { font-weight: 500; }
+.font-semibold{ font-weight: 600; }
+.font-bold    { font-weight: 700; }
+
+/* Spacing helpers */
+.mt-sm { margin-top: var(--space-sm); }
+.mt-md { margin-top: var(--space-md); }
+.mt-lg { margin-top: var(--space-lg); }
+.mb-sm { margin-bottom: var(--space-sm); }
+.mb-md { margin-bottom: var(--space-md); }
+.mb-lg { margin-bottom: var(--space-lg); }
+
+/* Display */
+.flex         { display: flex; }
+.flex-col     { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-sm       { gap: var(--space-sm); }
+.gap-md       { gap: var(--space-md); }
+
+/* ── NAV ICON SVG ───────────────────────────────────────────
+   Makes SVG icons in nav items inherit the text colour
+   so they automatically change colour on hover and active.
+*/
+.nav-icon svg {
+    display: block;
+    transition: stroke var(--transition-fast);
+}
+
+.nav-item:hover .nav-icon svg,
+.nav-item.active .nav-icon svg {
+    stroke: currentColor;
+}
+/* ── THEME TOGGLE ───────────────────────────────────────────
+   The dark/light mode switch button in the topbar.
+*/
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.theme-toggle:hover {
+  border-color: var(--kpmg-cyan);
+  color: var(--kpmg-cyan);
+}
+
+.theme-toggle-icon {
+  width: 14px;
+  height: 14px;
+  transition: transform var(--transition-mid);
+}
+
+body.light-mode .theme-toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Fix card backgrounds in light mode */
+body.light-mode .data-card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+body.light-mode .sidebar {
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Fix chart tooltip in light mode */
+body.light-mode .topbar {
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+}

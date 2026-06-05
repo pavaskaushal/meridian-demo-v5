@@ -1,0 +1,158 @@
+/* ============================================================
+   MERIDIAN · RESET
+   Removes all browser default styles.
+   Written once. Never modified.
+   ============================================================ */
+
+
+/* ── UNIVERSAL RESET ───────────────────────────────────────
+   The * selector means "target every single element on the page".
+   margin: 0        removes all default spacing outside elements
+   padding: 0       removes all default spacing inside elements
+   box-sizing       explained below
+*/
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── WHY box-sizing: border-box ────────────────────────────
+   By default, if you set width: 200px on a box and then add
+   padding: 20px, the box becomes 240px wide total.
+   The padding adds ON TOP of the width.
+
+   With border-box, the 200px INCLUDES the padding.
+   The box stays exactly 200px no matter what padding you add.
+
+   This prevents countless layout bugs.
+   Every professional project uses this. Always.
+*/
+
+
+/* ── HTML AND BODY ─────────────────────────────────────────
+   height: 100%     makes the page fill the full screen height
+   overflow: hidden prevents unwanted scrollbars on the outer page
+                    each screen will manage its own scrolling
+*/
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  /* uses the variable we defined in variables.css */
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  /* line-height: 1.5 means each line of text is 1.5x
+     the font size tall. At 14px font, each line is 21px.
+     This gives text room to breathe and improves readability. */
+  -webkit-font-smoothing: antialiased;
+  /* antialiased makes fonts render crisply on Mac screens.
+     Without this, text can look slightly blurry on retina displays. */
+}
+
+
+/* ── LINKS ─────────────────────────────────────────────────
+   Browsers make links blue and underlined by default.
+   We remove that so we can style links ourselves.
+*/
+a {
+  text-decoration: none;
+  color: inherit;
+  /* color: inherit means "use whatever colour the parent has"
+     instead of the default browser blue */
+}
+
+
+/* ── LISTS ─────────────────────────────────────────────────
+   Browsers add bullet points and indentation to lists.
+   We remove them — we'll add our own styling where needed.
+*/
+ul, ol {
+  list-style: none;
+}
+
+
+/* ── IMAGES ─────────────────────────────────────────────────
+   display: block    removes the small gap below images
+                     that browsers add by default
+   max-width: 100%   images never overflow their container
+*/
+img {
+  display: block;
+  max-width: 100%;
+}
+
+
+/* ── BUTTONS ────────────────────────────────────────────────
+   Browsers style buttons differently on each OS.
+   We strip all of that and start fresh.
+   cursor: pointer   shows the hand cursor on hover —
+                     the universal signal for "clickable"
+*/
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: inherit;
+  color: inherit;
+}
+
+
+/* ── INPUTS ─────────────────────────────────────────────────
+   Same idea as buttons — strip browser defaults.
+   outline: none     removes the blue focus ring that browsers
+                     add when you click an input field.
+                     We'll add our own focus style later.
+*/
+input, textarea, select {
+  font-family: var(--font-sans);
+  font-size: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+
+/* ── HEADINGS ────────────────────────────────────────────────
+   Browsers make h1 huge, h2 slightly smaller, etc.
+   We reset all headings to normal weight and size.
+   We'll set specific sizes ourselves in components.css.
+*/
+h1, h2, h3, h4, h5, h6 {
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+
+/* ── SCROLLBAR STYLING ───────────────────────────────────────
+   Custom scrollbars to match our dark theme.
+   The default Windows scrollbar looks wrong on a dark UI.
+
+   ::-webkit-scrollbar         the scrollbar track itself
+   ::-webkit-scrollbar-track   the background rail
+   ::-webkit-scrollbar-thumb   the draggable handle
+*/
+::-webkit-scrollbar {
+  width: 6px;
+  /* thin scrollbar — unobtrusive */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

@@ -1,0 +1,213 @@
+/* ============================================================
+   MERIDIAN · APEX TELECOM
+   Design System — Variables
+   Option 3: Palantir structure + KPMG accent colours
+
+   HOW TO USE:
+   - To change a colour everywhere: edit the value here
+   - To use a variable: write var(--name) in any CSS file
+   - To adapt for a new client: change accents section only
+   ============================================================ */
+
+:root {
+
+  /* ── STRUCTURE COLOURS ─────────────────────────────────────
+     These are the dark foundation — Palantir-style.
+     Think of them as layers stacked from deepest to lightest.
+
+     --bg       The page itself. Almost black.
+     --bg-card  Cards sit on top of the page. Slightly lighter.
+     --bg-hover What a card looks like when you hover over it.
+     --bg-input Input fields, search bars. Slightly lighter again.
+     --border   The thin line between elements. Very subtle.
+  */
+  --bg:           #0A0A0A;
+  --bg-card:      #111111;
+  --bg-hover:     #1A1A1A;
+  --bg-input:     #141414;
+  --border:       #222222;
+  --border-light: #2A2A2A;
+
+  /* ── KPMG PRIMARY ACCENTS ──────────────────────────────────
+     These are the KPMG brand colours.
+     Used for: active nav items, primary buttons,
+               live indicators, key highlights.
+
+     --kpmg-blue   The main KPMG blue. Most used accent.
+     --kpmg-cyan   Brighter, for "live" and positive states.
+     --kpmg-navy   Dark KPMG navy. For secondary backgrounds.
+     --kpmg-pink   KPMG pink. Used ONLY for critical alerts.
+                   It's distinctive — CFOs will notice it.
+  */
+  --kpmg-blue:    #1E49E2;
+  --kpmg-cyan:    #00B8F5;
+  --kpmg-navy:    #00338D;
+  --kpmg-pink:    #FD349C;
+
+  /* ── SEMANTIC COLOURS ──────────────────────────────────────
+     "Semantic" means each colour has a specific meaning.
+     We never use red for anything except danger.
+     We never use green for anything except success.
+     This consistency trains the user's eye.
+
+     --positive   Good news. Revenue up. Target hit.
+     --warning    Needs attention. Not critical yet.
+     --danger     Act now. Critical alert.
+     --info       Neutral information. No action needed.
+  */
+  --positive:     #00C0AE;
+  --warning:      #F59E0B;
+  --danger:       #FD349C;
+  --info:         #00B8F5;
+
+  /* ── CHART COLOURS ─────────────────────────────────────────
+     These are KPMG's official chart palette.
+     Used ONLY in charts, graphs, and data tables.
+     The order matters — chart-1 is always the primary series,
+     chart-2 is secondary, and so on.
+
+     In the ARPU trend chart:   chart-1 (our operator line)
+     In competitor chart:       chart-1 through chart-5
+     In the waterfall chart:    chart-1 (positive bars)
+                                danger  (negative bars)
+  */
+  --chart-1:      #00C0AE;
+  --chart-2:      #76D2FF;
+  --chart-3:      #B497FF;
+  --chart-4:      #63EBDA;
+  --chart-5:      #FFA3DA;
+  --chart-6:      #510DBC;
+
+  /* ── TEXT COLOURS ──────────────────────────────────────────
+     Three levels of text — like a visual hierarchy.
+
+     --text-primary    Headlines, KPI values, important labels.
+                       Near-white. Demands attention.
+
+     --text-secondary  Descriptions, sub-labels, body text.
+                       Muted blue-grey. Supporting role.
+
+     --text-muted      Footnotes, timestamps, placeholders.
+                       Very muted. Background role.
+  */
+  --text-primary:   #F9FAFB;
+  --text-secondary: #C0C8D8;
+  --text-muted:     #8A9BB0;
+
+  /* ── TYPOGRAPHY ────────────────────────────────────────────
+     Two fonts. Each has a specific job.
+
+     --font-sans   DM Sans. Every word that is read.
+                   Headers, labels, descriptions, buttons.
+
+     --font-mono   IBM Plex Mono. Every number that is data.
+                   KPI values, amounts, percentages, dates.
+                   Using a monospace font for numbers means
+                   digits always align vertically in columns.
+                   Critical for financial dashboards.
+  */
+  --font-sans:  'DM Sans', sans-serif;
+  --font-mono:  'IBM Plex Mono', monospace;
+
+  /* ── SPACING SCALE ─────────────────────────────────────────
+     A consistent spacing scale prevents the dashboard from
+     looking random. Every margin and padding uses one of
+     these values — never an arbitrary number like 13px.
+
+     Think of it like a ruler with fixed tick marks.
+     --space-xs  = tiny gaps (between icon and label)
+     --space-sm  = small gaps (inside a badge)
+     --space-md  = medium gaps (inside a card)
+     --space-lg  = large gaps (between card sections)
+     --space-xl  = extra large (between major sections)
+  */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   16px;
+  --space-lg:   24px;
+  --space-xl:   32px;
+  --space-2xl:  48px;
+
+  /* ── BORDER RADIUS ─────────────────────────────────────────
+     How rounded the corners of elements are.
+     Consistent rounding makes the UI feel intentional.
+
+     --radius-sm   Small elements: badges, tags, inputs
+     --radius-md   Medium elements: cards, panels
+     --radius-lg   Large elements: modals, large cards
+     --radius-full Perfect circle or pill shape
+  */
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-full: 9999px;
+
+  /* ── SHADOWS ───────────────────────────────────────────────
+     Shadows make elements appear to float above the background.
+     The darker the background, the more subtle the shadow needs
+     to be. On our near-black background, we use colour-tinted
+     shadows rather than pure black — it looks more premium.
+
+     Format: horizontal-offset vertical-offset blur colour
+  */
+  --shadow-sm:  0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md:  0 4px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg:  0 8px 40px rgba(0, 0, 0, 0.6);
+
+  /* ── GLOW EFFECTS ──────────────────────────────────────────
+     Subtle coloured glows on interactive elements.
+     This is the "Palantir feel" — elements appear to emit
+     a faint light matching their accent colour.
+     Used sparingly — only on the most important elements.
+  */
+  --glow-blue:  0 0 20px rgba(0, 184, 245, 0.2);
+  --glow-cyan:  0 0 20px rgba(0, 192, 174, 0.2);
+  --glow-pink:  0 0 20px rgba(253, 52, 156, 0.2);
+
+  /* ── LAYOUT ────────────────────────────────────────────────
+     Fixed dimensions that define the page structure.
+
+     --sidebar-width   How wide the left navigation is.
+                       240px fits 4 nav items comfortably
+                       at 1920×1080 resolution.
+
+     --topbar-height   If we add a top bar later, this is
+                       ready to use. Not used yet.
+  */
+  --sidebar-width:  240px;
+  --topbar-height:  60px;
+
+  /* ── TRANSITIONS ───────────────────────────────────────────
+     How fast animations play when you hover or interact.
+
+     --transition-fast   Instant feel. For hover colour changes.
+     --transition-mid    Smooth feel. For panels sliding in.
+     --transition-slow   Deliberate feel. For modals appearing.
+
+     "ease" means: starts fast, slows down at the end.
+     This mimics natural physical movement and feels less robotic
+     than a linear animation.
+  */
+  --transition-fast: 0.15s ease;
+  --transition-mid:  0.25s ease;
+  --transition-slow: 0.4s ease;
+
+}
+/* ══════════════════════════════════════════════════════════
+   LIGHT MODE
+   Applied when <body> has class "light-mode"
+   All structural colours switch to light palette.
+   KPMG accent colours stay identical.
+   ══════════════════════════════════════════════════════════ */
+
+body.light-mode {
+  --bg:           #F8F9FA;
+  --bg-card:      #FFFFFF;
+  --bg-hover:     #F0F2F5;
+  --bg-input:     #F8F9FA;
+  --border:       #E2E8F0;
+  --border-light: #CBD5E1;
+  --text-primary:   #0F172A;
+  --text-secondary: #475569;
+  --text-muted:     #94A3B8;
+}
