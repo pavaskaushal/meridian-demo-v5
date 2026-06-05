@@ -439,3 +439,57 @@ window.calculateScenario = calculateScenario;
 window.getEl             = getEl;
 window.setText           = setText;
 window.setHTML           = setHTML;
+
+/* ── NOTIFICATION BELL ──────────────────────────────────── */
+
+function toggleNotifications() {
+    var dd = document.getElementById('notification-dropdown');
+    if (!dd) return;
+    var isOpen = dd.style.display === 'block';
+    dd.style.display = isOpen ? 'none' : 'block';
+    if (!isOpen) renderNotifications();
+
+    // Close on outside click
+    if (!isOpen) {
+        setTimeout(function() {
+            document.addEventListener('click', closeNotificationsOutside);
+        }, 10);
+    }
+}
+
+function closeNotificationsOutside(e) {
+    var wrapper = document.getElementById('notification-bell-wrapper');
+    if (wrapper && !wrapper.contains(e.target)) {
+        var dd = document.getElementById('notification-dropdown');
+        if (dd) dd.style.display = 'none';
+        document.removeEventListener('click', closeNotificationsOutside);
+    }
+}
+
+function renderNotifications() {
+    var list = document.getElementById('notification-list');
+    if (!list || !window.RAFM_ALERTS) return;
+
+    var alerts = window.RAFM_ALERTS.slice(0, 3);
+    var severityColors = { CRITICAL: '#FD349C', HIGH: '#F59E0B', MEDIUM: '#00B8F5' };
+
+    list.innerHTML = alerts.map(function(a) {
+        var color = severityColors[a.severity] || '#8A9BB0';
+        return '<div style="padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" ' +
+            'onmouseover="this.style.background=\'var(--bg-hover)\'" onmouseout="this.style.background=\'\'">' +
+            '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">' +
+                '<div style="font-size:12px;font-weight:600;color:var(--text-primary);flex:1;padding-right:8px;">' + a.title + '</div>' +
+                '<div style="font-size:11px;font-weight:700;color:' + color + ';white-space:nowrap;">' + a.amount + '</div>' +
+            '</div>' +
+            '<div style="font-size:11px;color:var(--text-muted);">' + a.description.substring(0, 80) + '...</div>' +
+            '<div style="margin-top:6px;"><span style="font-size:10px;font-weight:700;letter-spacing:1px;color:' + color + ';background:' + color + '22;padding:2px 8px;border-radius:20px;">' + a.severity + '</span></div>' +
+        '</div>';
+    }).join('');
+}
+
+function markAllRead() {
+    var badge = document.getElementById('notif-badge');
+    if (badge) badge.style.display = 'none';
+    var dd = document.getElementById('notification-dropdown');
+    if (dd) dd.style.display = 'none';
+}
