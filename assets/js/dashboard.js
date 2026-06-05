@@ -8,6 +8,9 @@ function initDashboard() {
     renderAlertList();
     renderCharts();
     generateAutoInsight();
+    setTimeout(function() {
+        if (typeof renderCircleMap === 'function') renderCircleMap();
+    }, 200);
 }
 
 function generateAutoInsight() {

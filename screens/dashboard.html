@@ -105,3 +105,23 @@
                         </div>
                     </div>
 </div>
+
+<div class="section">
+    <div class="data-card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Circle Performance Map · India</div>
+                <div class="card-subtitle">22 Licensed Circles · Colour coded by ARPU · Click any circle for KPIs</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="circleMapMetric('arpu')">ARPU</button>
+                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="circleMapMetric('churn')">Churn</button>
+                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="circleMapMetric('revenue')">Revenue</button>
+            </div>
+        </div>
+        <div class="card-body" style="display:flex;gap:24px;align-items:flex-start;">
+            <div id="india-circle-map" style="flex:1;min-width:0;"></div>
+            <div id="circle-detail-panel" style="width:220px;flex-shrink:0;"></div>
+        </div>
+    </div>
+</div>
