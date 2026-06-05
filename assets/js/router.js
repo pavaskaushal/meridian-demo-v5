@@ -1,19 +1,18 @@
 /* ============================================================
-   MERIDIAN V2 · ROUTER
-   Navigation between screens
+   MERIDIAN V3 · ROUTER
+   Dynamic screen loading via fetch()
    ============================================================ */
 
+var SCREEN_CACHE = {};
+var CURRENT_SCREEN = null;
+
 function showScreen(screenId, navEl) {
-    document.querySelectorAll('.screen').forEach(function(s) {
-        s.style.display = 'none';
-    });
+    if (CURRENT_SCREEN === screenId) return;
+
     document.querySelectorAll('.nav-item').forEach(function(n) {
         n.classList.remove('active');
     });
-
-    var screen = document.getElementById('screen-' + screenId);
-    if (screen) screen.style.display = 'block';
-    if (navEl)  navEl.classList.add('active');
+    if (navEl) navEl.classList.add('active');
 
     var titles = {
         dashboard:  ['CFO Command Board',   'Real-time financial intelligence · Apex Telecom'],
@@ -29,9 +28,50 @@ function showScreen(screenId, navEl) {
         document.getElementById('topbar-subtitle').textContent = titles[screenId][1];
     }
 
-    if (screenId === 'rafm')       initRafm();
-    if (screenId === 'scenario')   initScenario();
-    if (screenId === 'regulatory') initRegulatory();
-    if (screenId === 'connectors') initConnectors();
-    if (screenId === 'issues')     initIssues();
+    loadScreen(screenId, function() {
+        if (screenId === 'dashboard')   initDashboard();
+        if (screenId === 'rafm')        initRafm();
+        if (screenId === 'scenario')    initScenario();
+        if (screenId === 'regulatory')  initRegulatory();
+        if (screenId === 'connectors')  initConnectors();
+        if (screenId === 'issues')      initIssues();
+        CURRENT_SCREEN = screenId;
+    });
+}
+
+function loadScreen(screenId, callback) {
+    var container = document.getElementById('screen-container');
+
+    // Show loading spinner
+    container.innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:center;height:200px;gap:12px;">' +
+            '<div class="loading-spinner"></div>' +
+            '<span style="color:var(--text-muted);font-size:13px;">Loading...</span>' +
+        '</div>';
+
+    // Use cache if available
+    if (SCREEN_CACHE[screenId]) {
+        container.innerHTML = SCREEN_CACHE[screenId];
+        if (callback) callback();
+        return;
+    }
+
+    // Fetch screen HTML
+    fetch('screens/' + screenId + '.html')
+        .then(function(r) {
+            if (!r.ok) throw new Error('Screen not found: ' + screenId);
+            return r.text();
+        })
+        .then(function(html) {
+            SCREEN_CACHE[screenId] = html;
+            container.innerHTML    = html;
+            if (callback) callback();
+        })
+        .catch(function(err) {
+            container.innerHTML =
+                '<div style="padding:40px;text-align:center;color:var(--text-muted);">' +
+                    '<div style="font-size:14px;margin-bottom:8px;">Failed to load screen</div>' +
+                    '<div style="font-size:12px;">' + err.message + '</div>' +
+                '</div>';
+        });
 }

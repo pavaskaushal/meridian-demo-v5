@@ -1,0 +1,77 @@
+<div class="section">
+                    <div class="section-header">
+                        <div class="section-title">AI Scenario Studio · What-If Modelling</div>
+                        <div class="section-subtitle">Adjust parameters and see P&L impact in real time</div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="grid-2">
+                        <div class="data-card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Scenario Inputs</div>
+                                    <div class="card-subtitle">Drag sliders to model P&L impact</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="slider-container"></div>
+                                <div style="margin-top:24px;padding:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);">
+                                    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);margin-bottom:12px;text-transform:uppercase;">Modelled P&L Impact</div>
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                                        <div>
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">SCENARIO REVENUE</div>
+                                            <div id="scenario-revenue" style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--text-primary);">₹3,420 Cr</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">REVENUE IMPACT</div>
+                                            <div id="revenue-impact" style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--positive);">₹0 Cr</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">SCENARIO EBITDA</div>
+                                            <div id="scenario-ebitda" style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--text-primary);">₹1,183 Cr</div>
+                                        </div>
+                                        <div>
+                                            <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">EBITDA MARGIN</div>
+                                            <div id="scenario-margin" style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:var(--positive);">34.6%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-card">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">P&L Waterfall</div>
+                                    <div class="card-subtitle">Impact breakdown by driver</div>
+                                </div>
+                            </div>
+                            <div class="card-body" style="height:420px;position:relative;">
+                                <canvas id="waterfall-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <div class="data-card">
+                        <div class="card-header">
+                            <div>
+                                <div class="card-title">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#00B8F5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;margin-right:2px;position:relative;top:1px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                                    AI Scenario Analysis
+                                </div>
+                                <div class="card-subtitle">Describe a scenario and get instant P&L analysis</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div style="display:flex;gap:12px;margin-bottom:16px;">
+                                <input type="text" id="scenario-query" placeholder="e.g. What if Jio cuts ARPU by 15% and we match their price?"
+                                    style="flex:1;background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;color:var(--text-primary);"
+                                    onkeydown="if(event.key==='Enter') handleScenarioQuery()"
+                                    onfocus="this.style.borderColor='var(--kpmg-cyan)'"
+                                    onblur="this.style.borderColor='var(--border-light)'">
+                                <button class="btn btn-primary" onclick="handleScenarioQuery()">Analyse</button>
+                            </div>
+                            <div id="scenario-response" style="display:none;"></div>
+                        </div>
+                    </div>
+</div>
