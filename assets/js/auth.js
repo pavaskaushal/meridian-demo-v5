@@ -33,7 +33,7 @@ function injectAuthScreens() {
 
         <!-- Meridian wordmark -->
         <div style="opacity:0;animation:fadeUp 0.6s ease 0.6s forwards;text-align:center;">
-            <div style="font-family:'DM Sans',sans-serif;font-size:48px;font-weight:700;color:#FFFFFF;letter-spacing:-1px;line-height:1;">Meridian</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:42px;font-weight:700;color:#FFFFFF;letter-spacing:3px;text-transform:uppercase;line-height:1;">Meridian</div>
             <div style="font-family:'DM Sans',sans-serif;font-size:14px;font-style:italic;color:#00C0AE;margin-top:4px;letter-spacing:1px;">CFO Intelligence Platform</div>
         </div>
 
@@ -79,7 +79,7 @@ function injectAuthScreens() {
             <img src="assets/kpmg-white.svg" style="height:22px;width:auto;margin-bottom:20px;">
 
             <!-- Title -->
-            <div style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:#FFFFFF;margin-bottom:4px;">Meridian</div>
+            <div style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:#FFFFFF;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">Meridian</div>
             <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#8A9BB0;margin-bottom:32px;font-style:italic;">Secure Access</div>
 
             <!-- PIN dots -->
