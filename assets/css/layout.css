@@ -54,11 +54,41 @@
   flex-direction: column;
   height: 100vh;
   overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
   z-index: 100;
   background-color: var(--bg-sidebar);
   border-right: 1px solid var(--sidebar-border);
+  /* Smooth width transition for collapse/expand */
+  transition: width var(--transition-mid);
 }
+
+/* ── COLLAPSED SIDEBAR ─────────────────────────────────────
+   Icon-only mode. Recovers 184px of horizontal space.
+   Applied by JS (.collapsed class) or auto on narrow screens.
+*/
+.sidebar.collapsed {
+  width: var(--sidebar-width-collapsed);
+}
+.sidebar.collapsed .brand-mark,
+.sidebar.collapsed .sidebar-footer { display: none; }
+.sidebar.collapsed .nav-label      { display: none; }
+.sidebar.collapsed .collapse-text  { display: none; }
+.sidebar.collapsed .sidebar-nav {
+  padding: var(--space-md) var(--space-xs);
+}
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 10px;
+}
+.sidebar.collapsed .sidebar-collapse-btn {
+  justify-content: center;
+  margin: var(--space-xs) auto;
+  padding: var(--space-sm);
+  width: 36px;
+  border-radius: var(--radius-sm);
+}
+.sidebar.collapsed .collapse-arrow { transform: rotate(180deg); }
 
 
 /* ── SIDEBAR HEADER ────────────────────────────────────────
@@ -296,4 +326,96 @@
   padding: var(--space-xl);
   min-height: 0;
   height: 0;
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD V5 — 3-ZONE LAYOUT
+   ══════════════════════════════════════════════════════════ */
+
+/* Zone 1 — Morning Brief strip */
+.morning-brief {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+/* Zone 2 — KPI Explorer (left) + Watch Panel (right) */
+.dashboard-body {
+  display: flex;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+  align-items: flex-start;
+}
+
+.kpi-explorer {
+  flex: 1;
+  min-width: 0;  /* prevents flex child from overflowing */
+}
+
+.watch-panel {
+  width: 290px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  position: sticky;
+  top: 0;
+}
+
+/* Zone 3 — Visual Intelligence (charts + map) */
+.viz-row {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 1600px — slightly tighter, 4-col KPI grid ────────────── */
+@media (max-width: 1600px) {
+  .grid-kpi { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ── 1400px — auto-collapse sidebar ───────────────────────── */
+@media (max-width: 1400px) {
+  .sidebar:not(.force-open) {
+    width: var(--sidebar-width-collapsed);
+  }
+  .sidebar:not(.force-open) .brand-mark,
+  .sidebar:not(.force-open) .sidebar-footer { display: none; }
+  .sidebar:not(.force-open) .nav-label      { display: none; }
+  .sidebar:not(.force-open) .collapse-text  { display: none; }
+  .sidebar:not(.force-open) .sidebar-nav    { padding: var(--space-md) var(--space-xs); }
+  .sidebar:not(.force-open) .nav-item       { justify-content: center; padding: 10px; }
+  .sidebar:not(.force-open) .sidebar-collapse-btn {
+    justify-content: center; margin: var(--space-xs) auto;
+    padding: var(--space-sm); width: 36px;
+  }
+  .sidebar:not(.force-open) .collapse-arrow { transform: rotate(180deg); }
+  .watch-panel { width: 260px; }
+}
+
+/* ── 1300px — hide less-critical topbar elements ──────────── */
+@media (max-width: 1300px) {
+  .operator-tag      { display: none; }
+  .watch-panel       { width: 240px; }
+  .morning-brief     { grid-template-columns: repeat(5, 1fr); }
+  .grid-kpi          { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ── 1200px — stack dashboard body, single-col viz ────────── */
+@media (max-width: 1200px) {
+  .dashboard-body    { flex-direction: column; }
+  .watch-panel       { width: 100%; position: static; }
+  .viz-row           { grid-template-columns: 1fr; }
+  .morning-brief     { grid-template-columns: repeat(3, 1fr); }
+  .grid-kpi          { grid-template-columns: repeat(3, 1fr); }
+  .grid-2-1          { grid-template-columns: 1fr; }
+  .grid-2            { grid-template-columns: 1fr; }
 }

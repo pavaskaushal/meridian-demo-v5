@@ -1,147 +1,153 @@
-<div class="section">
-    <div class="section-header">
-        <div class="section-title">CFO Command Board · Apex Telecom</div>
-        <div class="section-subtitle">80 KPIs · 8 Business Lines · 10 Source Systems · Q1 FY26</div>
+<!-- ============================================================
+     MERIDIAN V5 · CFO COMMAND BOARD
+     3-Zone Layout:
+       Zone 1 — Morning Brief (5 headline KPIs)
+       Zone 2 — KPI Explorer (left) + Watch Panel (right)
+       Zone 3 — Visual Intelligence (ARPU chart + Circle map)
+     ============================================================ -->
+
+<!-- ZONE 1 · MORNING BRIEF ─────────────────────────────────────
+     5 always-visible headline numbers. No tab switching needed.
+     Rendered by renderMorningBrief() in dashboard.js
+-->
+<div class="morning-brief" id="morning-brief">
+    <!-- Populated by JS -->
+</div>
+
+<!-- ZONE 2 · KPI EXPLORER + WATCH PANEL ────────────────────────
+     Left: tabbed KPI grid with sparklines
+     Right: sticky panel — alerts, AI insight, Ask Meridian
+-->
+<div class="dashboard-body">
+
+    <!-- LEFT: KPI Explorer -->
+    <div class="kpi-explorer">
+        <div id="kpi-tab-bar" class="kpi-tab-bar">
+            <button class="kpi-tab active" onclick="switchKPITab('finance')"     data-tab="finance">₹ Finance</button>
+            <button class="kpi-tab"        onclick="switchKPITab('commercial')"  data-tab="commercial">📈 Commercial</button>
+            <button class="kpi-tab"        onclick="switchKPITab('network')"     data-tab="network">📡 Network</button>
+            <button class="kpi-tab"        onclick="switchKPITab('rafm')"        data-tab="rafm">🛡 RAFM</button>
+            <button class="kpi-tab"        onclick="switchKPITab('hr')"          data-tab="hr">👥 HR</button>
+            <button class="kpi-tab"        onclick="switchKPITab('procurement')" data-tab="procurement">📦 Procurement</button>
+            <button class="kpi-tab"        onclick="switchKPITab('regulatory')"  data-tab="regulatory">⚖ Regulatory</button>
+            <button class="kpi-tab"        onclick="switchKPITab('cx')"          data-tab="cx">⭐ Customer</button>
+            <button class="kpi-tab"        onclick="switchKPITab('favourites')"  data-tab="favourites">★ Favourites</button>
+        </div>
+        <div id="kpi-tab-subtitle" class="kpi-tab-subtitle">Finance &amp; Treasury · SAP ERP · Oracle Financials</div>
+        <div class="grid-kpi" id="kpi-grid"></div>
     </div>
-</div>
 
-<div class="section">
-    <div id="kpi-tab-bar" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px;">
-        <button class="kpi-tab active" onclick="switchKPITab('finance')"    data-tab="finance">₹ Finance</button>
-        <button class="kpi-tab"        onclick="switchKPITab('commercial')" data-tab="commercial">📈 Commercial</button>
-        <button class="kpi-tab"        onclick="switchKPITab('network')"    data-tab="network">📡 Network</button>
-        <button class="kpi-tab"        onclick="switchKPITab('rafm')"       data-tab="rafm">🛡 RAFM</button>
-        <button class="kpi-tab"        onclick="switchKPITab('hr')"         data-tab="hr">👥 HR</button>
-        <button class="kpi-tab"        onclick="switchKPITab('procurement')" data-tab="procurement">📦 Procurement</button>
-        <button class="kpi-tab"        onclick="switchKPITab('regulatory')" data-tab="regulatory">⚖ Regulatory</button>
-        <button class="kpi-tab"        onclick="switchKPITab('cx')"         data-tab="cx">⭐ Customer</button>
-        <button class="kpi-tab"        onclick="switchKPITab('favourites')" data-tab="favourites">★ Favourites</button>
+    <!-- RIGHT: Watch Panel -->
+    <div class="watch-panel">
+
+        <!-- Active Alerts -->
+        <div class="watch-section">
+            <div class="watch-section-header">
+                <span class="watch-section-title">Active Alerts</span>
+                <span class="badge badge-critical" id="watch-alert-badge">2 CRITICAL</span>
+            </div>
+            <div id="watch-alerts"></div>
+            <div class="watch-section-footer">
+                <span onclick="showScreen('rafm', document.querySelector('[data-screen=rafm]'))"
+                    style="cursor:pointer;font-size:11px;color:var(--kpmg-cyan);font-weight:600;">
+                    View all in RAFM →
+                </span>
+            </div>
+        </div>
+
+        <!-- AI Intelligence -->
+        <div class="watch-section">
+            <div class="watch-section-header">
+                <span class="watch-section-title">AI Intelligence</span>
+                <div style="display:flex;align-items:center;gap:5px;">
+                    <div style="width:5px;height:5px;border-radius:50%;background:var(--kpmg-cyan);animation:livePulse 1.5s ease-in-out infinite alternate;"></div>
+                    <span style="font-size:9px;color:var(--kpmg-cyan);font-weight:700;letter-spacing:1px;">LIVE</span>
+                </div>
+            </div>
+            <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--kpmg-cyan);margin-bottom:8px;">
+                <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);text-transform:uppercase;margin-bottom:5px;">Top Risk</div>
+                <div id="watch-insight-risk" style="font-size:12px;color:var(--text-secondary);line-height:1.5;"></div>
+            </div>
+            <div style="padding:10px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--kpmg-blue);">
+                <div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-blue);text-transform:uppercase;margin-bottom:5px;">Top Opportunity</div>
+                <div id="watch-insight-arpu" style="font-size:12px;color:var(--text-secondary);line-height:1.5;"></div>
+            </div>
+        </div>
+
+        <!-- Ask Meridian (compact right-rail version) -->
+        <div class="watch-section">
+            <div class="watch-section-header">
+                <span class="watch-section-title">Ask Meridian</span>
+                <span style="font-size:9px;font-weight:700;letter-spacing:1px;color:var(--kpmg-purple);background:rgba(114,19,234,0.12);border:1px solid rgba(114,19,234,0.25);border-radius:4px;padding:2px 7px;">AI</span>
+            </div>
+            <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <input type="text" id="ai-query-input"
+                    placeholder="Ask about Apex Telecom..."
+                    style="flex:1;background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:7px 10px;font-size:12px;color:var(--text-primary);min-width:0;"
+                    onkeydown="if(event.key==='Enter') handleQuery()"
+                    onfocus="this.style.borderColor='var(--kpmg-cyan)'"
+                    onblur="this.style.borderColor='var(--border-light)'">
+                <button class="btn btn-primary" onclick="handleQuery()"
+                    style="padding:7px 12px;font-size:11px;white-space:nowrap;flex-shrink:0;">Ask</button>
+            </div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;">
+                <button class="btn btn-secondary" style="font-size:10px;padding:3px 7px;" onclick="setQuery('What is our ARPU vs competitors?')">ARPU vs peers</button>
+                <button class="btn btn-secondary" style="font-size:10px;padding:3px 7px;" onclick="setQuery('Summarise the top revenue risks')">Revenue risks</button>
+                <button class="btn btn-secondary" style="font-size:10px;padding:3px 7px;" onclick="setQuery('What is the EBITDA forecast for Q1 FY26?')">EBITDA outlook</button>
+                <button class="btn btn-secondary" style="font-size:10px;padding:3px 7px;" onclick="setQuery('Tell me about our 5G performance')">5G performance</button>
+            </div>
+            <div id="ai-response" style="display:none;max-height:280px;overflow-y:auto;"></div>
+        </div>
+
+    </div><!-- end .watch-panel -->
+</div><!-- end .dashboard-body -->
+
+
+<!-- ZONE 3 · VISUAL INTELLIGENCE ───────────────────────────────
+     ARPU trend chart (with competitor toggle) + Circle map
+-->
+<div class="viz-row">
+
+    <!-- ARPU Chart + Competitor toggle -->
+    <div class="data-card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">ARPU Trend — 15 Month View</div>
+                <div class="card-subtitle" id="arpu-chart-subtitle">Historical Jul'24–Jun'25 · AI Forecast Jul–Sep'25</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <div style="display:flex;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+                    <button id="arpu-view-trend" onclick="toggleARPUView('trend')"
+                        style="font-size:10px;padding:4px 10px;background:var(--kpmg-cyan);color:#0A0F1E;border:none;cursor:pointer;font-weight:700;transition:all 0.15s;">Trend</button>
+                    <button id="arpu-view-comp" onclick="toggleARPUView('competitors')"
+                        style="font-size:10px;padding:4px 10px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;transition:all 0.15s;">vs Peers</button>
+                </div>
+                <div class="badge badge-live">AI FORECAST</div>
+            </div>
+        </div>
+        <div class="card-body" style="height:220px;position:relative;">
+            <canvas id="arpu-chart"></canvas>
+            <canvas id="competitor-chart" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
+        </div>
     </div>
-    <div id="kpi-tab-subtitle" style="font-size:11px;color:var(--text-muted);margin-bottom:16px;padding-left:2px;">Finance & Treasury · SAP ERP · Oracle Financials</div>
-</div>
 
-<div class="section">
-    <div class="grid-kpi" id="kpi-grid"></div>
-</div>
-                    <div class="grid-kpi" id="kpi-grid"></div>
-                </div>
-                <div class="section">
-                    <div class="grid-2-1">
-                        <div class="data-card">
-                            <div class="card-header">
-                                <div>
-                                    <div class="card-title">ARPU Trend — 15 Month View</div>
-                                    <div class="card-subtitle">Historical Jul'24–Jun'25 · AI Forecast Jul–Sep'25</div>
-                                </div>
-                                <div class="badge badge-live">AI FORECAST ACTIVE</div>
-                            </div>
-                            <div class="card-body" style="height:280px;position:relative;">
-                                <canvas id="arpu-chart"></canvas>
-                            </div>
-                        </div>
-                        <div class="data-card">
-                            <div class="card-header">
-                                <div>
-                                    <div class="card-title">Competitor ARPU Benchmark</div>
-                                    <div class="card-subtitle">Indian telecom operators · ₹/month</div>
-                                </div>
-                            </div>
-                            <div class="card-body" style="height:280px;position:relative;">
-                                <canvas id="competitor-chart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="grid-2-1">
-                        <div class="data-card">
-                            <div class="card-header">
-                                <div>
-                                    <div class="card-title">
-                                        ⚠ GRCS Alert Queue
-                                    </div>
-                                    <div class="card-subtitle">Live anomaly detection · Click any alert for detail</div>
-                                </div>
-                                <div class="badge badge-critical">2 CRITICAL</div>
-                            </div>
-                            <div id="alert-list"></div>
-                        </div>
-                        <div class="data-card">
-                            <div class="card-header">
-                                <div>
-                                    <div class="card-title">
-                                        ★ AI Insight
-                                    </div>
-                                    <div class="card-subtitle">Meridian intelligence summary</div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--kpmg-cyan);margin-bottom:16px;">
-                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                                        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);text-transform:uppercase;">Top Risk · AI Generated</div>
-                                        <div style="width:6px;height:6px;border-radius:50%;background:var(--kpmg-cyan);animation:livePulse 1.5s ease-in-out infinite alternate;"></div>
-                                    </div>
-                                    <div id="auto-insight-risk" style="font-size:13px;color:var(--text-secondary);line-height:1.6;">Six active RAFM alerts represent <strong style="color:var(--text-primary);">₹9.32 Cr</strong> in combined revenue exposure. Priority: ₹4.8 Cr interconnect discrepancy with Jio and ₹1.92 Cr split-PO fraud at CloudHost Infra.</div>
-                                </div>
-                                <div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid var(--kpmg-blue);">
-                                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                                        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-blue);text-transform:uppercase;">Top Opportunity · AI Generated</div>
-                                        <div style="width:6px;height:6px;border-radius:50%;background:var(--kpmg-blue);animation:livePulse 1.5s ease-in-out infinite alternate;"></div>
-                                    </div>
-                                    <div id="auto-insight-arpu" style="font-size:13px;color:var(--text-secondary);line-height:1.6;">ARPU grown <strong style="color:var(--text-primary);">₹11/month over 12 months</strong> — 6.5% improvement. 5G subscribers show 2.4× higher ARPU (₹312). AI forecast: <strong style="color:var(--text-primary);">₹185/month by Sep 2025</strong>.</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="data-card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">
-                                    Ask Meridian
-                                </div>
-                                <div class="card-subtitle">Ask any question about Apex Telecom in plain English</div>
-                            </div>
-                            <div class="badge badge-medium">AI POWERED</div>
-                        </div>
-                        <div class="card-body">
-                            <div style="display:flex;gap:12px;margin-bottom:16px;">
-                                <input type="text" id="ai-query-input" placeholder="e.g. What is driving churn? or Compare our ARPU vs Airtel"
-                                    style="flex:1;background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;color:var(--text-primary);"
-                                    onkeydown="if(event.key==='Enter') handleQuery()"
-                                    onfocus="this.style.borderColor='var(--kpmg-cyan)'"
-                                    onblur="this.style.borderColor='var(--border-light)'">
-                                <button class="btn btn-primary" onclick="handleQuery()">Ask Meridian</button>
-                            </div>
-                            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
-                                <span style="font-size:11px;color:var(--text-muted);align-self:center;">Try:</span>
-                                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="setQuery('What is our ARPU vs competitors?')">ARPU vs competitors</button>
-                                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="setQuery('Summarise the top revenue risks')">Top revenue risks</button>
-                                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="setQuery('What is the EBITDA forecast for Q1 FY26?')">EBITDA forecast</button>
-                                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="setQuery('Tell me about our 5G performance')">5G performance</button>
-                            </div>
-                            <div id="ai-response" style="display:none;"></div>
-                        </div>
-                    </div>
-</div>
-
-<div class="section">
+    <!-- Circle Performance Map -->
     <div class="data-card">
         <div class="card-header">
             <div>
                 <div class="card-title">Circle Performance Map · India</div>
-                <div class="card-subtitle">22 Licensed Circles · Colour coded by ARPU · Click any circle for KPIs</div>
+                <div class="card-subtitle">22 Licensed Circles · Click any circle for KPIs</div>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="circleMapMetric('arpu')">ARPU</button>
-                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="circleMapMetric('churn')">Churn</button>
-                <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;" onclick="circleMapMetric('revenue')">Revenue</button>
+            <div style="display:flex;gap:5px;align-items:center;">
+                <button class="btn btn-secondary" style="font-size:10px;padding:3px 8px;" onclick="circleMapMetric('arpu')">ARPU</button>
+                <button class="btn btn-secondary" style="font-size:10px;padding:3px 8px;" onclick="circleMapMetric('churn')">Churn</button>
+                <button class="btn btn-secondary" style="font-size:10px;padding:3px 8px;" onclick="circleMapMetric('revenue')">Revenue</button>
             </div>
         </div>
-        <div class="card-body" style="display:flex;gap:24px;align-items:flex-start;">
+        <div class="card-body" style="display:flex;gap:16px;align-items:flex-start;">
             <div id="india-circle-map" style="flex:1;min-width:0;"></div>
-            <div id="circle-detail-panel" style="width:220px;flex-shrink:0;"></div>
+            <div id="circle-detail-panel" style="width:170px;flex-shrink:0;"></div>
         </div>
     </div>
-</div>
+
+</div><!-- end .viz-row -->

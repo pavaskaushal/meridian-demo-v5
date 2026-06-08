@@ -102,6 +102,11 @@
                 <span class="nav-label">Issues & Requests</span>
             </div>
         </nav>
+        <!-- Collapse toggle -->
+        <div class="sidebar-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
+            <span class="collapse-arrow">‹</span>
+            <span class="collapse-text">Collapse</span>
+        </div>
         <div class="sidebar-footer">
             <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:4px;">
                 <img id="kpmg-logo" src="assets/kpmg-white.svg" style="height:20px;width:auto;" alt="KPMG">
@@ -138,6 +143,10 @@
                 <button class="btn btn-secondary" onclick="openWidgetEditor()" style="font-size:11px;padding:4px 12px;display:flex;align-items:center;gap:6px;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                     Customise
+                </button>
+                <button class="compact-toggle" onclick="toggleCompact()" title="Toggle compact layout">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+                    <span id="compact-label">Compact</span>
                 </button>
                 <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle">
                     <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -215,6 +224,9 @@
 <script>
 /* Startup */
 document.addEventListener('DOMContentLoaded', function() {
+    // Restore sidebar, compact, theme preferences
+    if (window.initLayoutPreferences) initLayoutPreferences();
+
     var ts = document.getElementById('topbar-timestamp');
     if (ts && window.getTimestamp) ts.textContent = getTimestamp();
 
