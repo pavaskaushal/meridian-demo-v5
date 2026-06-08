@@ -29,7 +29,8 @@
 
 .brand-mark .brand-sub {
   font-size: 11px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.55);
+  /* semi-transparent white — legible on navy sidebar */
   letter-spacing: 0.5px;
 }
 
@@ -88,26 +89,26 @@
   cursor: pointer;
   transition: background var(--transition-fast),
               color var(--transition-fast);
-  /* transition on two properties simultaneously */
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.65);
+  /* medium-opacity white — visible on navy, not competing with active */
   font-size: 13px;
   font-weight: 500;
   position: relative;
-  /* needed for the active indicator line */
   border-left: 2px solid transparent;
-  /* 2px transparent border always present
-     prevents text from jumping when active border appears */
+  /* always present — prevents layout shift when active state appears */
 }
 
 .nav-item:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+  background: var(--nav-hover);
+  /* white at 7% opacity — works on navy sidebar */
+  color: #FFFFFF;
 }
 
 .nav-item.active {
-  background: rgba(30, 73, 226, 0.12);
-  /* 12% opacity of --kpmg-blue */
-  color: var(--kpmg-cyan);
+  background: var(--nav-active-bg);
+  /* cyan tint on navy — clearly selected */
+  color: var(--nav-active-text);
+  /* --kpmg-sky (#ACEAFF) — high contrast on deep navy */
   border-left-color: var(--kpmg-cyan);
   font-weight: 600;
 }
@@ -129,12 +130,13 @@
 */
 .sidebar-footer-text {
   font-size: 10px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.45);
+  /* muted white — readable on navy */
   line-height: 1.6;
 }
 
 .sidebar-footer-text strong {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.70);
   font-weight: 600;
 }
 /* ══════════════════════════════════════════════════════════
@@ -321,7 +323,13 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
   overflow: hidden;
-  /* clips children to the card boundary */
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast);
+}
+
+.data-card:hover {
+  border-color: var(--border-light);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 /* ── CARD HEADER ────────────────────────────────────────────

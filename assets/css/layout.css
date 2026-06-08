@@ -56,8 +56,8 @@
   overflow-y: auto;
   position: relative;
   z-index: 100;
-  background-color: var(--bg-card);
-  border-right: 1px solid var(--border);
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--sidebar-border);
 }
 
 
@@ -72,8 +72,10 @@
 */
 .sidebar-header {
   padding: var(--space-lg) var(--space-md);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--sidebar-border);
   flex-shrink: 0;
+  /* Subtle gradient — deepens from the top for depth */
+  background: linear-gradient(180deg, rgba(0,51,141,0.25) 0%, transparent 100%);
 }
 
 
