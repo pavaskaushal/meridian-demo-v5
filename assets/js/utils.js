@@ -568,7 +568,8 @@ function handleSearch(query) {
     }).join('');
 
     // Event delegation on dropdown
-    dd.onclick = function(e) {
+    dd.onmousedown = function(e) {
+        e.preventDefault(); // Prevent input blur
         var item = e.target.closest('[data-search-idx]');
         if (!item) return;
         var idx = parseInt(item.getAttribute('data-search-idx'));
