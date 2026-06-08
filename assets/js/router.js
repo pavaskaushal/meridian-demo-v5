@@ -21,7 +21,8 @@ function showScreen(screenId, navEl) {
         regulatory: ['Regulatory Calendar',  'TRAI filing tracker · Auto-readiness scoring'],
         connectors: ['Connector Status',     'System health · Data source monitoring · Platform engines'],
         issues:        ['Issues & Requests',      'Maintenance requests · SLA tracking · KPMG GRCS Managed Services'],
-        benchmarking:  ['Industry Benchmarking',  'Apex Telecom vs TRAI benchmarks · Airtel · Jio · Vi · BSNL']
+        benchmarking:  ['Industry Benchmarking',  'Apex Telecom vs TRAI benchmarks · Airtel · Jio · Vi · BSNL'],
+        dcf:           ['DCF Valuation Studio',    'Monte Carlo simulation · 10,000 runs · Intrinsic value range']
     };
 
     if (titles[screenId]) {
@@ -37,6 +38,7 @@ function showScreen(screenId, navEl) {
         if (screenId === 'connectors')  initConnectors();
         if (screenId === 'issues')        initIssues();
         if (screenId === 'benchmarking')  initBenchmarking();
+        if (screenId === 'dcf')           initDCF();
         CURRENT_SCREEN = screenId;
     });
 }
