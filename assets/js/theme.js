@@ -11,10 +11,9 @@ function toggleTheme() {
     if (isLight) {
         label.textContent = 'DARK MODE';
         updateChartsTheme(true);
-        document.getElementById('kpmg-logo').src = 'assets/kpmg-blue.svg';
+        /* KPMG logo stays white — sidebar is always Deep Navy in both modes */
     } else {
         label.textContent = 'LIGHT MODE';
         updateChartsTheme(false);
-        document.getElementById('kpmg-logo').src = 'assets/kpmg-white.svg';
     }
 }
