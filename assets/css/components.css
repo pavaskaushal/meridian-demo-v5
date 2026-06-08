@@ -289,9 +289,9 @@
   font-weight: 600;
 }
 
-.kpi-delta.positive { color: var(--positive); }
-.kpi-delta.negative { color: var(--danger); }
-.kpi-delta.neutral  { color: var(--text-muted); }
+.kpi-delta.positive { color: #00C0AE; }
+.kpi-delta.negative { color: #FD349C; }
+.kpi-delta.neutral  { color: #8A9BB0; }
 
 .kpi-delta-label {
   font-size: 12px;

@@ -21,6 +21,30 @@
             animation: spin 0.8s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* KPI TABS */
+        .kpi-tab {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .kpi-tab:hover {
+            border-color: var(--kpmg-cyan);
+            color: var(--kpmg-cyan);
+        }
+        .kpi-tab.active {
+            background: var(--kpmg-cyan);
+            border-color: var(--kpmg-cyan);
+            color: #0A0F1E;
+            font-weight: 700;
+        }
     </style>
 
     <link rel="stylesheet" href="assets/css/variables.css">

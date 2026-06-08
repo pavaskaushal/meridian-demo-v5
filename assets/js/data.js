@@ -1,635 +1,1642 @@
-// DEV ONLY — remove before sharing publicly
-
 /* ============================================================
-   MERIDIAN · DATA
-   Expanded dataset for Apex Telecom demo
+   MERIDIAN V4 · MASTER DATA FILE
+   80 KPIs · 8 Business Lines · 8 Source Systems
+   Apex Telecom · CFO Intelligence Platform · FY2026
    ============================================================ */
 
-/* ══════════════════════════════════════════════════════════
-   1. OPERATOR PROFILE
-   ══════════════════════════════════════════════════════════ */
-
-const OPERATOR = {
-    name:          "Apex Telecom",
-    shortName:     "APEX",
-    hq:            "Mumbai",
-    circles:       22,
-    subscribers:   312,
-    currency:      "₹",
-    currencyUnit:  "Cr",
-    reportingDate: "June 2025",
-    fyEnd:         "March 2026",
-    founded:       1995,
-    employees:     48000,
-    spectrum:      "700MHz · 1800MHz · 2100MHz · 2300MHz · 3500MHz",
-    networkType:   "4G · 5G NSA · 5G SA (12 circles)",
-    marketShare:   "22.4%",
-    stockCode:     "APXTLCM.NSE"
+/* ── OPERATOR PROFILE ───────────────────────────────────── */
+var OPERATOR = {
+    name:        'Apex Telecom',
+    shortName:   'APEX',
+    hq:          'Mumbai',
+    circles:     22,
+    subscribers: 312,
+    founded:     2001,
+    listed:      'NSE · BSE',
+    marketCap:   '₹42,000 Cr',
+    employees:   48200,
+    tagline:     'Connecting India · Powering Growth'
 };
 
+/* ── SOURCE SYSTEMS ─────────────────────────────────────── */
+var SOURCE_SYSTEMS = {
+    SAP:        { name: 'SAP ERP',           color: '#1E49E2', icon: '🔵' },
+    ORACLE:     { name: 'Oracle Financials',  color: '#F59E0B', icon: '🟡' },
+    HUAWEI:     { name: 'Huawei OSS',         color: '#00C0AE', icon: '🟢' },
+    NOKIA:      { name: 'Nokia NetAct',       color: '#00B8F5', icon: '🔷' },
+    SIEBEL:     { name: 'Siebel CRM',         color: '#B497FF', icon: '🟣' },
+    SUBEX:      { name: 'Subex RAID',         color: '#FD349C', icon: '🔴' },
+    WORKDAY:    { name: 'Workday HCM',        color: '#63EBDA', icon: '🩵' },
+    ARIBA:      { name: 'SAP Ariba',          color: '#F97316', icon: '🟠' },
+    GRC:        { name: 'Internal GRC',       color: '#6B7280', icon: '⚫' },
+    GENESYS:    { name: 'Genesys CX',         color: '#8B5CF6', icon: '🔮' }
+};
 
-/* ══════════════════════════════════════════════════════════
-   2. KPI DATA
-   ══════════════════════════════════════════════════════════ */
+/* ── BUSINESS LINES ─────────────────────────────────────── */
+var BUSINESS_LINES = [
+    { id: 'finance',    label: 'Finance & Treasury',        color: '#1E49E2', icon: '₹' },
+    { id: 'commercial', label: 'Commercial & Revenue',      color: '#00C0AE', icon: '📈' },
+    { id: 'network',    label: 'Network & Technology',      color: '#00B8F5', icon: '📡' },
+    { id: 'rafm',       label: 'Revenue Assurance & Fraud', color: '#FD349C', icon: '🛡' },
+    { id: 'hr',         label: 'HR & Workforce',            color: '#63EBDA', icon: '👥' },
+    { id: 'procurement',label: 'Procurement & Vendor',      color: '#F97316', icon: '📦' },
+    { id: 'regulatory', label: 'Regulatory & Compliance',   color: '#6B7280', icon: '⚖' },
+    { id: 'cx',         label: 'Customer Experience',       color: '#8B5CF6', icon: '⭐' }
+];
 
-const KPI_DATA = [
+/* ── KPI MASTER DATA ────────────────────────────────────── */
+var KPI_MASTER = [
+
+    /* ════════════════════════════════════════════════════════
+       FINANCE & TREASURY — 10 KPIs
+    ════════════════════════════════════════════════════════ */
     {
-        id:          "arpu",
-        label:       "ARPU (Blended)",
-        value:       "₹181",
-        unit:        "/mo",
-        delta:       "+₹12",
-        deltaLabel:  "vs last year",
-        trend:       "up",
-        accentColor: "#00C0AE"
+        id: 'revenue', label: 'Total Revenue', businessLine: 'finance',
+        value: 3510, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '+8.4%', deltaQoQ: '+2.6%', deltaYoY: '+8.4%', trend: 'up',
+        target: 3600, targetFY: '₹14,200 Cr FY26',
+        pctToTarget: 97.5,
+        benchmark: 3890, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 5,
+        accentColor: '#1E49E2',
+        system: 'SAP', systemFull: 'SAP ERP · Revenue Accounting Module',
+        formula: 'Service Revenue + Roaming Revenue + Other Operating Revenue',
+        insight: 'Revenue grew 8.4% YoY driven by 5G ARPU uplift and postpaid additions. 2.5% gap to quarterly target.',
+        risk: 'Jio pricing pressure on prepaid segment may compress growth in Q2.',
+        opportunity: 'Enterprise segment underpenetrated — B2B revenue at 12% vs industry 18%.',
+        trend5Q: [3230, 3280, 3350, 3420, 3510],
+        tags: ['P&L', 'Top Line', 'Quarterly']
     },
     {
-        id:          "churn",
-        label:       "Monthly Churn",
-        value:       "1.42",
-        unit:        "%",
-        delta:       "-0.18%",
-        deltaLabel:  "vs last year",
-        trend:       "up",
-        accentColor: "#FD349C"
+        id: 'ebitda', label: 'EBITDA', businessLine: 'finance',
+        value: 1225, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '+9.1%', deltaQoQ: '+3.5%', deltaYoY: '+9.1%', trend: 'up',
+        target: 1260, targetFY: '₹4,900 Cr FY26',
+        pctToTarget: 97.2,
+        benchmark: 1408, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 5,
+        accentColor: '#1E49E2',
+        system: 'SAP', systemFull: 'SAP ERP · Controlling Module',
+        formula: 'Revenue − Operating Expenses (excl. D&A, Interest, Tax)',
+        insight: 'EBITDA margin expanded 20bps QoQ to 34.9%. Operational leverage from 5G network sharing driving cost efficiencies.',
+        risk: 'Spectrum auction costs in H2 FY26 may compress margin by 80–120bps.',
+        opportunity: 'Tower monetisation and energy optimisation could add ₹80–100 Cr annually.',
+        trend5Q: [1060, 1115, 1152, 1183, 1225],
+        tags: ['P&L', 'Profitability', 'Quarterly']
     },
     {
-        id:          "ebitda",
-        label:       "EBITDA Margin",
-        value:       "34.6",
-        unit:        "%",
-        delta:       "+2.1%",
-        deltaLabel:  "vs last year",
-        trend:       "up",
-        accentColor: "#76D2FF"
+        id: 'ebitda-margin', label: 'EBITDA Margin', businessLine: 'finance',
+        value: 34.9, unit: '%', period: 'Q1 FY26',
+        delta: '+1.6%', deltaQoQ: '+0.3%', deltaYoY: '+1.6%', trend: 'up',
+        target: 36.0, targetFY: '36% by Q4 FY26',
+        pctToTarget: 96.9,
+        benchmark: 36.2, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#1E49E2',
+        system: 'SAP', systemFull: 'SAP ERP · Controlling Module',
+        formula: 'EBITDA ÷ Total Revenue × 100',
+        insight: 'Margin at 34.9% — 130bps below Airtel and 310bps below Jio. Structural cost gap driven by higher energy spend.',
+        risk: 'Each 100bps margin miss = ₹140 Cr EBITDA impact annually.',
+        opportunity: 'Network sharing with 2 additional operators could close 150bps of gap by FY27.',
+        trend5Q: [33.3, 34.0, 34.4, 34.6, 34.9],
+        tags: ['P&L', 'Profitability', 'Margin']
     },
     {
-        id:          "spectrum",
-        label:       "Spectrum Coverage",
-        value:       "2.8",
-        unit:        "×",
-        delta:       "+0.3×",
-        deltaLabel:  "vs last year",
-        trend:       "up",
-        accentColor: "#B497FF"
+        id: 'fcf', label: 'Free Cash Flow', businessLine: 'finance',
+        value: 905, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '+24.3%', deltaQoQ: '+7.4%', deltaYoY: '+24.3%', trend: 'up',
+        target: 920, targetFY: '₹3,500 Cr FY26',
+        pctToTarget: 98.4,
+        benchmark: 1120, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'SAP', systemFull: 'SAP ERP · Treasury Module',
+        formula: 'EBITDA − Capex − Interest − Tax − Working Capital Changes',
+        insight: 'FCF at ₹905 Cr — strongest quarter ever. Capex discipline and EBITDA growth driving conversion ratio to 73.9%.',
+        risk: 'Deferred capex of ₹400 Cr in 5G rollout will impact FCF in Q2–Q3.',
+        opportunity: 'FCF yield of 8.6% vs Airtel 9.2% — gap closing rapidly.',
+        trend5Q: [640, 735, 792, 843, 905],
+        tags: ['Cash', 'Balance Sheet', 'Quarterly']
     },
     {
-        id:          "fcf",
-        label:       "Free Cash Flow",
-        value:       "₹2,340",
-        unit:        " Cr",
-        delta:       "+₹340 Cr",
-        deltaLabel:  "vs last year",
-        trend:       "up",
-        accentColor: "#63EBDA"
+        id: 'capex', label: 'Capital Expenditure', businessLine: 'finance',
+        value: 320, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '-23.8%', deltaQoQ: '-5.9%', deltaYoY: '-23.8%', trend: 'down',
+        target: 350, targetFY: '₹1,400 Cr FY26',
+        pctToTarget: 91.4,
+        benchmark: 680, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 2, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'SAP', systemFull: 'SAP ERP · Asset Accounting',
+        formula: 'Network Capex + IT Capex + Spectrum Amortisation',
+        insight: 'Capex intensity at 9.1% of revenue — well managed. 5G capex front-loaded in FY25 now yielding network benefits.',
+        risk: '5G rural rollout mandate from TRAI requires ₹800 Cr incremental spend by FY27.',
+        opportunity: 'Capex reduction freeing FCF for debt repayment and dividend.',
+        trend5Q: [420, 380, 360, 340, 320],
+        tags: ['Capex', 'Investment', 'Quarterly']
     },
     {
-        id:          "subscribers",
-        label:       "Active Subscribers",
-        value:       "312",
-        unit:        "M",
-        delta:       "+18M",
-        deltaLabel:  "vs last year",
-        trend:       "up",
-        accentColor: "#1E49E2"
+        id: 'net-debt', label: 'Net Debt', businessLine: 'finance',
+        value: 8500, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '-8.2%', deltaQoQ: '-2.1%', deltaYoY: '-8.2%', trend: 'down',
+        target: 7800, targetFY: '₹7,800 Cr by FY26',
+        pctToTarget: 91.8,
+        benchmark: 12400, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 2, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'SAP', systemFull: 'SAP ERP · Treasury & Debt Management',
+        formula: 'Total Debt − Cash & Cash Equivalents',
+        insight: 'Net Debt/EBITDA at 1.74× — below 2× threshold. Deleveraging on track with ₹700 Cr reduction this quarter.',
+        risk: 'Spectrum auction financing could add ₹2,000–3,000 Cr debt in H2 FY26.',
+        opportunity: 'Credit rating upgrade to AA possible if Net Debt/EBITDA reaches 1.5× by FY27.',
+        trend5Q: [10200, 9800, 9300, 8900, 8500],
+        tags: ['Balance Sheet', 'Leverage', 'Debt']
+    },
+    {
+        id: 'roce', label: 'Return on Capital Employed', businessLine: 'finance',
+        value: 14.2, unit: '%', period: 'Q1 FY26',
+        delta: '+2.1%', deltaQoQ: '+0.4%', deltaYoY: '+2.1%', trend: 'up',
+        target: 16.0, targetFY: '16% by FY26',
+        pctToTarget: 88.8,
+        benchmark: 17.4, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#1E49E2',
+        system: 'ORACLE', systemFull: 'Oracle Financials · Management Reporting',
+        formula: 'EBIT ÷ Capital Employed × 100',
+        insight: 'ROCE improving but 320bps below Airtel. Capital efficiency gap driven by legacy 3G assets still on books.',
+        risk: 'Underperforming 3G towers dragging ROCE — accelerate decommissioning.',
+        opportunity: 'Tower sale-leaseback could unlock ₹1,200 Cr and improve ROCE by 180bps.',
+        trend5Q: [11.4, 12.1, 12.8, 13.6, 14.2],
+        tags: ['Returns', 'Efficiency', 'Annual']
+    },
+    {
+        id: 'interest-coverage', label: 'Interest Coverage Ratio', businessLine: 'finance',
+        value: 4.8, unit: '×', period: 'Q1 FY26',
+        delta: '+0.6×', deltaQoQ: '+0.2×', deltaYoY: '+0.6×', trend: 'up',
+        target: 5.5, targetFY: '5.5× by FY26',
+        pctToTarget: 87.3,
+        benchmark: 6.2, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#00B8F5',
+        system: 'SAP', systemFull: 'SAP ERP · Treasury Module',
+        formula: 'EBIT ÷ Interest Expense',
+        insight: 'Coverage at 4.8× — comfortable but below Airtel. Debt reduction improving ratio steadily.',
+        risk: 'Rising interest rates could compress coverage if debt not reduced.',
+        opportunity: 'Refinancing ₹3,000 Cr of high-cost debt at current rates saves ₹90 Cr annually.',
+        trend5Q: [3.4, 3.8, 4.1, 4.5, 4.8],
+        tags: ['Debt', 'Solvency', 'Annual']
+    },
+    {
+        id: 'working-capital', label: 'Working Capital Days', businessLine: 'finance',
+        value: 28, unit: 'days', period: 'Q1 FY26',
+        delta: '-4 days', deltaQoQ: '-2 days', deltaYoY: '-4 days', trend: 'down',
+        target: 25, targetFY: '25 days by FY26',
+        pctToTarget: 88.0,
+        benchmark: 22, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'SAP', systemFull: 'SAP ERP · Working Capital Management',
+        formula: '(Receivables + Inventory − Payables) ÷ Daily Revenue',
+        insight: 'Working capital improving but 6 days above Airtel. Vendor payment terms renegotiation underway.',
+        risk: 'Receivables from enterprise segment up 18% — collection risk rising.',
+        opportunity: 'Supply chain financing programme could reduce working capital by 5–7 days.',
+        trend5Q: [38, 35, 32, 30, 28],
+        tags: ['Working Capital', 'Efficiency', 'Quarterly']
+    },
+    {
+        id: 'dividend-payout', label: 'Dividend Payout Ratio', businessLine: 'finance',
+        value: 32.4, unit: '%', period: 'FY25',
+        delta: '+4.2%', deltaQoQ: 'N/A', deltaYoY: '+4.2%', trend: 'up',
+        target: 35.0, targetFY: '35% by FY26',
+        pctToTarget: 92.6,
+        benchmark: 28.0, benchmarkLabel: 'Airtel FY25',
+        rank: 1, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'ORACLE', systemFull: 'Oracle Financials · Shareholder Management',
+        formula: 'Total Dividends Paid ÷ Net Profit × 100',
+        insight: 'Apex leads peers on dividend payout — strong shareholder return signal. FCF growth enables further increases.',
+        risk: 'Spectrum auction capex may constrain dividend in FY27.',
+        opportunity: 'Special dividend of ₹5/share possible if FCF target achieved.',
+        trend5Q: [22.1, 24.8, 27.2, 30.1, 32.4],
+        tags: ['Shareholder Returns', 'Dividend', 'Annual']
+    },
+
+    /* ════════════════════════════════════════════════════════
+       COMMERCIAL & REVENUE — 10 KPIs
+    ════════════════════════════════════════════════════════ */
+    {
+        id: 'arpu', label: 'Blended ARPU', businessLine: 'commercial',
+        value: 181, unit: '₹/mo', period: 'Q1 FY26',
+        delta: '+6.5%', deltaQoQ: '+1.7%', deltaYoY: '+6.5%', trend: 'up',
+        target: 190, targetFY: '₹190/mo by Q4 FY26',
+        pctToTarget: 95.3,
+        benchmark: 194, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 2, rankOf: 5,
+        accentColor: '#00C0AE',
+        system: 'SIEBEL', systemFull: 'Siebel CRM · Revenue Analytics',
+        formula: 'Total Service Revenue ÷ Average Subscribers ÷ 3 months',
+        insight: 'ARPU gap of ₹13 vs Airtel. 5G subscribers generating ₹312 ARPU — 2.4× blended. Accelerating 5G migration is #1 revenue lever.',
+        risk: 'Jio postpaid tariff undercutting premium segment. Risk of ARPU compression in H2.',
+        opportunity: 'Closing half the Airtel gap adds ₹240 Cr quarterly revenue.',
+        trend5Q: [162, 168, 172, 178, 181],
+        tags: ['Revenue', 'Subscribers', 'Quarterly']
+    },
+    {
+        id: 'churn', label: 'Monthly Churn Rate', businessLine: 'commercial',
+        value: 1.42, unit: '%', period: 'Q1 FY26',
+        delta: '-0.18%', deltaQoQ: '-0.04%', deltaYoY: '-0.18%', trend: 'down',
+        target: 1.20, targetFY: '1.20% by Q4 FY26',
+        pctToTarget: 84.5,
+        benchmark: 1.28, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 5,
+        accentColor: '#FD349C',
+        system: 'SIEBEL', systemFull: 'Siebel CRM · Churn Analytics',
+        formula: 'Churned Subscribers ÷ Opening Subscribers × 100',
+        insight: 'Each 0.1% churn reduction saves ₹180 Cr annualised revenue. Loyalty programme driving improvement.',
+        risk: 'Postpaid churn at 0.8% but prepaid at 1.9% — prepaid base at risk from Jio.',
+        opportunity: 'AI-driven churn prediction model could reduce churn by 0.2% saving ₹360 Cr.',
+        trend5Q: [1.78, 1.68, 1.58, 1.46, 1.42],
+        tags: ['Retention', 'Subscribers', 'Monthly']
+    },
+    {
+        id: 'subscribers', label: 'Total Subscribers', businessLine: 'commercial',
+        value: 312, unit: 'M', period: 'Q1 FY26',
+        delta: '+3.2%', deltaQoQ: '+0.8%', deltaYoY: '+3.2%', trend: 'up',
+        target: 320, targetFY: '320M by FY26',
+        pctToTarget: 97.5,
+        benchmark: 380, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 5,
+        accentColor: '#00C0AE',
+        system: 'SIEBEL', systemFull: 'Siebel CRM · Subscriber Management',
+        formula: 'Active SIMs generating revenue in last 90 days',
+        insight: '312M subscribers — 3rd in India. Net adds of 2.4M this quarter. 5G subscribers at 48M (15.4% of base).',
+        risk: 'Market share at 22.4% — flat for 3 quarters. Risk of share loss to Jio in tier-2 cities.',
+        opportunity: 'Tier-3 and rural expansion could add 20M subscribers by FY27.',
+        trend5Q: [294, 298, 302, 309, 312],
+        tags: ['Subscribers', 'Market Share', 'Quarterly']
+    },
+    {
+        id: 'arpu-5g', label: '5G ARPU', businessLine: 'commercial',
+        value: 312, unit: '₹/mo', period: 'Q1 FY26',
+        delta: '+4.3%', deltaQoQ: '+1.2%', deltaYoY: '+4.3%', trend: 'up',
+        target: 320, targetFY: '₹320/mo by Q4 FY26',
+        pctToTarget: 97.5,
+        benchmark: 298, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 1, rankOf: 3,
+        accentColor: '#00C0AE',
+        system: 'SIEBEL', systemFull: 'Siebel CRM · 5G Analytics Module',
+        formula: 'Total 5G Service Revenue ÷ Active 5G Subscribers ÷ 3 months',
+        insight: 'Apex leads peers on 5G ARPU at ₹312. Premium 5G plans and enterprise IoT driving revenue density.',
+        risk: '5G subscriber base at 15.4% — below 20% needed for meaningful revenue impact.',
+        opportunity: 'Each 5M 5G migrations adds ₹65 Cr quarterly revenue at current ARPU.',
+        trend5Q: [280, 288, 296, 304, 312],
+        tags: ['5G', 'Revenue', 'Quarterly']
+    },
+    {
+        id: 'market-share', label: 'Market Share', businessLine: 'commercial',
+        value: 22.4, unit: '%', period: 'Q1 FY26',
+        delta: '+0.2%', deltaQoQ: '+0.1%', deltaYoY: '+0.2%', trend: 'up',
+        target: 24.0, targetFY: '24% by FY26',
+        pctToTarget: 93.3,
+        benchmark: 26.4, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 5,
+        accentColor: '#1E49E2',
+        system: 'SIEBEL', systemFull: 'Siebel CRM · Market Intelligence',
+        formula: 'Apex Subscribers ÷ Total Industry Subscribers × 100',
+        insight: 'Market share gains slow at +0.2% YoY. Jio at 34.5% dominates. Urban market saturating.',
+        risk: 'BSNL 4G rollout could erode rural share — 2.1M rural subscribers at risk.',
+        opportunity: 'Enterprise market share at 18% vs potential 25% — B2B the key growth lever.',
+        trend5Q: [21.8, 22.0, 22.1, 22.3, 22.4],
+        tags: ['Market Share', 'Competitive', 'Quarterly']
+    },
+    {
+        id: 'postpaid-mix', label: 'Postpaid Mix', businessLine: 'commercial',
+        value: 18.4, unit: '%', period: 'Q1 FY26',
+        delta: '+1.8%', deltaQoQ: '+0.4%', deltaYoY: '+1.8%', trend: 'up',
+        target: 22.0, targetFY: '22% by FY26',
+        pctToTarget: 83.6,
+        benchmark: 24.2, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#B497FF',
+        system: 'SIEBEL', systemFull: 'Siebel CRM · Segment Analytics',
+        formula: 'Postpaid Subscribers ÷ Total Subscribers × 100',
+        insight: 'Postpaid mix at 18.4% vs Airtel 24.2%. Each 1% mix shift = ₹85 Cr additional annual revenue at postpaid ARPU premium.',
+        risk: 'Postpaid churn of 0.8% means high-value customers leaving — retention investment needed.',
+        opportunity: 'Premium convergence bundles (mobile + broadband) driving 28% of new postpaid adds.',
+        trend5Q: [15.2, 16.1, 16.9, 17.8, 18.4],
+        tags: ['Postpaid', 'Mix', 'Quarterly']
+    },
+    {
+        id: 'data-revenue', label: 'Data Revenue Share', businessLine: 'commercial',
+        value: 58.4, unit: '%', period: 'Q1 FY26',
+        delta: '+4.2%', deltaQoQ: '+0.8%', deltaYoY: '+4.2%', trend: 'up',
+        target: 62.0, targetFY: '62% by FY26',
+        pctToTarget: 94.2,
+        benchmark: 64.1, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#00B8F5',
+        system: 'SIEBEL', systemFull: 'Siebel CRM · Revenue Mix Analytics',
+        formula: 'Data Revenue ÷ Total Service Revenue × 100',
+        insight: 'Data now 58.4% of revenue — voice declining at 8% YoY. 5G driving data ARPU uplift.',
+        risk: 'OTT players cannibalising voice revenue — 12% voice revenue decline expected FY26.',
+        opportunity: 'Enterprise data services at 22% margin premium vs consumer — accelerate B2B push.',
+        trend5Q: [50.2, 52.8, 54.9, 56.8, 58.4],
+        tags: ['Data', 'Revenue Mix', 'Quarterly']
+    },
+    {
+        id: 'nps', label: 'Net Promoter Score', businessLine: 'commercial',
+        value: 42, unit: '', period: 'Q1 FY26',
+        delta: '+6', deltaQoQ: '+2', deltaYoY: '+6', trend: 'up',
+        target: 50, targetFY: '50 by Q4 FY26',
+        pctToTarget: 84.0,
+        benchmark: 48, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#63EBDA',
+        system: 'GENESYS', systemFull: 'Genesys CX · Survey Analytics',
+        formula: '% Promoters − % Detractors (scale −100 to +100)',
+        insight: 'NPS at 42 — improving but 6 points below Airtel. Network quality and billing clarity key drivers.',
+        risk: 'NPS below 40 correlates with 40% higher churn probability.',
+        opportunity: 'Each 5-point NPS increase associated with 0.3% churn reduction historically.',
+        trend5Q: [28, 32, 36, 40, 42],
+        tags: ['Customer', 'Loyalty', 'Quarterly']
+    },
+    {
+        id: 'roaming-revenue', label: 'Roaming Revenue', businessLine: 'commercial',
+        value: 148, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '+18.4%', deltaQoQ: '+4.2%', deltaYoY: '+18.4%', trend: 'up',
+        target: 155, targetFY: '₹600 Cr FY26',
+        pctToTarget: 95.5,
+        benchmark: 210, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'SUBEX', systemFull: 'Subex RAID · Roaming Analytics',
+        formula: 'Inbound Roaming Revenue + Outbound Roaming Revenue',
+        insight: 'Roaming revenue up 18.4% on post-COVID travel recovery. International roaming pack attach rate at 34%.',
+        risk: 'TAP file leakage costing ₹1.2 Cr per quarter — RAFM intervention required.',
+        opportunity: 'Premium roaming packs at 42% margin vs 28% blended — upsell opportunity.',
+        trend5Q: [98, 108, 118, 132, 148],
+        tags: ['Roaming', 'Revenue', 'Quarterly']
+    },
+    {
+        id: 'b2b-revenue', label: 'Enterprise Revenue', businessLine: 'commercial',
+        value: 421, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '+22.4%', deltaQoQ: '+5.1%', deltaYoY: '+22.4%', trend: 'up',
+        target: 450, targetFY: '₹1,800 Cr FY26',
+        pctToTarget: 93.6,
+        benchmark: 680, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'SIEBEL', systemFull: 'Siebel CRM · Enterprise Sales Module',
+        formula: 'B2B Service Revenue + IoT Revenue + Cloud Revenue + Managed Services',
+        insight: 'Enterprise at 12% of revenue vs industry 18%. 5G private networks and IoT driving 40% of new enterprise wins.',
+        risk: 'Enterprise sales cycle 6–9 months — revenue visibility limited.',
+        opportunity: 'Government contracts worth ₹800 Cr in pipeline. Win rate at 38% — above industry 28%.',
+        trend5Q: [280, 310, 340, 376, 421],
+        tags: ['B2B', 'Enterprise', 'Quarterly']
+    },
+
+    /* ════════════════════════════════════════════════════════
+       NETWORK & TECHNOLOGY — 10 KPIs
+    ════════════════════════════════════════════════════════ */
+    {
+        id: 'network-uptime', label: 'Network Uptime', businessLine: 'network',
+        value: 99.94, unit: '%', period: 'Q1 FY26',
+        delta: '+0.02%', deltaQoQ: '+0.01%', deltaYoY: '+0.02%', trend: 'up',
+        target: 99.97, targetFY: '99.97% by Q4 FY26',
+        pctToTarget: 99.97,
+        benchmark: 99.96, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 2, rankOf: 5,
+        accentColor: '#00B8F5',
+        system: 'HUAWEI', systemFull: 'Huawei OSS · Network Performance Manager',
+        formula: '(Total Time − Downtime) ÷ Total Time × 100',
+        insight: '99.94% uptime = 5.3 hours downtime per year. Apex 2nd in industry behind Airtel. Each 0.01% improvement = 52 min less downtime.',
+        risk: 'Monsoon season historically causes 0.03% uptime degradation — mitigation plan needed.',
+        opportunity: 'AI-powered predictive maintenance reducing unplanned outages by 34% YoY.',
+        trend5Q: [99.88, 99.90, 99.91, 99.93, 99.94],
+        tags: ['Network', 'Quality', 'Monthly']
+    },
+    {
+        id: 'call-drop', label: 'Call Drop Rate', businessLine: 'network',
+        value: 1.42, unit: '%', period: 'Q1 FY26',
+        delta: '-0.38%', deltaQoQ: '-0.08%', deltaYoY: '-0.38%', trend: 'down',
+        target: 1.00, targetFY: '<1% by Q4 FY26',
+        pctToTarget: 70.4,
+        benchmark: 1.31, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 5,
+        accentColor: '#FD349C',
+        system: 'HUAWEI', systemFull: 'Huawei OSS · Call Quality Monitor',
+        formula: 'Dropped Calls ÷ Total Call Attempts × 100',
+        insight: 'Call drop at 1.42% — TRAI threshold is 2%. Apex above Airtel (1.31%) but gap closing. 850 high-drop sites identified for remediation.',
+        risk: 'High-traffic urban zones showing 2.1% drop rate — TRAI notice risk.',
+        opportunity: 'Antenna tilt optimisation on 850 sites could reduce drops by 0.3% saving ₹42 Cr in penalty risk.',
+        trend5Q: [1.92, 1.78, 1.64, 1.50, 1.42],
+        tags: ['Voice', 'Quality', 'Monthly']
+    },
+    {
+        id: 'data-speed', label: '4G Data Speed', businessLine: 'network',
+        value: 22.4, unit: 'Mbps', period: 'Q1 FY26',
+        delta: '+3.2%', deltaQoQ: '+0.8%', deltaYoY: '+3.2%', trend: 'up',
+        target: 25.0, targetFY: '25 Mbps by Q4 FY26',
+        pctToTarget: 89.6,
+        benchmark: 24.1, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 2, rankOf: 5,
+        accentColor: '#00B8F5',
+        system: 'HUAWEI', systemFull: 'Huawei OSS · Radio Performance Analytics',
+        formula: 'Average User Downlink Throughput (Mbps) across all 4G sites',
+        insight: '22.4 Mbps — 2nd in India. 1.7 Mbps gap to Airtel narrowing. 5G coexistence improving 4G offload.',
+        risk: 'Spectrum congestion in 1800 MHz band during peak hours reducing speed to 14 Mbps.',
+        opportunity: '2100 MHz refarming from 3G could add 4–6 Mbps to average speed by Q3.',
+        trend5Q: [19.8, 20.4, 21.1, 21.8, 22.4],
+        tags: ['4G', 'Speed', 'Monthly']
+    },
+    {
+        id: 'volte', label: 'VoLTE Penetration', businessLine: 'network',
+        value: 68.4, unit: '%', period: 'Q1 FY26',
+        delta: '+8.2%', deltaQoQ: '+2.1%', deltaYoY: '+8.2%', trend: 'up',
+        target: 80.0, targetFY: '80% by FY26',
+        pctToTarget: 85.5,
+        benchmark: 74.2, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 5,
+        accentColor: '#B497FF',
+        system: 'NOKIA', systemFull: 'Nokia NetAct · Voice Analytics',
+        formula: 'VoLTE Calls ÷ Total Voice Calls × 100',
+        insight: 'VoLTE at 68.4% — trailing Airtel by 5.8% and Jio (89.1%) by 20.7%. Legacy handset base slowing migration.',
+        risk: 'Low VoLTE means higher call drop rates and lower voice quality perception.',
+        opportunity: 'Handset subsidy programme for VoLTE-capable devices could accelerate by 8–10% in 2 quarters.',
+        trend5Q: [52.1, 56.8, 61.2, 65.4, 68.4],
+        tags: ['VoLTE', '4G', 'Monthly']
+    },
+    {
+        id: '5g-coverage', label: '5G Population Coverage', businessLine: 'network',
+        value: 42.8, unit: '%', period: 'Q1 FY26',
+        delta: '+12.4%', deltaQoQ: '+3.2%', deltaYoY: '+12.4%', trend: 'up',
+        target: 55.0, targetFY: '55% by FY26',
+        pctToTarget: 77.8,
+        benchmark: 58.4, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 3,
+        accentColor: '#00C0AE',
+        system: 'HUAWEI', systemFull: 'Huawei OSS · 5G Network Planner',
+        formula: 'Population in 5G coverage area ÷ Total India Population × 100',
+        insight: '42.8% 5G coverage — 15.6% behind Airtel. 28,400 5G sites live. Mid-band spectrum enabling better indoor coverage.',
+        risk: 'TRAI 5G coverage mandate of 60% by Dec 2026 requires acceleration.',
+        opportunity: '5G coverage expansion into tier-2 cities correlates with 24% higher ARPU in covered areas.',
+        trend5Q: [18.2, 24.6, 31.8, 38.4, 42.8],
+        tags: ['5G', 'Coverage', 'Monthly']
+    },
+    {
+        id: 'latency', label: 'Network Latency', businessLine: 'network',
+        value: 28, unit: 'ms', period: 'Q1 FY26',
+        delta: '-4ms', deltaQoQ: '-1ms', deltaYoY: '-4ms', trend: 'down',
+        target: 20, targetFY: '<20ms by FY26',
+        pctToTarget: 71.4,
+        benchmark: 24, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#00B8F5',
+        system: 'HUAWEI', systemFull: 'Huawei OSS · Core Network Analytics',
+        formula: 'Average Round Trip Time (RTT) across all active data sessions',
+        insight: 'Latency at 28ms — 4ms above Airtel. 5G mmWave sites achieving <5ms for enterprise customers.',
+        risk: 'High latency impacting enterprise IoT SLAs — 3 contracts at risk of penalty.',
+        opportunity: 'Edge computing deployment could reduce latency to <15ms for 60% of enterprise traffic.',
+        trend5Q: [38, 34, 32, 29, 28],
+        tags: ['Latency', '5G', 'Monthly']
+    },
+    {
+        id: 'bts-count', label: 'Active BTS Sites', businessLine: 'network',
+        value: 184200, unit: '', period: 'Q1 FY26',
+        delta: '+6.8%', deltaQoQ: '+1.4%', deltaYoY: '+6.8%', trend: 'up',
+        target: 200000, targetFY: '200,000 by FY26',
+        pctToTarget: 92.1,
+        benchmark: 226000, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#00B8F5',
+        system: 'HUAWEI', systemFull: 'Huawei OSS · Site Management',
+        formula: 'Count of active 2G + 3G + 4G + 5G base transceiver stations',
+        insight: '184,200 active sites including 28,400 5G. Site density 18% below Airtel — rural coverage gap.',
+        risk: 'Tower sharing agreement with Indus covers 68% of sites — renegotiation due Q3.',
+        opportunity: 'Small cell deployment in dense urban zones could add 12,000 virtual sites at 40% lower cost.',
+        trend5Q: [162400, 168800, 174200, 181400, 184200],
+        tags: ['Infrastructure', 'Network', 'Monthly']
+    },
+    {
+        id: 'fault-resolution', label: 'Fault Resolution Time', businessLine: 'network',
+        value: 3.8, unit: 'hrs', period: 'Q1 FY26',
+        delta: '-0.8hrs', deltaQoQ: '-0.2hrs', deltaYoY: '-0.8hrs', trend: 'down',
+        target: 2.5, targetFY: '<2.5 hrs by FY26',
+        pctToTarget: 65.8,
+        benchmark: 2.9, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'HUAWEI', systemFull: 'Huawei OSS · Fault Management System',
+        formula: 'Average time from fault detection to network restoration',
+        insight: 'Resolution time at 3.8 hrs — 0.9 hrs above Airtel. AI-based fault prediction reducing P1 incidents by 34%.',
+        risk: 'Critical sites (hospitals, airports) have 6.2 hr average resolution — SLA breach risk.',
+        opportunity: 'Drone-based inspection programme could reduce site visit time by 60%.',
+        trend5Q: [5.8, 5.2, 4.6, 4.0, 3.8],
+        tags: ['Operations', 'Quality', 'Monthly']
+    },
+    {
+        id: 'spectrum-efficiency', label: 'Spectrum Efficiency', businessLine: 'network',
+        value: 4.2, unit: 'bps/Hz', period: 'Q1 FY26',
+        delta: '+0.4', deltaQoQ: '+0.1', deltaYoY: '+0.4', trend: 'up',
+        target: 5.0, targetFY: '5.0 bps/Hz by FY26',
+        pctToTarget: 84.0,
+        benchmark: 4.8, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'NOKIA', systemFull: 'Nokia NetAct · Spectrum Analytics',
+        formula: 'Total Network Throughput ÷ Total Spectrum Bandwidth',
+        insight: 'Spectrum efficiency at 4.2 bps/Hz — 0.6 below Airtel. Massive MIMO deployment on 2,400 sites improving efficiency.',
+        risk: 'Spectrum crunch in top-10 cities — efficiency degrading to 3.1 bps/Hz in peak hours.',
+        opportunity: 'Dynamic spectrum sharing between 4G/5G could improve efficiency by 18%.',
+        trend5Q: [3.4, 3.6, 3.8, 4.0, 4.2],
+        tags: ['Spectrum', 'Efficiency', 'Monthly']
+    },
+    {
+        id: 'energy-cost', label: 'Energy Cost per Site', businessLine: 'network',
+        value: 48200, unit: '₹/mo', period: 'Q1 FY26',
+        delta: '-4.2%', deltaQoQ: '-1.1%', deltaYoY: '-4.2%', trend: 'down',
+        target: 42000, targetFY: '₹42,000/site by FY26',
+        pctToTarget: 87.2,
+        benchmark: 44800, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'HUAWEI', systemFull: 'Huawei OSS · Energy Management System',
+        formula: 'Total Network Energy Cost ÷ Active BTS Sites',
+        insight: 'Energy at ₹48,200/site — ₹3,400 above Airtel. Solar deployment on 18,400 sites saving ₹28 Cr quarterly.',
+        risk: 'Diesel dependency at 12% of sites — fuel cost volatility risk.',
+        opportunity: 'Full solar conversion roadmap saves ₹120 Cr annually and reduces carbon footprint 40%.',
+        trend5Q: [54800, 53200, 51400, 49600, 48200],
+        tags: ['Energy', 'Cost', 'Monthly']
+    },
+
+    /* ════════════════════════════════════════════════════════
+       REVENUE ASSURANCE & FRAUD — 10 KPIs
+    ════════════════════════════════════════════════════════ */
+    {
+        id: 'fraud-loss', label: 'Fraud & Leakage Loss', businessLine: 'rafm',
+        value: 9.32, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '-12.4%', deltaQoQ: '-3.1%', deltaYoY: '-12.4%', trend: 'down',
+        target: 7.0, targetFY: '<₹7 Cr by Q4 FY26',
+        pctToTarget: 75.1,
+        benchmark: 6.8, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 5,
+        accentColor: '#FD349C',
+        system: 'SUBEX', systemFull: 'Subex RAID · Fraud Management System',
+        formula: 'Total confirmed revenue leakage + fraud losses across all categories',
+        insight: '₹9.32 Cr active exposure across 6 alert categories. ₹4.8 Cr interconnect discrepancy is priority #1.',
+        risk: 'SIM box fraud in UP East growing 24% QoQ — organized syndicate suspected.',
+        opportunity: 'AI fraud detection model could reduce losses by 35% saving ₹3.2 Cr quarterly.',
+        trend5Q: [14.2, 12.8, 11.4, 10.1, 9.32],
+        tags: ['Fraud', 'Revenue Assurance', 'Monthly']
+    },
+    {
+        id: 'recovery-rate', label: 'Revenue Recovery Rate', businessLine: 'rafm',
+        value: 78.4, unit: '%', period: 'Q1 FY26',
+        delta: '+6.2%', deltaQoQ: '+1.8%', deltaYoY: '+6.2%', trend: 'up',
+        target: 88.0, targetFY: '88% by Q4 FY26',
+        pctToTarget: 89.1,
+        benchmark: 84.2, benchmarkLabel: 'Industry Best Practice',
+        rank: 3, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'SUBEX', systemFull: 'Subex RAID · Recovery Analytics',
+        formula: 'Revenue Recovered ÷ Total Identified Leakage × 100',
+        insight: 'Recovery at 78.4% — ₹7.3 Cr recovered this quarter. TAP file automation improved recovery by 12%.',
+        risk: 'Interconnect disputes with 3 operators pending — ₹4.8 Cr at risk.',
+        opportunity: 'Automated recovery workflows could push rate above 85% within 2 quarters.',
+        trend5Q: [62.1, 66.4, 70.8, 74.8, 78.4],
+        tags: ['Recovery', 'Revenue Assurance', 'Monthly']
+    },
+    {
+        id: 'open-alerts', label: 'Open RAFM Alerts', businessLine: 'rafm',
+        value: 6, unit: '', period: 'Q1 FY26',
+        delta: '-2', deltaQoQ: '-1', deltaYoY: '-2', trend: 'down',
+        target: 3, targetFY: '<3 by Q4 FY26',
+        pctToTarget: 50.0,
+        benchmark: 4, benchmarkLabel: 'Industry Average',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'SUBEX', systemFull: 'Subex RAID · Alert Management',
+        formula: 'Count of active revenue assurance alerts above ₹10L threshold',
+        insight: '6 open alerts — 2 CRITICAL (₹6.72 Cr combined), 3 HIGH, 1 MEDIUM. Age of oldest alert: 18 days.',
+        risk: '2 critical alerts unresolved >14 days — escalation to CFO required.',
+        opportunity: 'Alert auto-closure rate at 34% — AI triage could push to 60% reducing analyst load.',
+        trend5Q: [12, 10, 9, 7, 6],
+        tags: ['Alerts', 'RAFM', 'Daily']
+    },
+    {
+        id: 'billing-accuracy', label: 'Billing Accuracy Rate', businessLine: 'rafm',
+        value: 99.82, unit: '%', period: 'Q1 FY26',
+        delta: '+0.08%', deltaQoQ: '+0.02%', deltaYoY: '+0.08%', trend: 'up',
+        target: 99.95, targetFY: '99.95% by Q4 FY26',
+        pctToTarget: 99.87,
+        benchmark: 99.91, benchmarkLabel: 'Industry Best Practice',
+        rank: 3, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'SUBEX', systemFull: 'Subex RAID · Billing Assurance',
+        formula: 'Correctly billed events ÷ Total billable events × 100',
+        insight: '0.18% billing error rate = ₹6.3 Cr unbilled or overbilled per quarter. Each 0.01% improvement = ₹350 Cr revenue impact.',
+        risk: 'Postpaid bill shock complaints up 22% — overbilling risk to brand.',
+        opportunity: 'Real-time billing validation cuts error rate to <0.05% within 3 quarters.',
+        trend5Q: [99.62, 99.68, 99.74, 99.79, 99.82],
+        tags: ['Billing', 'Accuracy', 'Monthly']
+    },
+    {
+        id: 'interconnect-accuracy', label: 'Interconnect Settlement Accuracy', businessLine: 'rafm',
+        value: 96.8, unit: '%', period: 'Q1 FY26',
+        delta: '+1.4%', deltaQoQ: '+0.4%', deltaYoY: '+1.4%', trend: 'up',
+        target: 99.0, targetFY: '99% by Q4 FY26',
+        pctToTarget: 97.8,
+        benchmark: 98.2, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 5,
+        accentColor: '#FD349C',
+        system: 'SUBEX', systemFull: 'Subex RAID · Interconnect Management',
+        formula: 'Matched interconnect records ÷ Total interconnect records × 100',
+        insight: '3.2% mismatch rate = ₹4.8 Cr disputed with Jio alone. Manual reconciliation taking 18 days per cycle.',
+        risk: 'Jio disputing ₹4.8 Cr — arbitration risk if not resolved in 60 days.',
+        opportunity: 'Automated CDR matching reduces disputes by 80% and settlement cycle to 3 days.',
+        trend5Q: [93.2, 94.1, 95.2, 96.1, 96.8],
+        tags: ['Interconnect', 'Settlement', 'Monthly']
+    },
+    {
+        id: 'tap-success', label: 'TAP File Success Rate', businessLine: 'rafm',
+        value: 97.4, unit: '%', period: 'Q1 FY26',
+        delta: '+1.8%', deltaQoQ: '+0.4%', deltaYoY: '+1.8%', trend: 'up',
+        target: 99.5, targetFY: '99.5% by Q4 FY26',
+        pctToTarget: 97.9,
+        benchmark: 98.8, benchmarkLabel: 'GSMA Standard',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'SUBEX', systemFull: 'Subex RAID · Roaming Analytics',
+        formula: 'Successfully processed TAP files ÷ Total TAP files received × 100',
+        insight: '2.6% TAP failure rate = ₹1.2 Cr unbilled roaming per quarter. South India zone highest failure at 4.1%.',
+        risk: 'Failed TAP files from 3 international partners causing revenue gap.',
+        opportunity: 'Automated TAP reprocessing engine could recover ₹0.9 Cr per quarter.',
+        trend5Q: [93.8, 94.8, 95.8, 96.8, 97.4],
+        tags: ['Roaming', 'TAP', 'Monthly']
+    },
+    {
+        id: 'sim-box', label: 'SIM Box Incidents', businessLine: 'rafm',
+        value: 14, unit: '', period: 'Q1 FY26',
+        delta: '-4', deltaQoQ: '-1', deltaYoY: '-4', trend: 'down',
+        target: 5, targetFY: '<5 by Q4 FY26',
+        pctToTarget: 35.7,
+        benchmark: 8, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 5,
+        accentColor: '#FD349C',
+        system: 'SUBEX', systemFull: 'Subex RAID · Fraud Detection Engine',
+        formula: 'Count of confirmed SIM box fraud incidents per quarter',
+        insight: '14 SIM box incidents — above industry average of 8. UP East and Bihar circles most affected.',
+        risk: 'SIM box fraud bypassing ₹0.6 Cr ILD termination revenue per quarter.',
+        opportunity: 'AI-powered CLI analysis identifies 94% of SIM boxes within 48 hours.',
+        trend5Q: [28, 24, 20, 15, 14],
+        tags: ['Fraud', 'SIM Box', 'Monthly']
+    },
+    {
+        id: 'dispute-value', label: 'Revenue Dispute Value', businessLine: 'rafm',
+        value: 8.2, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '-18.4%', deltaQoQ: '-4.2%', deltaYoY: '-18.4%', trend: 'down',
+        target: 4.0, targetFY: '<₹4 Cr by Q4 FY26',
+        pctToTarget: 48.8,
+        benchmark: 5.4, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 5,
+        accentColor: '#FD349C',
+        system: 'SUBEX', systemFull: 'Subex RAID · Dispute Management',
+        formula: 'Total value of open revenue disputes with operators and vendors',
+        insight: '₹8.2 Cr in active disputes — ₹4.8 Cr with Jio (interconnect), ₹1.9 Cr with Huawei (SLA breach), ₹1.5 Cr others.',
+        risk: 'Jio dispute approaching 60-day escalation threshold — arbitration cost ₹0.4 Cr.',
+        opportunity: 'Dispute resolution SLA of 45 days achievable with dedicated team.',
+        trend5Q: [14.8, 12.4, 10.8, 9.2, 8.2],
+        tags: ['Disputes', 'RAFM', 'Monthly']
+    },
+    {
+        id: 'rafm-roi', label: 'RAFM Programme ROI', businessLine: 'rafm',
+        value: 4.2, unit: '×', period: 'Q1 FY26',
+        delta: '+0.6×', deltaQoQ: '+0.2×', deltaYoY: '+0.6×', trend: 'up',
+        target: 5.0, targetFY: '5× by Q4 FY26',
+        pctToTarget: 84.0,
+        benchmark: 4.8, benchmarkLabel: 'Industry Best Practice',
+        rank: 3, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'SUBEX', systemFull: 'Subex RAID · Programme Analytics',
+        formula: 'Revenue Protected & Recovered ÷ RAFM Programme Cost',
+        insight: '4.2× ROI — every ₹1 spent on RAFM returns ₹4.2 in protected revenue. KPMG benchmark is 4.5×.',
+        risk: 'Subex licence renewal Q3 — cost increase of 18% proposed.',
+        opportunity: 'Expanding RAFM to IoT billing could add ₹1.8 Cr recoveries annually.',
+        trend5Q: [2.8, 3.2, 3.6, 4.0, 4.2],
+        tags: ['ROI', 'Programme', 'Quarterly']
+    },
+    {
+        id: 'leakage-pct', label: 'Revenue Leakage %', businessLine: 'rafm',
+        value: 0.27, unit: '%', period: 'Q1 FY26',
+        delta: '-0.08%', deltaQoQ: '-0.02%', deltaYoY: '-0.08%', trend: 'down',
+        target: 0.15, targetFY: '<0.15% by Q4 FY26',
+        pctToTarget: 55.6,
+        benchmark: 0.20, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 5,
+        accentColor: '#F59E0B',
+        system: 'SUBEX', systemFull: 'Subex RAID · Leakage Analytics',
+        formula: 'Total Revenue Leakage ÷ Total Service Revenue × 100',
+        insight: '0.27% leakage on ₹3,510 Cr revenue = ₹9.5 Cr quarterly loss. Above industry average of 0.20%.',
+        risk: 'New 5G service bundles introducing billing complexity — leakage risk rising.',
+        opportunity: 'End-to-end revenue assurance automation could reduce to 0.12% within 4 quarters.',
+        trend5Q: [0.44, 0.39, 0.35, 0.30, 0.27],
+        tags: ['Leakage', 'Revenue Assurance', 'Monthly']
+    },
+
+    /* ════════════════════════════════════════════════════════
+       HR & WORKFORCE — 10 KPIs
+    ════════════════════════════════════════════════════════ */
+    {
+        id: 'headcount', label: 'Total Headcount', businessLine: 'hr',
+        value: 48200, unit: '', period: 'Q1 FY26',
+        delta: '-1.8%', deltaQoQ: '-0.4%', deltaYoY: '-1.8%', trend: 'down',
+        target: 46000, targetFY: '46,000 by FY26',
+        pctToTarget: 95.4,
+        benchmark: 52400, benchmarkLabel: 'Airtel FY25',
+        rank: 2, rankOf: 4,
+        accentColor: '#63EBDA',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Workforce Planning',
+        formula: 'Total permanent + contractual employees on payroll',
+        insight: '48,200 employees — lean vs Airtel 52,400. Revenue per employee at ₹72.8 Lakh vs Airtel ₹68.4 Lakh.',
+        risk: 'Network engineering talent shortage — 340 open positions in 5G team unfilled >90 days.',
+        opportunity: 'AI automation roadmap targets 8% headcount reduction by FY27 saving ₹240 Cr.',
+        trend5Q: [50400, 49800, 49200, 48600, 48200],
+        tags: ['Workforce', 'Headcount', 'Quarterly']
+    },
+    {
+        id: 'attrition', label: 'Annual Attrition Rate', businessLine: 'hr',
+        value: 14.2, unit: '%', period: 'FY25',
+        delta: '-2.4%', deltaQoQ: 'N/A', deltaYoY: '-2.4%', trend: 'down',
+        target: 12.0, targetFY: '12% by FY26',
+        pctToTarget: 84.5,
+        benchmark: 11.8, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#63EBDA',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Attrition Analytics',
+        formula: 'Employees who left ÷ Average Headcount × 100',
+        insight: '14.2% attrition = 6,845 employees replaced annually at ₹3.8 Lakh avg replacement cost = ₹260 Cr annual cost.',
+        risk: '5G engineers at 28% attrition — poached by hyperscalers at 40–60% salary premium.',
+        opportunity: 'Employee stock option plan proposed to reduce tech attrition by 8%.',
+        trend5Q: [18.8, 17.4, 16.2, 15.1, 14.2],
+        tags: ['Attrition', 'Retention', 'Annual']
+    },
+    {
+        id: 'revenue-per-employee', label: 'Revenue per Employee', businessLine: 'hr',
+        value: 72.8, unit: '₹ L', period: 'FY25',
+        delta: '+10.2%', deltaQoQ: 'N/A', deltaYoY: '+10.2%', trend: 'up',
+        target: 80.0, targetFY: '₹80 Lakh by FY26',
+        pctToTarget: 91.0,
+        benchmark: 68.4, benchmarkLabel: 'Airtel FY25',
+        rank: 2, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Productivity Analytics',
+        formula: 'Total Annual Revenue ÷ Average Annual Headcount (in Lakhs)',
+        insight: 'Apex leads Airtel on revenue per employee — operational leverage improving. Automation roadmap to push to ₹88 Lakh by FY27.',
+        risk: 'Flat revenue growth with headcount reductions could impact service quality.',
+        opportunity: 'Digital field force automation saving 2,400 engineer-days quarterly.',
+        trend5Q: [60.2, 64.1, 67.4, 70.2, 72.8],
+        tags: ['Productivity', 'Efficiency', 'Annual']
+    },
+    {
+        id: 'training-hours', label: 'Training Hours per Employee', businessLine: 'hr',
+        value: 42, unit: 'hrs/yr', period: 'FY25',
+        delta: '+8hrs', deltaQoQ: 'N/A', deltaYoY: '+8hrs', trend: 'up',
+        target: 50, targetFY: '50 hrs by FY26',
+        pctToTarget: 84.0,
+        benchmark: 38, benchmarkLabel: 'Industry Average',
+        rank: 1, rankOf: 4,
+        accentColor: '#63EBDA',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Learning Management',
+        formula: 'Total training hours delivered ÷ Average headcount',
+        insight: 'Apex leads industry on training investment at 42 hrs/year. 5G technical training for 8,400 engineers driving capability.',
+        risk: 'Training ROI not measured — 34% of 5G-trained staff churning within 18 months.',
+        opportunity: 'Certified 5G engineers command 22% higher revenue per project — training ROI positive.',
+        trend5Q: [28, 32, 36, 40, 42],
+        tags: ['Training', 'Capability', 'Annual']
+    },
+    {
+        id: 'gender-diversity', label: 'Gender Diversity Ratio', businessLine: 'hr',
+        value: 24.8, unit: '%F', period: 'Q1 FY26',
+        delta: '+2.4%', deltaQoQ: '+0.6%', deltaYoY: '+2.4%', trend: 'up',
+        target: 30.0, targetFY: '30% by FY26',
+        pctToTarget: 82.7,
+        benchmark: 26.2, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#B497FF',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Diversity Analytics',
+        formula: 'Female employees ÷ Total employees × 100',
+        insight: '24.8% female workforce — improving but below 30% target. Senior leadership at 18% female — lagging.',
+        risk: 'Low diversity linked to talent pool constraints in engineering roles.',
+        opportunity: 'Women in Tech programme targeting 500 female hires in FY26 from campus.',
+        trend5Q: [20.4, 21.6, 22.8, 23.8, 24.8],
+        tags: ['Diversity', 'ESG', 'Quarterly']
+    },
+    {
+        id: 'open-positions', label: 'Critical Open Positions', businessLine: 'hr',
+        value: 684, unit: '', period: 'Q1 FY26',
+        delta: '+124', deltaQoQ: '+42', deltaYoY: '+124', trend: 'up',
+        target: 300, targetFY: '<300 by Q4 FY26',
+        pctToTarget: 43.9,
+        benchmark: 420, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 4,
+        accentColor: '#FD349C',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Talent Acquisition',
+        formula: 'Count of open requisitions unfilled >45 days in critical functions',
+        insight: '684 critical positions open — 340 in 5G/network, 180 in digital, 164 in enterprise sales. Time-to-fill at 84 days.',
+        risk: '5G rollout delayed 6 weeks due to engineering resource shortage.',
+        opportunity: 'Campus hiring programme with IIT/NIT targeting 400 fresh graduates for 5G roles.',
+        trend5Q: [420, 480, 540, 620, 684],
+        tags: ['Hiring', 'Talent', 'Monthly']
+    },
+    {
+        id: 'cost-per-employee', label: 'Cost per Employee', businessLine: 'hr',
+        value: 18.4, unit: '₹ L/yr', period: 'FY25',
+        delta: '+4.2%', deltaQoQ: 'N/A', deltaYoY: '+4.2%', trend: 'up',
+        target: 19.0, targetFY: '<₹19 L by FY26',
+        pctToTarget: 96.8,
+        benchmark: 16.8, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Compensation Analytics',
+        formula: 'Total HR Cost (salary + benefits + training) ÷ Average Headcount',
+        insight: 'Cost per employee ₹1.6 Lakh above Airtel — premium talent strategy. Total people cost ₹8,865 Cr annually.',
+        risk: '5G engineer salary inflation at 18% YoY driven by hyperscaler competition.',
+        opportunity: 'Variable pay restructuring could reduce fixed cost by 4% without impacting retention.',
+        trend5Q: [16.2, 16.8, 17.4, 17.9, 18.4],
+        tags: ['Cost', 'Compensation', 'Annual']
+    },
+    {
+        id: 'employee-nps', label: 'Employee NPS (eNPS)', businessLine: 'hr',
+        value: 28, unit: '', period: 'Q1 FY26',
+        delta: '+6', deltaQoQ: '+2', deltaYoY: '+6', trend: 'up',
+        target: 40, targetFY: '40 by Q4 FY26',
+        pctToTarget: 70.0,
+        benchmark: 34, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#63EBDA',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Engagement Surveys',
+        formula: '% Promoters − % Detractors in employee engagement survey',
+        insight: 'eNPS at 28 — below Airtel 34. Top detractor themes: career growth clarity, work-life balance, 5G tech training access.',
+        risk: 'eNPS below 30 correlated with 20% higher attrition in 12 months.',
+        opportunity: 'Manager quality programme — 80% of eNPS variation explained by direct manager.',
+        trend5Q: [14, 18, 22, 26, 28],
+        tags: ['Engagement', 'Culture', 'Quarterly']
+    },
+    {
+        id: 'overtime-pct', label: 'Overtime as % of Payroll', businessLine: 'hr',
+        value: 4.8, unit: '%', period: 'Q1 FY26',
+        delta: '-0.6%', deltaQoQ: '-0.2%', deltaYoY: '-0.6%', trend: 'down',
+        target: 3.5, targetFY: '<3.5% by FY26',
+        pctToTarget: 72.9,
+        benchmark: 3.2, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Time & Attendance',
+        formula: 'Total overtime cost ÷ Total payroll cost × 100',
+        insight: '4.8% overtime — above industry 3.2%. Field engineering team averaging 12 overtime hours/week during 5G rollout.',
+        risk: 'Overtime liability of ₹42 Cr annualised — burnout risk increasing.',
+        opportunity: 'Contractor augmentation for peak 5G work could reduce overtime by 40%.',
+        trend5Q: [6.4, 5.9, 5.4, 5.1, 4.8],
+        tags: ['Overtime', 'Cost', 'Monthly']
+    },
+    {
+        id: 'contractor-ratio', label: 'Contractor Ratio', businessLine: 'hr',
+        value: 28.4, unit: '%', period: 'Q1 FY26',
+        delta: '+2.8%', deltaQoQ: '+0.8%', deltaYoY: '+2.8%', trend: 'up',
+        target: 25.0, targetFY: '<25% by FY26',
+        pctToTarget: 88.0,
+        benchmark: 22.1, benchmarkLabel: 'Airtel FY25',
+        rank: 4, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'WORKDAY', systemFull: 'Workday HCM · Workforce Mix Analytics',
+        formula: 'Contract employees ÷ Total workforce (permanent + contract) × 100',
+        insight: '28.4% contractors — rising vs target. 5G tower rollout driving contractor dependency. Risk of knowledge loss post-project.',
+        risk: 'Regulatory risk — TRAI guidelines on workforce localisation may require contractor reduction.',
+        opportunity: 'Convert top 500 performers to permanent roles — reduces contractor premium by ₹18 Cr.',
+        trend5Q: [24.2, 25.1, 26.2, 27.4, 28.4],
+        tags: ['Workforce Mix', 'Contractors', 'Quarterly']
+    },
+
+    /* ════════════════════════════════════════════════════════
+       PROCUREMENT & VENDOR — 10 KPIs
+    ════════════════════════════════════════════════════════ */
+    {
+        id: 'active-vendors', label: 'Active Vendor Count', businessLine: 'procurement',
+        value: 1842, unit: '', period: 'Q1 FY26',
+        delta: '-3.2%', deltaQoQ: '-0.8%', deltaYoY: '-3.2%', trend: 'down',
+        target: 1600, targetFY: '1,600 by FY26',
+        pctToTarget: 86.9,
+        benchmark: 1420, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#F97316',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Vendor Master Data',
+        formula: 'Count of vendors with at least 1 PO in last 12 months',
+        insight: '1,842 active vendors — 29% more than Airtel. Vendor rationalisation programme targeting 242 consolidations by FY26.',
+        risk: 'Long tail of 620 vendors each <₹10 Lakh — administrative cost exceeds value.',
+        opportunity: 'Consolidating to preferred vendors achieves 8–12% savings on renegotiated contracts.',
+        trend5Q: [2140, 2080, 2010, 1920, 1842],
+        tags: ['Vendors', 'Procurement', 'Quarterly']
+    },
+    {
+        id: 'po-value', label: 'Purchase Order Value', businessLine: 'procurement',
+        value: 2840, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '+4.2%', deltaQoQ: '+1.1%', deltaYoY: '+4.2%', trend: 'up',
+        target: 2700, targetFY: '₹10,800 Cr FY26',
+        pctToTarget: 105.2,
+        benchmark: 3240, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#F97316',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Purchase Order Management',
+        formula: 'Total value of approved purchase orders in period',
+        insight: 'PO value at ₹2,840 Cr — above quarterly target. Network capex vendors (Huawei, Nokia, Ericsson) = 68% of spend.',
+        risk: 'Single-source dependency on Huawei for 5G RAN — geopolitical risk if supply disrupted.',
+        opportunity: 'Multi-vendor 5G strategy saves 12–15% on equipment cost via competitive tendering.',
+        trend5Q: [2480, 2580, 2680, 2760, 2840],
+        tags: ['Spend', 'Procurement', 'Quarterly']
+    },
+    {
+        id: 'contract-compliance', label: 'Contract Compliance Rate', businessLine: 'procurement',
+        value: 84.2, unit: '%', period: 'Q1 FY26',
+        delta: '+3.8%', deltaQoQ: '+1.0%', deltaYoY: '+3.8%', trend: 'up',
+        target: 92.0, targetFY: '92% by FY26',
+        pctToTarget: 91.5,
+        benchmark: 89.4, benchmarkLabel: 'Industry Best Practice',
+        rank: 3, rankOf: 4,
+        accentColor: '#F97316',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Contract Management',
+        formula: 'POs placed against contracted vendors ÷ Total POs × 100',
+        insight: '15.8% off-contract spend = ₹449 Cr at risk pricing. Non-compliant spend concentrated in IT and facilities.',
+        risk: '₹449 Cr off-contract spend paying avg 18% premium vs contracted rates.',
+        opportunity: 'Mandatory contract compliance policy saves ₹80 Cr annually at current spend levels.',
+        trend5Q: [76.4, 78.8, 80.6, 82.4, 84.2],
+        tags: ['Compliance', 'Contracts', 'Quarterly']
+    },
+    {
+        id: 'savings-pct', label: 'Procurement Savings %', businessLine: 'procurement',
+        value: 6.8, unit: '%', period: 'FY25',
+        delta: '+1.2%', deltaQoQ: 'N/A', deltaYoY: '+1.2%', trend: 'up',
+        target: 8.0, targetFY: '8% by FY26',
+        pctToTarget: 85.0,
+        benchmark: 7.4, benchmarkLabel: 'Industry Best Practice',
+        rank: 3, rankOf: 4,
+        accentColor: '#00C0AE',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Savings Tracking',
+        formula: '(Baseline Cost − Actual Cost) ÷ Baseline Cost × 100',
+        insight: '6.8% savings on ₹11,360 Cr spend = ₹773 Cr saved FY25. Below Airtel 7.4% despite higher spend base.',
+        risk: 'Commodity price inflation eroding savings — steel and copper up 24% YoY.',
+        opportunity: 'Strategic sourcing for tower infrastructure could add ₹120 Cr savings annually.',
+        trend5Q: [4.8, 5.4, 5.9, 6.4, 6.8],
+        tags: ['Savings', 'Value', 'Annual']
+    },
+    {
+        id: 'vendor-risk-score', label: 'Average Vendor Risk Score', businessLine: 'procurement',
+        value: 28, unit: '/100', period: 'Q1 FY26',
+        delta: '-4', deltaQoQ: '-1', deltaYoY: '-4', trend: 'down',
+        target: 20, targetFY: '<20 by FY26',
+        pctToTarget: 71.4,
+        benchmark: 22, benchmarkLabel: 'Industry Best Practice',
+        rank: 3, rankOf: 4,
+        accentColor: '#F97316',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Vendor Risk Management',
+        formula: 'Weighted average risk score across financial, operational and compliance dimensions',
+        insight: 'Average vendor risk at 28/100 — 6 above industry best practice. 12 vendors in HIGH risk category including 2 OFAC flagged.',
+        risk: '2 OFAC-flagged vendors with ₹142 Cr cumulative spend — legal exposure.',
+        opportunity: 'Vendor risk tiering programme reduces monitoring cost by 40% while improving coverage.',
+        trend5Q: [38, 35, 32, 30, 28],
+        tags: ['Risk', 'Vendors', 'Quarterly']
+    },
+    {
+        id: 'ontime-delivery', label: 'On-Time Delivery Rate', businessLine: 'procurement',
+        value: 88.4, unit: '%', period: 'Q1 FY26',
+        delta: '+3.2%', deltaQoQ: '+0.8%', deltaYoY: '+3.2%', trend: 'up',
+        target: 94.0, targetFY: '94% by FY26',
+        pctToTarget: 94.0,
+        benchmark: 91.8, benchmarkLabel: 'Industry Average',
+        rank: 3, rankOf: 4,
+        accentColor: '#F97316',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Supply Chain Analytics',
+        formula: 'POs delivered on or before committed date ÷ Total POs × 100',
+        insight: '11.6% late deliveries impacting 5G rollout — 3,400 sites delayed due to equipment delays from Huawei.',
+        risk: 'Huawei 5G equipment lead time extended to 18 weeks — rollout risk to TRAI mandate.',
+        opportunity: 'Local warehousing strategy reduces delivery lead time by 4 weeks.',
+        trend5Q: [82.4, 84.1, 85.8, 87.2, 88.4],
+        tags: ['Supply Chain', 'Delivery', 'Monthly']
+    },
+    {
+        id: 'sla-breach', label: 'Vendor SLA Breach Count', businessLine: 'procurement',
+        value: 18, unit: '', period: 'Q1 FY26',
+        delta: '-6', deltaQoQ: '-2', deltaYoY: '-6', trend: 'down',
+        target: 8, targetFY: '<8 by Q4 FY26',
+        pctToTarget: 44.4,
+        benchmark: 12, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 4,
+        accentColor: '#FD349C',
+        system: 'ARIBA', systemFull: 'SAP Ariba · SLA Management',
+        formula: 'Count of vendor SLA breaches with financial penalty implications',
+        insight: '18 SLA breaches — ₹1.92 Cr in penalty claims. Huawei accounts for 8 breaches on 5G delivery SLAs.',
+        risk: 'Penalty recovery rate at 64% — ₹0.69 Cr in penalties waived due to relationship management.',
+        opportunity: 'Automated SLA monitoring triggers real-time vendor alerts reducing breach by 60%.',
+        trend5Q: [32, 28, 24, 20, 18],
+        tags: ['SLA', 'Vendor Performance', 'Monthly']
+    },
+    {
+        id: 'payment-terms', label: 'Average Payment Terms', businessLine: 'procurement',
+        value: 42, unit: 'days', period: 'Q1 FY26',
+        delta: '+4 days', deltaQoQ: '+1 day', deltaYoY: '+4 days', trend: 'up',
+        target: 50, targetFY: '50 days by FY26',
+        pctToTarget: 84.0,
+        benchmark: 48, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#F97316',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Payment Management',
+        formula: 'Average days from invoice receipt to payment across all vendors',
+        insight: 'Payment terms extended from 38 to 42 days — improving working capital by ₹180 Cr. Target 50 days by FY26.',
+        risk: 'Early payment discount opportunities being missed — ₹28 Cr in dynamic discounting available.',
+        opportunity: 'Supply chain financing for top 200 vendors could extend terms to 75 days.',
+        trend5Q: [34, 36, 38, 40, 42],
+        tags: ['Payment', 'Working Capital', 'Quarterly']
+    },
+    {
+        id: 'single-source', label: 'Single Source Spend %', businessLine: 'procurement',
+        value: 34.2, unit: '%', period: 'Q1 FY26',
+        delta: '-2.8%', deltaQoQ: '-0.8%', deltaYoY: '-2.8%', trend: 'down',
+        target: 25.0, targetFY: '<25% by FY26',
+        pctToTarget: 73.1,
+        benchmark: 28.4, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 4,
+        accentColor: '#FD349C',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Spend Analytics',
+        formula: 'Spend with sole-source vendors ÷ Total addressable spend × 100',
+        insight: '34.2% single-source — high concentration risk. Huawei (22% of total spend) and Indus Towers (8%) are top concentration points.',
+        risk: 'Single-source dependency on Huawei for 5G — supply disruption could halt rollout.',
+        opportunity: 'Ericsson qualification for 5G RAN reduces Huawei dependency — target 60/40 split.',
+        trend5Q: [40.8, 38.4, 36.8, 35.2, 34.2],
+        tags: ['Concentration', 'Risk', 'Quarterly']
+    },
+    {
+        id: 'dispute-rate', label: 'Invoice Dispute Rate', businessLine: 'procurement',
+        value: 3.8, unit: '%', period: 'Q1 FY26',
+        delta: '-0.8%', deltaQoQ: '-0.2%', deltaYoY: '-0.8%', trend: 'down',
+        target: 2.0, targetFY: '<2% by FY26',
+        pctToTarget: 52.6,
+        benchmark: 2.4, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'ARIBA', systemFull: 'SAP Ariba · Invoice Management',
+        formula: 'Disputed invoices ÷ Total invoices received × 100',
+        insight: '3.8% invoice dispute rate — above industry 2.4%. Top dispute causes: quantity mismatch (42%), price variance (38%), duplicate (20%).',
+        risk: 'Dispute resolution taking avg 28 days — vendor relationship strain.',
+        opportunity: 'PO-flip automation eliminates 64% of invoice disputes at source.',
+        trend5Q: [5.8, 5.1, 4.6, 4.2, 3.8],
+        tags: ['Invoices', 'Disputes', 'Monthly']
+    },
+
+    /* ════════════════════════════════════════════════════════
+       REGULATORY & COMPLIANCE — 10 KPIs
+    ════════════════════════════════════════════════════════ */
+    {
+        id: 'trai-filings', label: 'TRAI Filing Compliance', businessLine: 'regulatory',
+        value: 98.4, unit: '%', period: 'Q1 FY26',
+        delta: '+1.2%', deltaQoQ: '+0.4%', deltaYoY: '+1.2%', trend: 'up',
+        target: 100.0, targetFY: '100% by Q2 FY26',
+        pctToTarget: 98.4,
+        benchmark: 99.2, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#6B7280',
+        system: 'GRC', systemFull: 'Internal GRC · Regulatory Compliance Tracker',
+        formula: 'Filings submitted on time ÷ Total mandatory filings × 100',
+        insight: '2 TRAI filings late this quarter — QoS report and spectrum utilisation report. Penalty risk ₹8 Lakh per late filing.',
+        risk: 'Repeat late filings trigger enhanced monitoring by TRAI — reputational and regulatory risk.',
+        opportunity: 'Automated filing workflow reduces manual effort by 68% and eliminates delays.',
+        trend5Q: [94.8, 96.0, 97.2, 97.8, 98.4],
+        tags: ['TRAI', 'Compliance', 'Quarterly']
+    },
+    {
+        id: 'pending-compliance', label: 'Pending Compliance Items', businessLine: 'regulatory',
+        value: 12, unit: '', period: 'Q1 FY26',
+        delta: '-4', deltaQoQ: '-1', deltaYoY: '-4', trend: 'down',
+        target: 5, targetFY: '<5 by Q4 FY26',
+        pctToTarget: 41.7,
+        benchmark: 8, benchmarkLabel: 'Industry Average',
+        rank: 4, rankOf: 4,
+        accentColor: '#FD349C',
+        system: 'GRC', systemFull: 'Internal GRC · Compliance Dashboard',
+        formula: 'Count of open regulatory obligations past due date',
+        insight: '12 pending items — 3 HIGH priority (5G security audit, TRAI QoS, spectrum fees). 4 items >30 days overdue.',
+        risk: '3 high-priority items risk ₹4.2 Cr in combined penalties if not closed.',
+        opportunity: 'Compliance calendar automation ensures 0 overdue items within 2 quarters.',
+        trend5Q: [22, 19, 16, 13, 12],
+        tags: ['Compliance', 'Regulatory', 'Monthly']
+    },
+    {
+        id: 'qos-score', label: 'TRAI QoS Score', businessLine: 'regulatory',
+        value: 82.4, unit: '/100', period: 'Q1 FY26',
+        delta: '+4.2', deltaQoQ: '+1.2', deltaYoY: '+4.2', trend: 'up',
+        target: 88.0, targetFY: '88 by Q4 FY26',
+        pctToTarget: 93.6,
+        benchmark: 86.8, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#6B7280',
+        system: 'GRC', systemFull: 'Internal GRC · QoS Management',
+        formula: 'Composite score across TRAI-defined QoS parameters (voice, data, customer service)',
+        insight: 'QoS at 82.4 — improving but 4.4 below Airtel. Call drop rate and data speed are primary detractors.',
+        risk: 'QoS below 80 triggers TRAI show-cause notice — currently 2.4 points above threshold.',
+        opportunity: 'Call drop reduction programme contributes 3–4 points to QoS score.',
+        trend5Q: [74.2, 76.8, 78.4, 80.8, 82.4],
+        tags: ['QoS', 'TRAI', 'Quarterly']
+    },
+    {
+        id: 'spectrum-fees', label: 'Spectrum Fee Liability', businessLine: 'regulatory',
+        value: 1840, unit: '₹ Cr', period: 'FY26',
+        delta: '+8.4%', deltaQoQ: 'N/A', deltaYoY: '+8.4%', trend: 'up',
+        target: 1840, targetFY: '₹1,840 Cr FY26 (budgeted)',
+        pctToTarget: 100.0,
+        benchmark: 2240, benchmarkLabel: 'Airtel FY25',
+        rank: 2, rankOf: 4,
+        accentColor: '#6B7280',
+        system: 'GRC', systemFull: 'Internal GRC · Spectrum Management',
+        formula: 'Annual spectrum usage charges per DoT assessment',
+        insight: '₹1,840 Cr spectrum fees = 13.1% of annual revenue. FY26 5G spectrum auction may add ₹3,200 Cr to liability.',
+        risk: 'Deferred spectrum payment at 12% interest — ₹220 Cr annual interest cost.',
+        opportunity: 'Spectrum sharing with one MVNO could offset 8–10% of annual fees.',
+        trend5Q: [1420, 1520, 1620, 1720, 1840],
+        tags: ['Spectrum', 'Fees', 'Annual']
+    },
+    {
+        id: 'regulatory-fines', label: 'Regulatory Fines', businessLine: 'regulatory',
+        value: 0.42, unit: '₹ Cr', period: 'Q1 FY26',
+        delta: '-52.2%', deltaQoQ: '-18.4%', deltaYoY: '-52.2%', trend: 'down',
+        target: 0.0, targetFY: 'Zero by FY26',
+        pctToTarget: 0.0,
+        benchmark: 0.28, benchmarkLabel: 'Industry Average',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'GRC', systemFull: 'Internal GRC · Legal & Compliance',
+        formula: 'Total regulatory fines and penalties paid in period',
+        insight: '₹0.42 Cr in fines this quarter — QoS violation (₹0.28 Cr) and late filing (₹0.14 Cr). Improving significantly.',
+        risk: 'Pending TRAI investigation on 5G rollout pace could result in ₹2–4 Cr fine.',
+        opportunity: 'Zero-fine target achievable — only 2 violation categories remaining.',
+        trend5Q: [1.84, 1.42, 0.98, 0.68, 0.42],
+        tags: ['Fines', 'Penalties', 'Quarterly']
+    },
+    {
+        id: 'license-fees', label: 'License Fee % of Revenue', businessLine: 'regulatory',
+        value: 8.0, unit: '%', period: 'FY26',
+        delta: '0.0%', deltaQoQ: 'N/A', deltaYoY: '0.0%', trend: 'stable',
+        target: 8.0, targetFY: '8% (regulatory fixed)',
+        pctToTarget: 100.0,
+        benchmark: 8.0, benchmarkLabel: 'DoT Fixed Rate',
+        rank: 1, rankOf: 1,
+        accentColor: '#6B7280',
+        system: 'GRC', systemFull: 'Internal GRC · Revenue Share Tracking',
+        formula: 'License Fee Paid ÷ Adjusted Gross Revenue × 100',
+        insight: 'License fee fixed at 8% AGR by DoT. FY26 liability ₹1,100 Cr. AGR definition dispute resolved — no further litigation risk.',
+        risk: 'DoT may revise AGR definition to include non-telecom revenue — potential ₹280 Cr additional liability.',
+        opportunity: 'Revenue mix shift to non-AGR activities (cloud, IoT) reduces effective license fee rate.',
+        trend5Q: [8.0, 8.0, 8.0, 8.0, 8.0],
+        tags: ['License', 'Regulatory', 'Annual']
+    },
+    {
+        id: 'audit-findings', label: 'Open Audit Findings', businessLine: 'regulatory',
+        value: 8, unit: '', period: 'Q1 FY26',
+        delta: '-3', deltaQoQ: '-1', deltaYoY: '-3', trend: 'down',
+        target: 3, targetFY: '<3 by Q4 FY26',
+        pctToTarget: 37.5,
+        benchmark: 6, benchmarkLabel: 'Industry Average',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'GRC', systemFull: 'Internal GRC · Audit Management',
+        formula: 'Count of open internal and external audit findings above medium severity',
+        insight: '8 open findings — 2 HIGH (revenue recognition, capex capitalisation), 6 MEDIUM. Oldest finding 84 days open.',
+        risk: 'Revenue recognition finding could trigger restatement risk — Big 4 auditor flagged.',
+        opportunity: 'Audit finding closure rate at 68% — industry best is 85%.',
+        trend5Q: [18, 14, 12, 9, 8],
+        tags: ['Audit', 'Governance', 'Quarterly']
+    },
+    {
+        id: 'data-privacy', label: 'Data Privacy Incidents', businessLine: 'regulatory',
+        value: 2, unit: '', period: 'Q1 FY26',
+        delta: '-3', deltaQoQ: '-1', deltaYoY: '-3', trend: 'down',
+        target: 0, targetFY: 'Zero by FY26',
+        pctToTarget: 0.0,
+        benchmark: 1, benchmarkLabel: 'Industry Average',
+        rank: 3, rankOf: 4,
+        accentColor: '#FD349C',
+        system: 'GRC', systemFull: 'Internal GRC · Privacy Management',
+        formula: 'Count of confirmed personal data breaches or privacy incidents',
+        insight: '2 incidents — 1 customer data exposure (840 records) via API vulnerability, 1 employee data incident. Both below PDPB mandatory disclosure threshold.',
+        risk: 'PDPB 2023 enforcement from Jan 2025 — penalty up to ₹250 Cr per major breach.',
+        opportunity: 'Privacy-by-design programme and quarterly penetration testing reduces incident risk 80%.',
+        trend5Q: [8, 6, 5, 3, 2],
+        tags: ['Privacy', 'Data', 'Monthly']
+    },
+    {
+        id: 'compliance-score', label: 'Overall Compliance Score', businessLine: 'regulatory',
+        value: 86.4, unit: '/100', period: 'Q1 FY26',
+        delta: '+4.8', deltaQoQ: '+1.2', deltaYoY: '+4.8', trend: 'up',
+        target: 92.0, targetFY: '92 by Q4 FY26',
+        pctToTarget: 93.9,
+        benchmark: 89.2, benchmarkLabel: 'Industry Average',
+        rank: 3, rankOf: 4,
+        accentColor: '#6B7280',
+        system: 'GRC', systemFull: 'Internal GRC · Compliance Scorecard',
+        formula: 'Weighted composite across 48 regulatory parameters per TRAI and DoT framework',
+        insight: 'Compliance score at 86.4 — improving strongly. Primary gap areas: QoS parameters (weight 35%) and spectrum utilisation (weight 25%).',
+        risk: 'Score below 85 triggers TRAI enhanced scrutiny — currently 1.4 above threshold.',
+        opportunity: 'QoS improvement programme alone could add 4–6 points to overall score.',
+        trend5Q: [74.2, 78.4, 81.2, 84.2, 86.4],
+        tags: ['Compliance', 'Score', 'Quarterly']
+    },
+    {
+        id: 'license-renewals', label: 'License Renewals Due', businessLine: 'regulatory',
+        value: 3, unit: '', period: 'Next 12 months',
+        delta: '-1', deltaQoQ: '0', deltaYoY: '-1', trend: 'stable',
+        target: 0, targetFY: 'All renewed on time',
+        pctToTarget: 0.0,
+        benchmark: 0, benchmarkLabel: 'Target',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'GRC', systemFull: 'Internal GRC · License Management',
+        formula: 'Count of telecom licenses due for renewal in next 12 months',
+        insight: '3 licenses due — Mumbai UAS (Mar 2026, ₹840 Cr renewal fee), Delhi NLD (Jun 2026), Karnataka ISP (Sep 2026).',
+        risk: 'Mumbai license renewal most critical — 28M subscribers at risk if delayed.',
+        opportunity: 'Early renewal of Delhi NLD captures 2023 fee structure — saves ₹42 Cr vs 2025 rates.',
+        trend5Q: [6, 5, 4, 4, 3],
+        tags: ['License', 'Renewals', 'Annual']
+    },
+
+    /* ════════════════════════════════════════════════════════
+       CUSTOMER EXPERIENCE — 10 KPIs
+    ════════════════════════════════════════════════════════ */
+    {
+        id: 'csat', label: 'Customer Satisfaction Score', businessLine: 'cx',
+        value: 3.8, unit: '/5', period: 'Q1 FY26',
+        delta: '+0.3', deltaQoQ: '+0.1', deltaYoY: '+0.3', trend: 'up',
+        target: 4.2, targetFY: '4.2/5 by Q4 FY26',
+        pctToTarget: 90.5,
+        benchmark: 4.1, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#8B5CF6',
+        system: 'GENESYS', systemFull: 'Genesys CX · CSAT Survey Engine',
+        formula: 'Average customer satisfaction rating across all touchpoints (scale 1–5)',
+        insight: 'CSAT at 3.8 — 0.3 below Airtel. Network quality (3.6) and billing clarity (3.4) are lowest sub-scores.',
+        risk: 'CSAT below 3.5 correlated with 2× higher churn probability in 90 days.',
+        opportunity: 'Proactive network outage communication reduces CSAT impact by 40%.',
+        trend5Q: [3.2, 3.4, 3.5, 3.7, 3.8],
+        tags: ['Satisfaction', 'CX', 'Monthly']
+    },
+    {
+        id: 'fcr', label: 'First Call Resolution Rate', businessLine: 'cx',
+        value: 72.4, unit: '%', period: 'Q1 FY26',
+        delta: '+4.8%', deltaQoQ: '+1.2%', deltaYoY: '+4.8%', trend: 'up',
+        target: 82.0, targetFY: '82% by Q4 FY26',
+        pctToTarget: 88.3,
+        benchmark: 78.2, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#8B5CF6',
+        system: 'GENESYS', systemFull: 'Genesys CX · Call Centre Analytics',
+        formula: 'Calls resolved on first contact ÷ Total calls handled × 100',
+        insight: 'FCR at 72.4% — 5.8% below Airtel. Billing queries (FCR 58%) and network complaints (FCR 64%) drag overall rate.',
+        risk: 'Each 1% FCR improvement reduces repeat calls by 2.4% saving ₹8 Cr annually in call centre cost.',
+        opportunity: 'AI-powered agent assist tool increasing FCR by 8% in pilot centres — ready for rollout.',
+        trend5Q: [62.4, 65.2, 68.1, 70.8, 72.4],
+        tags: ['Resolution', 'Call Centre', 'Monthly']
+    },
+    {
+        id: 'aht', label: 'Average Handle Time', businessLine: 'cx',
+        value: 4.2, unit: 'min', period: 'Q1 FY26',
+        delta: '-0.6min', deltaQoQ: '-0.2min', deltaYoY: '-0.6min', trend: 'down',
+        target: 3.5, targetFY: '3.5 min by Q4 FY26',
+        pctToTarget: 83.3,
+        benchmark: 3.8, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#8B5CF6',
+        system: 'GENESYS', systemFull: 'Genesys CX · Workforce Management',
+        formula: 'Average talk time + hold time + after-call work per interaction',
+        insight: 'AHT at 4.2 min — 0.4 above Airtel. Reducing to 3.5 min saves ₹28 Cr annually in agent cost at current volumes.',
+        risk: 'Forced AHT reduction without FCR improvement increases repeat contacts — net cost neutral.',
+        opportunity: 'Knowledge base modernisation reduces average handle time by 0.5 min.',
+        trend5Q: [5.2, 4.9, 4.6, 4.4, 4.2],
+        tags: ['Efficiency', 'Call Centre', 'Monthly']
+    },
+    {
+        id: 'complaint-rate', label: 'Customer Complaint Rate', businessLine: 'cx',
+        value: 0.84, unit: 'per 100 subs', period: 'Q1 FY26',
+        delta: '-0.18', deltaQoQ: '-0.04', deltaYoY: '-0.18', trend: 'down',
+        target: 0.50, targetFY: '<0.5 by Q4 FY26',
+        pctToTarget: 59.5,
+        benchmark: 0.62, benchmarkLabel: 'Airtel Q1 FY26',
+        rank: 3, rankOf: 4,
+        accentColor: '#FD349C',
+        system: 'GENESYS', systemFull: 'Genesys CX · Complaint Management',
+        formula: 'Total complaints ÷ Total active subscribers × 100',
+        insight: '0.84 per 100 subscribers = 2.6M complaints per quarter. Top issues: network coverage (38%), billing (28%), service activation (18%).',
+        risk: 'Complaint rate above 1.0 triggers TRAI mandatory reporting — currently 16% below threshold.',
+        opportunity: 'Proactive fault resolution via network AI could prevent 40% of network-related complaints.',
+        trend5Q: [1.18, 1.08, 0.98, 0.90, 0.84],
+        tags: ['Complaints', 'Quality', 'Monthly']
+    },
+    {
+        id: 'digital-adoption', label: 'Digital Channel Adoption', businessLine: 'cx',
+        value: 64.2, unit: '%', period: 'Q1 FY26',
+        delta: '+8.4%', deltaQoQ: '+2.1%', deltaYoY: '+8.4%', trend: 'up',
+        target: 75.0, targetFY: '75% by Q4 FY26',
+        pctToTarget: 85.6,
+        benchmark: 72.4, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#8B5CF6',
+        system: 'GENESYS', systemFull: 'Genesys CX · Digital Analytics',
+        formula: 'Customer interactions via app/web ÷ Total customer interactions × 100',
+        insight: '64.2% digital — 8.2% below Airtel. Each 1% shift from voice to digital saves ₹4.2 Cr annually. App rating 3.9/5.',
+        risk: 'Elderly subscriber segment (18% of base) resistant to digital — call volume floor.',
+        opportunity: 'WhatsApp service bot could deflect 28% of routine queries at ₹0.8 Cr implementation cost.',
+        trend5Q: [48.2, 52.8, 56.4, 60.8, 64.2],
+        tags: ['Digital', 'Self-Service', 'Monthly']
+    },
+    {
+        id: 'app-rating', label: 'App Store Rating', businessLine: 'cx',
+        value: 3.9, unit: '/5', period: 'Q1 FY26',
+        delta: '+0.4', deltaQoQ: '+0.1', deltaYoY: '+0.4', trend: 'up',
+        target: 4.3, targetFY: '4.3 by Q4 FY26',
+        pctToTarget: 90.7,
+        benchmark: 4.2, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#8B5CF6',
+        system: 'GENESYS', systemFull: 'Genesys CX · App Analytics',
+        formula: 'Weighted average rating on Google Play + Apple App Store',
+        insight: 'App at 3.9 — 0.3 below Airtel. Top negative reviews: slow loading (34%), bill pay failures (28%), network map inaccurate (18%).',
+        risk: 'App rating below 4.0 reduces organic downloads by 24% — acquisition cost impact.',
+        opportunity: 'UX redesign and performance optimisation — Airtel hit 4.4 post-redesign in 2 quarters.',
+        trend5Q: [3.2, 3.4, 3.6, 3.8, 3.9],
+        tags: ['App', 'Digital', 'Monthly']
+    },
+    {
+        id: 'ivr-containment', label: 'IVR Containment Rate', businessLine: 'cx',
+        value: 42.8, unit: '%', period: 'Q1 FY26',
+        delta: '+4.2%', deltaQoQ: '+1.1%', deltaYoY: '+4.2%', trend: 'up',
+        target: 55.0, targetFY: '55% by Q4 FY26',
+        pctToTarget: 77.8,
+        benchmark: 52.4, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#8B5CF6',
+        system: 'GENESYS', systemFull: 'Genesys CX · IVR Analytics',
+        formula: 'Calls resolved in IVR without agent transfer ÷ Total IVR calls × 100',
+        insight: '42.8% containment — 9.6% below Airtel. Each 1% improvement reduces agent calls by 180K quarterly saving ₹2.8 Cr.',
+        risk: 'Low containment driving ₹68 Cr annual call centre cost — highest single operating cost.',
+        opportunity: 'Conversational AI IVR upgrade — pilot showing 62% containment (vs 43% legacy).',
+        trend5Q: [34.2, 36.8, 38.8, 41.2, 42.8],
+        tags: ['IVR', 'Self-Service', 'Monthly']
+    },
+    {
+        id: 'escalation-rate', label: 'Escalation Rate', businessLine: 'cx',
+        value: 8.4, unit: '%', period: 'Q1 FY26',
+        delta: '-1.8%', deltaQoQ: '-0.4%', deltaYoY: '-1.8%', trend: 'down',
+        target: 5.0, targetFY: '<5% by Q4 FY26',
+        pctToTarget: 59.5,
+        benchmark: 6.2, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'GENESYS', systemFull: 'Genesys CX · Escalation Tracker',
+        formula: 'Calls escalated to supervisor ÷ Total calls handled × 100',
+        insight: '8.4% escalation — 2.2% above Airtel. Billing disputes (42% of escalations) and network outages (28%) are top triggers.',
+        risk: 'High escalation rate increases cost-per-call by 3.4× vs resolved calls.',
+        opportunity: 'Empowering frontline agents with ₹500 goodwill credit authority reduces escalations 40%.',
+        trend5Q: [11.8, 10.8, 9.8, 8.8, 8.4],
+        tags: ['Escalation', 'Quality', 'Monthly']
+    },
+    {
+        id: 'repeat-contacts', label: 'Repeat Contact Rate', businessLine: 'cx',
+        value: 24.2, unit: '%', period: 'Q1 FY26',
+        delta: '-3.8%', deltaQoQ: '-0.8%', deltaYoY: '-3.8%', trend: 'down',
+        target: 15.0, targetFY: '<15% by Q4 FY26',
+        pctToTarget: 61.9,
+        benchmark: 18.4, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#F59E0B',
+        system: 'GENESYS', systemFull: 'Genesys CX · Contact Analytics',
+        formula: 'Customers contacting again within 7 days of previous contact ÷ Total contacts × 100',
+        insight: '24.2% repeat contact — 5.8% above Airtel. Indicates FCR failure. Each 1% reduction saves ₹4.2 Cr annually.',
+        risk: 'High repeat contacts driving CSAT down — 2nd contact CSAT is 2.8 vs 4.0 for resolved first contact.',
+        opportunity: 'Root cause analysis on top 10 repeat contact drivers could eliminate 60% of repeats.',
+        trend5Q: [31.8, 29.4, 27.2, 25.4, 24.2],
+        tags: ['Repeat', 'FCR', 'Monthly']
+    },
+    {
+        id: 'resolution-sla', label: 'Complaint Resolution SLA %', businessLine: 'cx',
+        value: 88.4, unit: '%', period: 'Q1 FY26',
+        delta: '+3.8%', deltaQoQ: '+0.8%', deltaYoY: '+3.8%', trend: 'up',
+        target: 95.0, targetFY: '95% by Q4 FY26',
+        pctToTarget: 93.1,
+        benchmark: 92.4, benchmarkLabel: 'Airtel FY25',
+        rank: 3, rankOf: 4,
+        accentColor: '#8B5CF6',
+        system: 'GENESYS', systemFull: 'Genesys CX · SLA Management',
+        formula: 'Complaints resolved within TRAI-mandated timeframe ÷ Total complaints × 100',
+        insight: '11.6% complaints breaching TRAI SLA. Network outage complaints worst at 28% breach rate — field team capacity constraint.',
+        risk: 'SLA breach >10% triggers TRAI investigation — currently 1.6% above safe threshold.',
+        opportunity: 'Field force automation and predictive routing reduces resolution time by 34%.',
+        trend5Q: [80.2, 82.8, 84.8, 86.8, 88.4],
+        tags: ['SLA', 'Resolution', 'Monthly']
     }
 ];
 
+/* ── LEGACY KPI_DATA (V3 compatibility) ─────────────────── */
+var KPI_DATA = KPI_MASTER.filter(function(k) {
+    return ['arpu','churn','ebitda-margin','fcf','subscribers','5g-coverage'].indexOf(k.id) > -1;
+}).map(function(k) {
+    return {
+        id:          k.id,
+        label:       k.label,
+        value:       k.value,
+        unit:        k.unit,
+        delta:       k.delta,
+        deltaLabel:  'YoY',
+        accentColor: k.accentColor
+    };
+});
 
-/* ══════════════════════════════════════════════════════════
-   3. ARPU CHART DATA
-   ══════════════════════════════════════════════════════════ */
-
-const CHART_MONTHS = [
-    "Jul'24","Aug'24","Sep'24","Oct'24","Nov'24","Dec'24",
-    "Jan'25","Feb'25","Mar'25","Apr'25","May'25","Jun'25",
-    "Jul'25","Aug'25","Sep'25"
-];
-
-const ARPU_HISTORICAL = [170, 171, 172, 173, 175, 174, 176, 177, 178, 179, 180, 181];
-const ARPU_FORECAST   = [182, 183, 185];
-
-const ARPU_CHART_DATA = {
-    months:             CHART_MONTHS,
-    historical:         ARPU_HISTORICAL,
-    forecast:           ARPU_FORECAST,
-    forecastStartIndex: 12
+/* ── SCENARIO DATA ──────────────────────────────────────── */
+var SCENARIO_BASE = {
+    revenue:     3510,
+    ebitda:      1225,
+    ebitdaPct:   34.9,
+    subscribers: 312,
+    arpu:        181
 };
 
-
-/* ══════════════════════════════════════════════════════════
-   4. CHURN TREND DATA
-   ══════════════════════════════════════════════════════════ */
-
-const CHURN_TREND = {
-    months:    CHART_MONTHS.slice(0, 12),
-    values:    [1.62, 1.60, 1.58, 1.57, 1.55, 1.54, 1.52, 1.50, 1.48, 1.46, 1.44, 1.42],
-    forecast:  [1.40, 1.38, 1.36]
-};
-
-
-/* ══════════════════════════════════════════════════════════
-   5. REVENUE BREAKDOWN
-   ══════════════════════════════════════════════════════════ */
-
-const REVENUE_BREAKDOWN = [
-    { segment: "Prepaid Mobile",    revenue: 1540, pct: 45.0, color: "#00C0AE" },
-    { segment: "Postpaid Mobile",   revenue: 820,  pct: 24.0, color: "#1E49E2" },
-    { segment: "Broadband (FBB)",   revenue: 480,  pct: 14.0, color: "#76D2FF" },
-    { segment: "Enterprise B2B",    revenue: 390,  pct: 11.4, color: "#B497FF" },
-    { segment: "Roaming & ILD",     revenue: 120,  pct: 3.5,  color: "#FFA3DA" },
-    { segment: "Other Services",    revenue: 70,   pct: 2.1,  color: "#63EBDA" }
+var SCENARIO_SLIDERS = [
+    { id: 'arpu-change',    label: 'ARPU Change',          min: -30, max: 30,  step: 1,   default: 0,  unit: '%' },
+    { id: 'churn-change',   label: 'Churn Rate Change',    min: -50, max: 100, step: 5,   default: 0,  unit: '%' },
+    { id: 'spectrum-cost',  label: 'Spectrum Cost Change',  min: -20, max: 50,  step: 1,   default: 0,  unit: '%' },
+    { id: 'price-increase', label: 'Price Increase Offset', min: 0,   max: 20,  step: 0.5, default: 0,  unit: '%' }
 ];
 
-
-/* ══════════════════════════════════════════════════════════
-   6. CIRCLE PERFORMANCE DATA
-   Top 10 circles by revenue
-   ══════════════════════════════════════════════════════════ */
-
-const CIRCLE_DATA = [
-    { circle: "Mumbai",          revenue: 520, arpu: 198, churn: 1.1, subscribers: 28.4, color: "#00C0AE" },
-    { circle: "Delhi NCR",       revenue: 480, arpu: 192, churn: 1.2, subscribers: 26.8, color: "#00C0AE" },
-    { circle: "Maharashtra",     revenue: 380, arpu: 184, churn: 1.3, subscribers: 22.3, color: "#00C0AE" },
-    { circle: "Karnataka",       revenue: 340, arpu: 181, churn: 1.4, subscribers: 20.4, color: "#1E49E2" },
-    { circle: "Tamil Nadu",      revenue: 310, arpu: 178, churn: 1.4, subscribers: 18.9, color: "#1E49E2" },
-    { circle: "Andhra Pradesh",  revenue: 290, arpu: 175, churn: 1.5, subscribers: 17.9, color: "#1E49E2" },
-    { circle: "Gujarat",         revenue: 270, arpu: 174, churn: 1.5, subscribers: 16.8, color: "#76D2FF" },
-    { circle: "Rajasthan",       revenue: 180, arpu: 162, churn: 1.8, subscribers: 12.0, color: "#F59E0B" },
-    { circle: "UP East",         revenue: 160, arpu: 158, churn: 1.9, subscribers: 10.9, color: "#F59E0B" },
-    { circle: "Bihar",           revenue: 140, arpu: 154, churn: 2.1, subscribers: 9.8,  color: "#FD349C" }
-];
-
-
-/* ══════════════════════════════════════════════════════════
-   7. COMPETITOR DATA
-   ══════════════════════════════════════════════════════════ */
-
-const COMPETITOR_DATA = [
-    { name: "Apex Telecom", arpu: 181, subscribers: 312, marketShare: 22.4, color: "#00C0AE", isUs: true  },
-    { name: "Airtel",       arpu: 194, subscribers: 368, marketShare: 26.4, color: "#4B5563", isUs: false },
-    { name: "Jio",          arpu: 168, subscribers: 480, marketShare: 34.5, color: "#4B5563", isUs: false },
-    { name: "Vi",           arpu: 156, subscribers: 198, marketShare: 14.2, color: "#4B5563", isUs: false },
-    { name: "BSNL",         arpu: 98,  subscribers: 36,  marketShare: 2.5,  color: "#4B5563", isUs: false }
-];
-
-
-/* ══════════════════════════════════════════════════════════
-   8. QUARTERLY P&L
-   ══════════════════════════════════════════════════════════ */
-
-const QUARTERLY_PL = [
-    { quarter: "Q1 FY25", revenue: 3180, ebitda: 1060, ebitdaPct: 33.3, capex: 420, fcf: 640  },
-    { quarter: "Q2 FY25", revenue: 3280, ebitda: 1115, ebitdaPct: 34.0, capex: 380, fcf: 735  },
-    { quarter: "Q3 FY25", revenue: 3350, ebitda: 1152, ebitdaPct: 34.4, capex: 360, fcf: 792  },
-    { quarter: "Q4 FY25", revenue: 3420, ebitda: 1183, ebitdaPct: 34.6, capex: 340, fcf: 843  },
-    { quarter: "Q1 FY26", revenue: 3510, ebitda: 1225, ebitdaPct: 34.9, capex: 320, fcf: 905  }
-];
-
-
-/* ══════════════════════════════════════════════════════════
-   9. RAFM ALERTS — EXPANDED
-   ══════════════════════════════════════════════════════════ */
-
-const RAFM_ALERTS = [
+/* ── RAFM ALERTS ────────────────────────────────────────── */
+var RAFM_ALERTS = [
     {
-        id:          "rafm-001",
-        type:        "RAFM · INTERCONNECT",
-        title:       "Interconnect Billing Discrepancy",
-        description: "CDR reconciliation flagged a billing discrepancy with Jio on the Mumbai-Delhi interconnect route. 847,000 CDRs show settlement variance of ₹5.67/CDR on average.",
-        amount:      "₹4.8 Cr",
-        amountRaw:   4.8,
-        severity:    "critical",
-        operator:    "Jio Networks Ltd",
-        route:       "Mumbai ↔ Delhi",
-        cdrCount:    "8,47,000 CDRs",
-        detectedAt:  "Today, 09:14 IST",
-        detectionMethod: "CDR Reconciliation Engine v4.2",
-        agingDays:   25,
-        action:      "Initiate formal dispute with Jio interconnect team. Request CDR dump for period 01-Jun to 25-Jun 2025. Escalate to VP Networks within 24 hours."
+        id: 'ALT001', severity: 'CRITICAL', title: 'Interconnect Billing Discrepancy — Jio',
+        amount: '₹4.8 Cr', circle: 'Pan-India', category: 'Interconnect',
+        description: 'CDR mismatch of 2.3M records between Apex and Jio billing systems. Dispute period: Q4 FY25. Arbitration deadline in 18 days.',
+        age: 18, status: 'OPEN', owner: 'RAFM Team'
     },
     {
-        id:          "rafm-002",
-        type:        "RAFM · ROAMING",
-        title:       "TAP File Leakage — Zone 3",
-        description: "Transfer Account Procedure file analysis shows unbilled roaming events in South India zone. Mismatch between IOT and TAP records across Karnataka and Tamil Nadu.",
-        amount:      "₹1.2 Cr",
-        amountRaw:   1.2,
-        severity:    "high",
-        operator:    "Multiple (Zone 3)",
-        route:       "South India — Karnataka, TN, Kerala",
-        cdrCount:    "1,23,400 records",
-        detectedAt:  "Today, 07:52 IST",
-        detectionMethod: "TAP File Analyser · IOT Reconciliation",
-        agingDays:   3,
-        action:      "Trigger TAP file re-transmission request. Escalate to roaming operations team for Zone 3 audit. Expected recovery timeline: 7-10 days."
+        id: 'ALT002', severity: 'CRITICAL', title: 'Split PO — CloudHost Infra Ltd',
+        amount: '₹1.92 Cr', circle: 'Corporate', category: 'Procurement Fraud',
+        description: 'Vendor CloudHost Infra Ltd has split a ₹1.92 Cr PO into 4 sub-threshold POs to bypass approval. OFAC screening flag raised.',
+        age: 12, status: 'OPEN', owner: 'Procurement Team'
     },
     {
-        id:          "rafm-003",
-        type:        "REGULATORY · TRAI",
-        title:       "QoS Submission — 78% Ready",
-        description: "TRAI Quality of Service submission due 30 June 2025. Data collection 78% complete. Circle-wise KPI compilation pending for 5 circles.",
-        amount:      "Due 30 Jun",
-        amountRaw:   0,
-        severity:    "medium",
-        operator:    "TRAI",
-        route:       "All 22 Circles",
-        cdrCount:    "5 circles pending",
-        detectedAt:  "Updated today, 06:00 IST",
-        detectionMethod: "Regulatory Compliance Engine",
-        agingDays:   0,
-        action:      "Escalate to circle heads for Rajasthan, UP East, UP West, Bihar, and Jharkhand. Deadline: 29 June EOD."
+        id: 'ALT003', severity: 'HIGH', title: 'TAP File Leakage — South India Zone',
+        amount: '₹1.2 Cr', circle: 'South India', category: 'Roaming',
+        description: 'TAP file mismatch in South India zone — 4.1% failure rate vs 2.6% national average. ₹1.2 Cr unbilled roaming events.',
+        age: 8, status: 'OPEN', owner: 'RAFM Team'
     },
     {
-        id:          "rafm-004",
-        type:        "RAFM · REVENUE ASSURANCE",
-        title:       "Prepaid Credit Leakage Detected",
-        description: "Automated revenue assurance engine detected prepaid balance leakage on VoLTE calls in Maharashtra circle. Affects ~18,400 subscribers with incorrect rate plan application.",
-        amount:      "₹0.8 Cr",
-        amountRaw:   0.8,
-        severity:    "high",
-        operator:    "Internal · Maharashtra Circle",
-        route:       "Maharashtra · VoLTE",
-        cdrCount:    "18,400 subscribers",
-        detectedAt:  "Yesterday, 22:31 IST",
-        detectionMethod: "Revenue Assurance Engine · Rate Plan Audit",
-        agingDays:   1,
-        action:      "Suspend affected rate plan configuration. Initiate credit reversal for impacted subscribers. Root cause: billing platform patch deployed 24-Jun applied incorrect VoLTE rate."
+        id: 'ALT004', severity: 'HIGH', title: 'Prepaid Credit Leakage — Mumbai Circle',
+        amount: '₹0.8 Cr', circle: 'Mumbai', category: 'Billing',
+        description: 'Prepaid balance not deducted for 84,000 data sessions. Rating engine config error post-5G migration.',
+        age: 5, status: 'OPEN', owner: 'BSS Team'
     },
     {
-        id:          "rafm-005",
-        type:        "RAFM · FRAUD",
-        title:       "SIM Box Fraud — UP East",
-        description: "Traffic analysis engine detected potential SIM box activity in UP East circle. 847 SIMs showing atypical international-to-local call conversion patterns consistent with SIM box operation.",
-        amount:      "₹0.6 Cr",
-        amountRaw:   0.6,
-        severity:    "high",
-        operator:    "Unknown · UP East",
-        route:       "UP East · International Termination",
-        cdrCount:    "847 SIMs flagged",
-        detectedAt:  "Yesterday, 18:44 IST",
-        detectionMethod: "Fraud Management System · Pattern Analysis",
-        agingDays:   1,
-        action:      "Block flagged SIMs pending investigation. Coordinate with UP East circle security team. File FIR if confirmed. Estimated revenue protection: ₹0.6 Cr/month."
+        id: 'ALT005', severity: 'HIGH', title: 'SIM Box Fraud — UP East',
+        amount: '₹0.6 Cr', circle: 'UP East', category: 'Fraud',
+        description: 'CLI analysis detected 14 active SIM box devices bypassing ILD termination. ₹0.6 Cr revenue impact per quarter.',
+        age: 3, status: 'OPEN', owner: 'Fraud Team'
     },
     {
-        id:          "rafm-006",
-        type:        "PPP · PROCUREMENT",
-        title:       "Split PO Detected — Tower Vendor",
-        description: "Procurement policy engine flagged 4 consecutive purchase orders to CloudHost Infra Ltd, each valued at ₹48L — just below the ₹50L approval threshold requiring CFO sign-off.",
-        amount:      "₹1.92 Cr",
-        amountRaw:   1.92,
-        severity:    "critical",
-        operator:    "CloudHost Infra Ltd",
-        route:       "Procurement · Tower Infrastructure",
-        cdrCount:    "4 POs flagged",
-        detectedAt:  "2 days ago, 14:22 IST",
-        detectionMethod: "PPP Policy Engine · Split-PO Detection",
-        agingDays:   2,
-        action:      "Freeze all pending payments to CloudHost Infra Ltd. Escalate to CFO and Internal Audit immediately. Initiate vendor investigation. This vendor also has an active OFAC match flag."
+        id: 'ALT006', severity: 'MEDIUM', title: 'Roaming Partner Dispute — 3 Partners',
+        amount: '₹1.5 Cr', circle: 'International', category: 'Roaming',
+        description: 'Settlement disputes with 3 international roaming partners. TAP reject rate above 3% threshold.',
+        age: 22, status: 'OPEN', owner: 'RAFM Team'
     }
 ];
 
-
-/* ══════════════════════════════════════════════════════════
-   10. VENDOR DATA — EXPANDED TO 32
-   ══════════════════════════════════════════════════════════ */
-
-const VENDOR_DATA = [
-    { name: "CloudHost Infra Ltd",    score: 14, exposure: "₹12.4 Cr", issue: "OFAC match · GST lapsed · Split-PO flag" },
-    { name: "SubCon Partners Pvt",    score: 22, exposure: "₹8.6 Cr",  issue: "CIBIL: 31 · 4 GST defaults · Late payment" },
-    { name: "NetBridge Systems",      score: 28, exposure: "₹6.2 Cr",  issue: "MCA21 default · Director disqualified" },
-    { name: "TowerCo Solutions",      score: 38, exposure: "₹28.1 Cr", issue: "Concentration: 42% · BB− rating" },
-    { name: "Fibernet Services",      score: 41, exposure: "₹15.2 Cr", issue: "Late payments · 3 active disputes" },
-    { name: "DataCentre One",         score: 45, exposure: "₹19.8 Cr", issue: "Credit watch · Pending audit" },
-    { name: "RuralNet Pvt Ltd",       score: 48, exposure: "₹9.4 Cr",  issue: "GST mismatch · 2 pending TDS defaults" },
-    { name: "SpeedFibre Ltd",         score: 52, exposure: "₹11.2 Cr", issue: "Minor: 1 late payment in 12 months" },
-    { name: "Ericsson India",         score: 91, exposure: "₹142 Cr",  issue: "" },
-    { name: "Nokia Solutions",        score: 88, exposure: "₹98 Cr",   issue: "" },
-    { name: "Huawei Tech India",      score: 72, exposure: "₹86 Cr",   issue: "" },
-    { name: "Cisco Systems India",    score: 85, exposure: "₹54 Cr",   issue: "" },
-    { name: "IBM India",              score: 82, exposure: "₹38 Cr",   issue: "" },
-    { name: "TCS Network Svcs",       score: 90, exposure: "₹67 Cr",   issue: "" },
-    { name: "Infosys BPM",            score: 87, exposure: "₹32 Cr",   issue: "" },
-    { name: "Wipro Networks",         score: 79, exposure: "₹28 Cr",   issue: "" },
-    { name: "HCL Technologies",       score: 83, exposure: "₹41 Cr",   issue: "" },
-    { name: "Tech Mahindra",          score: 76, exposure: "₹35 Cr",   issue: "" },
-    { name: "L&T Technology",         score: 81, exposure: "₹22 Cr",   issue: "" },
-    { name: "Sterlite Tech Ltd",      score: 69, exposure: "₹48 Cr",   issue: "" },
-    { name: "HFCL Limited",           score: 74, exposure: "₹31 Cr",   issue: "" },
-    { name: "Tejas Networks",         score: 77, exposure: "₹18 Cr",   issue: "" },
-    { name: "Amdocs India",           score: 84, exposure: "₹26 Cr",   issue: "" },
-    { name: "Oracle India",           score: 89, exposure: "₹62 Cr",   issue: "" },
-    { name: "SAP India",              score: 92, exposure: "₹44 Cr",   issue: "" },
-    { name: "Microsoft India",        score: 94, exposure: "₹38 Cr",   issue: "" },
-    { name: "Amazon AWS India",       score: 88, exposure: "₹52 Cr",   issue: "" },
-    { name: "Google Cloud India",     score: 91, exposure: "₹29 Cr",   issue: "" },
-    { name: "Razorpay Payments",      score: 78, exposure: "₹8 Cr",    issue: "" },
-    { name: "Juspay Tech",            score: 73, exposure: "₹6 Cr",    issue: "" },
-    { name: "National Fibre Net",     score: 66, exposure: "₹24 Cr",   issue: "" },
-    { name: "Reliance Jio Infra",     score: 55, exposure: "₹18 Cr",   issue: "" }
+/* ── CONNECTOR DATA ─────────────────────────────────────── */
+var CONNECTOR_DATA_LIST = [
+    { id: 'SAP',      name: 'SAP ERP',           status: 'live',    lastSync: '2 min ago',  records: '2.4M',   kpis: ['revenue','ebitda','ebitda-margin','fcf','capex','net-debt','roce','interest-coverage','working-capital','dividend-payout'] },
+    { id: 'ORACLE',   name: 'Oracle Financials',  status: 'live',    lastSync: '5 min ago',  records: '840K',   kpis: ['roce','dividend-payout'] },
+    { id: 'SIEBEL',   name: 'Siebel CRM',         status: 'live',    lastSync: '1 min ago',  records: '312M',   kpis: ['arpu','churn','subscribers','arpu-5g','market-share','postpaid-mix','data-revenue','nps','roaming-revenue','b2b-revenue'] },
+    { id: 'HUAWEI',   name: 'Huawei OSS',         status: 'live',    lastSync: '30 sec ago', records: '184K',   kpis: ['network-uptime','call-drop','data-speed','5g-coverage','latency','bts-count','energy-cost','fault-resolution'] },
+    { id: 'NOKIA',    name: 'Nokia NetAct',        status: 'live',    lastSync: '3 min ago',  records: '48K',    kpis: ['volte','spectrum-efficiency'] },
+    { id: 'SUBEX',    name: 'Subex RAID',          status: 'warning', lastSync: '18 min ago', records: '9.2M',   kpis: ['fraud-loss','recovery-rate','open-alerts','billing-accuracy','interconnect-accuracy','tap-success','sim-box','dispute-value','rafm-roi','leakage-pct'] },
+    { id: 'WORKDAY',  name: 'Workday HCM',         status: 'live',    lastSync: '4 min ago',  records: '48.2K',  kpis: ['headcount','attrition','revenue-per-employee','training-hours','gender-diversity','open-positions','cost-per-employee','employee-nps','overtime-pct','contractor-ratio'] },
+    { id: 'ARIBA',    name: 'SAP Ariba',           status: 'live',    lastSync: '6 min ago',  records: '1.84M',  kpis: ['active-vendors','po-value','contract-compliance','savings-pct','vendor-risk-score','ontime-delivery','sla-breach','payment-terms','single-source','dispute-rate'] },
+    { id: 'GRC',      name: 'Internal GRC',        status: 'live',    lastSync: '8 min ago',  records: '4.2K',   kpis: ['trai-filings','pending-compliance','qos-score','spectrum-fees','regulatory-fines','license-fees','audit-findings','data-privacy','compliance-score','license-renewals'] },
+    { id: 'GENESYS',  name: 'Genesys CX',          status: 'live',    lastSync: '2 min ago',  records: '28.4M',  kpis: ['csat','fcr','aht','complaint-rate','digital-adoption','app-rating','ivr-containment','escalation-rate','repeat-contacts','resolution-sla'] }
 ];
 
+/* ── CIRCLE DATA ────────────────────────────────────────── */
+var CIRCLE_DATA = [
+    { id: 'MH', name: 'Maharashtra',      arpu: 184, churn: 1.3, revenue: 380, subscribers: 22.3 },
+    { id: 'MU', name: 'Mumbai',           arpu: 198, churn: 1.1, revenue: 520, subscribers: 28.4 },
+    { id: 'DL', name: 'Delhi NCR',        arpu: 192, churn: 1.2, revenue: 480, subscribers: 26.8 },
+    { id: 'KA', name: 'Karnataka',        arpu: 181, churn: 1.4, revenue: 340, subscribers: 20.4 },
+    { id: 'TN', name: 'Tamil Nadu',       arpu: 178, churn: 1.4, revenue: 310, subscribers: 18.9 },
+    { id: 'AP', name: 'Andhra Pradesh',   arpu: 175, churn: 1.5, revenue: 290, subscribers: 17.9 },
+    { id: 'GJ', name: 'Gujarat',          arpu: 174, churn: 1.5, revenue: 270, subscribers: 16.8 },
+    { id: 'RJ', name: 'Rajasthan',        arpu: 162, churn: 1.8, revenue: 180, subscribers: 12.0 },
+    { id: 'UP', name: 'UP West',          arpu: 161, churn: 1.8, revenue: 170, subscribers: 11.4 },
+    { id: 'UE', name: 'UP East',          arpu: 158, churn: 1.9, revenue: 160, subscribers: 10.9 },
+    { id: 'BR', name: 'Bihar',            arpu: 154, churn: 2.1, revenue: 140, subscribers: 9.8  },
+    { id: 'WB', name: 'West Bengal',      arpu: 168, churn: 1.6, revenue: 220, subscribers: 14.2 },
+    { id: 'OR', name: 'Odisha',           arpu: 159, churn: 1.7, revenue: 150, subscribers: 10.2 },
+    { id: 'MP', name: 'Madhya Pradesh',   arpu: 163, churn: 1.7, revenue: 185, subscribers: 12.3 },
+    { id: 'KL', name: 'Kerala',           arpu: 176, churn: 1.4, revenue: 240, subscribers: 14.8 },
+    { id: 'PB', name: 'Punjab',           arpu: 171, churn: 1.5, revenue: 195, subscribers: 12.4 },
+    { id: 'HR', name: 'Haryana',          arpu: 169, churn: 1.6, revenue: 188, subscribers: 12.1 },
+    { id: 'HP', name: 'Himachal Pradesh', arpu: 158, churn: 1.8, revenue: 98,  subscribers: 6.7  },
+    { id: 'JK', name: 'J&K',             arpu: 152, churn: 2.0, revenue: 82,  subscribers: 5.8  },
+    { id: 'NE', name: 'North East',       arpu: 148, churn: 2.2, revenue: 76,  subscribers: 5.5  },
+    { id: 'AS', name: 'Assam',            arpu: 151, churn: 2.1, revenue: 88,  subscribers: 6.3  },
+    { id: 'CH', name: 'Chhattisgarh',     arpu: 157, churn: 1.9, revenue: 112, subscribers: 7.7  }
+];
 
-/* ══════════════════════════════════════════════════════════
-   11. SCENARIO BASE DATA
-   ══════════════════════════════════════════════════════════ */
+/* ── VENDOR RISK DATA ───────────────────────────────────── */
+var VENDOR_DATA = [
+    { name: 'Huawei Technologies',    spend: 612, risk: 42, status: 'MEDIUM', flag: false, category: 'Network' },
+    { name: 'Nokia Solutions',        spend: 284, risk: 18, status: 'LOW',    flag: false, category: 'Network' },
+    { name: 'Ericsson India',         spend: 198, risk: 22, status: 'LOW',    flag: false, category: 'Network' },
+    { name: 'Indus Towers',           spend: 228, risk: 28, status: 'LOW',    flag: false, category: 'Infrastructure' },
+    { name: 'CloudHost Infra Ltd',    spend: 1.92,risk: 94, status: 'CRITICAL',flag: true,  category: 'IT' },
+    { name: 'TowerCo Solutions',      spend: 28,  risk: 38, status: 'MEDIUM', flag: false, category: 'Infrastructure' },
+    { name: 'SAP India',              spend: 84,  risk: 12, status: 'LOW',    flag: false, category: 'Software' },
+    { name: 'Oracle India',           spend: 62,  risk: 14, status: 'LOW',    flag: false, category: 'Software' },
+    { name: 'Accenture India',        spend: 142, risk: 18, status: 'LOW',    flag: false, category: 'Services' },
+    { name: 'Subex Ltd',              spend: 28,  risk: 16, status: 'LOW',    flag: false, category: 'Software' }
+];
 
-const SCENARIO_BASE = {
-    revenue:     3420,
-    ebitda:      1183,
-    ebitdaPct:   34.6,
-    arpu:        181,
-    churn:       1.42,
-    subscribers: 312
+/* ── QUARTERLY P&L ──────────────────────────────────────── */
+var QUARTERLY_PL = [
+    { quarter: 'Q1 FY25', revenue: 3180, ebitda: 1060, margin: 33.3, capex: 420, fcf: 640  },
+    { quarter: 'Q2 FY25', revenue: 3280, ebitda: 1115, margin: 34.0, capex: 380, fcf: 735  },
+    { quarter: 'Q3 FY25', revenue: 3350, ebitda: 1152, margin: 34.4, capex: 360, fcf: 792  },
+    { quarter: 'Q4 FY25', revenue: 3420, ebitda: 1183, margin: 34.6, capex: 340, fcf: 843  },
+    { quarter: 'Q1 FY26', revenue: 3510, ebitda: 1225, margin: 34.9, capex: 320, fcf: 905  }
+];
+
+/* ── REGULATORY FILINGS ─────────────────────────────────── */
+var REGULATORY_FILINGS = [
+    { id: 'REG001', title: 'TRAI QoS Report — Q1 FY26',         due: '2026-04-30', status: 'SUBMITTED', category: 'QoS' },
+    { id: 'REG002', title: 'Spectrum Utilisation Report',         due: '2026-05-15', status: 'PENDING',   category: 'Spectrum' },
+    { id: 'REG003', title: 'AGR Revenue Share — Q1 FY26',        due: '2026-04-15', status: 'SUBMITTED', category: 'Revenue Share' },
+    { id: 'REG004', title: 'DoT 5G Rollout Progress Report',     due: '2026-06-30', status: 'DUE',       category: '5G' }
+];
+
+/* ── ACTIVITY LOG ───────────────────────────────────────── */
+var ACTIVITY_LOG = [
+    { time: '09:42', user: 'CFO', action: 'Reviewed Q1 FY26 Revenue Report', type: 'view' },
+    { time: '09:18', user: 'RAFM', action: 'Escalated ALT001 — Jio Interconnect Dispute', type: 'alert' },
+    { time: '08:54', user: 'Finance', action: 'Updated EBITDA forecast — +₹42 Cr revision', type: 'update' },
+    { time: '08:30', user: 'Network', action: 'Mumbai Circle outage resolved — 2.4 hrs', type: 'resolved' },
+    { time: '08:15', user: 'System', action: 'Daily data refresh complete — 10 systems synced', type: 'system' }
+];
+
+/* ── ISSUES LOG ─────────────────────────────────────────── */
+var ISSUES_LOG = [
+    { id: 'ISS001', title: '5G Dashboard KPI Integration', priority: 'HIGH', status: 'In Progress', owner: 'Tech Team', slaRemaining: '3 days' },
+    { id: 'ISS002', title: 'SAP-Subex Data Reconciliation', priority: 'MEDIUM', status: 'Pending', owner: 'Finance', slaRemaining: '7 days' },
+    { id: 'ISS003', title: 'Huawei OSS API Latency >500ms', priority: 'HIGH', status: 'Escalated', owner: 'Network', slaRemaining: '1 day' },
+    { id: 'ISS004', title: 'TAP File South Zone Recovery', priority: 'MEDIUM', status: 'Resolved', owner: 'RAFM', slaRemaining: 'Resolved' }
+];
+
+/* ── CHART DATA ─────────────────────────────────────────── */
+var ARPU_CHART_DATA = {
+    months:     ['Q1 FY25', 'Q2 FY25', 'Q3 FY25', 'Q4 FY25', 'Q1 FY26'],
+    historical: [162, 168, 172, 178, 181],
+    forecast:   [null, null, null, null, 181, 184, 188, 190]
 };
 
-const SCENARIO_SLIDERS = [
-    {
-        id:      "arpu-change",
-        label:   "ARPU Change",
-        unit:    "%",
-        min:     -30,
-        max:     30,
-        step:    1,
-        default: 0,
-        impact:  "revenue"
-    },
-    {
-        id:      "churn-change",
-        label:   "Churn Rate Change",
-        unit:    "%",
-        min:     -50,
-        max:     100,
-        step:    1,
-        default: 0,
-        impact:  "subscribers"
-    },
-    {
-        id:      "spectrum-cost",
-        label:   "Spectrum Cost Change",
-        unit:    "%",
-        min:     -20,
-        max:     50,
-        step:    1,
-        default: 0,
-        impact:  "ebitda"
-    },
-    {
-        id:      "price-increase",
-        label:   "Price Increase Offset",
-        unit:    "%",
-        min:     0,
-        max:     20,
-        step:    0.5,
-        default: 0,
-        impact:  "revenue"
-    }
+var COMPETITOR_DATA = [
+    { name: 'Airtel', arpu: 194, color: '#1E49E2' },
+    { name: 'Apex',   arpu: 181, color: '#00C0AE' },
+    { name: 'Jio',    arpu: 168, color: '#00B8F5' },
+    { name: 'Vi',     arpu: 156, color: '#F59E0B' },
+    { name: 'BSNL',   arpu: 98,  color: '#6B7280' }
 ];
 
-
-/* ══════════════════════════════════════════════════════════
-   12. REGULATORY FILINGS
-   ══════════════════════════════════════════════════════════ */
-
-const REGULATORY_FILINGS = [
-    {
-        id:           "reg-001",
-        title:        "TRAI QoS Report",
-        description:  "Quality of Service parameters — all 22 circles. Circle-wise KPI data including call drop rate, data speed, and network availability.",
-        dueDate:      "2025-06-30",
-        readiness:    78,
-        authority:    "TRAI",
-        penalty:      "₹50 Lakh per day",
-        pendingItems: [
-            "Circle KPI data — 5 circles pending",
-            "Network availability report — UP East",
-            "Customer complaint data — Bihar circle"
-        ],
-        accentColor: "#FD349C"
-    },
-    {
-        id:           "reg-002",
-        title:        "AGR Reconciliation Statement",
-        description:  "Adjusted Gross Revenue reconciliation for FY2024-25. Revenue share calculation for spectrum and licence fee payments to DoT.",
-        dueDate:      "2025-07-15",
-        readiness:    45,
-        authority:    "DoT",
-        penalty:      "Interest at 12% p.a. on shortfall",
-        pendingItems: [
-            "Interconnect revenue verification",
-            "Roaming revenue reconciliation",
-            "Other operating income classification",
-            "Auditor sign-off pending"
-        ],
-        accentColor: "#F59E0B"
-    },
-    {
-        id:           "reg-003",
-        title:        "Spectrum Usage Certificate",
-        description:  "Quarterly spectrum utilisation report across all bands — 700MHz, 1800MHz, 2100MHz, 2300MHz, 3500MHz.",
-        dueDate:      "2025-07-31",
-        readiness:    30,
-        authority:    "WPC / DoT",
-        penalty:      "Show cause notice",
-        pendingItems: [
-            "3500MHz band utilisation data",
-            "700MHz rural coverage metrics",
-            "Circle-wise spectrum efficiency ratios",
-            "Technical team certification pending",
-            "Legal review pending"
-        ],
-        accentColor: "#76D2FF"
-    },
-    {
-        id:           "reg-004",
-        title:        "Annual Subscriber Verification",
-        description:  "Annual verification of active subscriber base, SIM registration status, and KYC compliance across all 22 circles.",
-        dueDate:      "2025-08-15",
-        readiness:    15,
-        authority:    "TRAI / DoT",
-        penalty:      "₹2 Crore + disconnection risk",
-        pendingItems: [
-            "KYC audit — 8 circles pending",
-            "SIM registration verification",
-            "Biometric re-verification backlog",
-            "Subscriber count audit",
-            "Foreign national SIM compliance",
-            "Third party KYC vendor audit"
-        ],
-        accentColor: "#B497FF"
-    }
+var CHURN_TREND = [1.78, 1.68, 1.58, 1.46, 1.42];
+var REVENUE_BREAKDOWN = [
+    { label: 'Voice',       value: 28.4, color: '#1E49E2' },
+    { label: 'Data',        value: 58.4, color: '#00C0AE' },
+    { label: 'Enterprise',  value: 12.0, color: '#00B8F5' },
+    { label: 'Other',       value: 1.2,  color: '#6B7280' }
 ];
 
+var KPI_LIBRARY = KPI_MASTER;
 
-/* ══════════════════════════════════════════════════════════
-   13. NETWORK KPIs
-   ══════════════════════════════════════════════════════════ */
-
-const NETWORK_KPIS = {
-    callDropRate:      1.42,
-    dataSpeed4G:       22.4,
-    dataSpeed5G:       187.3,
-    networkUptime:     99.94,
-    voLTEPenetration:  68.4,
-    fiveGCircles:      12,
-    totalSites:        184200,
-    fiberedSites:      82400
-};
-
-
-/* ══════════════════════════════════════════════════════════
-   EXPORT
-   ══════════════════════════════════════════════════════════ */
-
+/* ── EXPOSE TO WINDOW ───────────────────────────────────── */
 window.OPERATOR            = OPERATOR;
+window.SOURCE_SYSTEMS      = SOURCE_SYSTEMS;
+window.BUSINESS_LINES      = BUSINESS_LINES;
+window.KPI_MASTER          = KPI_MASTER;
 window.KPI_DATA            = KPI_DATA;
-window.ARPU_CHART_DATA     = ARPU_CHART_DATA;
-window.CHURN_TREND         = CHURN_TREND;
-window.REVENUE_BREAKDOWN   = REVENUE_BREAKDOWN;
-window.CIRCLE_DATA         = CIRCLE_DATA;
-window.COMPETITOR_DATA     = COMPETITOR_DATA;
-window.QUARTERLY_PL        = QUARTERLY_PL;
-window.RAFM_ALERTS         = RAFM_ALERTS;
-window.VENDOR_DATA         = VENDOR_DATA;
 window.SCENARIO_BASE       = SCENARIO_BASE;
 window.SCENARIO_SLIDERS    = SCENARIO_SLIDERS;
-window.REGULATORY_FILINGS  = REGULATORY_FILINGS;
-window.NETWORK_KPIS        = NETWORK_KPIS;
-
-/* ══════════════════════════════════════════════════════════
-   14. CONNECTOR STATUS DATA
-   ══════════════════════════════════════════════════════════ */
-
-const CONNECTOR_DATA_LIST = [
-    { name: "SAP S/4HANA",           type: "ERP",          status: "live",    lastSync: "2 min ago",  records: "4,218,442",  latency: "14ms",  uptime: "99.98%" },
-    { name: "Oracle ERP Cloud",       type: "ERP",          status: "live",    lastSync: "4 min ago",  records: "2,841,203",  latency: "18ms",  uptime: "99.94%" },
-    { name: "Microsoft Dynamics",     type: "ERP",          status: "live",    lastSync: "3 min ago",  records: "1,204,887",  latency: "22ms",  uptime: "99.91%" },
-    { name: "Workday",                type: "HRIS",         status: "live",    lastSync: "1 min ago",  records: "312,441",    latency: "9ms",   uptime: "99.99%" },
-    { name: "Salesforce CRM",         type: "CRM",          status: "live",    lastSync: "3 min ago",  records: "891,204",    latency: "16ms",  uptime: "99.96%" },
-    { name: "Ariba / Coupa",          type: "Procurement",  status: "warning", lastSync: "18 min ago", records: "204,118",    latency: "142ms", uptime: "98.84%" },
-    { name: "Banking APIs",           type: "Treasury",     status: "live",    lastSync: "1 min ago",  records: "48,204",     latency: "8ms",   uptime: "99.99%" },
-    { name: "TRAI Data Feed",         type: "Regulatory",   status: "live",    lastSync: "6 min ago",  records: "12,441",     latency: "24ms",  uptime: "99.87%" },
-    { name: "GST Portal",             type: "Tax",          status: "live",    lastSync: "8 min ago",  records: "88,204",     latency: "31ms",  uptime: "99.82%" },
-    { name: "OFAC Sanctions List",    type: "Compliance",   status: "live",    lastSync: "12 min ago", records: "1,204",      latency: "11ms",  uptime: "100%"   },
-    { name: "Market Data Feed",       type: "External",     status: "live",    lastSync: "30 sec ago", records: "204,887",    latency: "6ms",   uptime: "99.99%" },
-    { name: "MCA21 Registry",         type: "Compliance",   status: "live",    lastSync: "15 min ago", records: "42,118",     latency: "28ms",  uptime: "99.76%" }
-];
-
-const ENGINE_DATA = [
-    { name: "Golden Record Engine",   uptime: "99.94%", latency: "12ms",  throughput: "48,204/s", status: "live"    },
-    { name: "RAFM Rules Engine",      uptime: "99.87%", latency: "8ms",   throughput: "22,118/s", status: "live"    },
-    { name: "AI Forecast Engine",     uptime: "99.91%", latency: "240ms", throughput: "1,204/s",  status: "live"    },
-    { name: "Reconciliation Engine",  uptime: "99.88%", latency: "18ms",  throughput: "12,441/s", status: "live"    },
-    { name: "PPP Policy Engine",      uptime: "99.76%", latency: "14ms",  throughput: "8,204/s",  status: "live"    },
-    { name: "NLP Query Processor",    uptime: "99.82%", latency: "380ms", throughput: "204/s",    status: "live"    },
-    { name: "KPI Computation Layer",  uptime: "98.84%", latency: "22ms",  throughput: "4,118/s",  status: "warning" },
-    { name: "Data Lineage Tracker",   uptime: "99.94%", latency: "9ms",   throughput: "48,887/s", status: "live"    },
-    { name: "Anomaly Detection ML",   uptime: "99.71%", latency: "180ms", throughput: "2,204/s",  status: "live"    }
-];
-
-const ACTIVITY_LOG = [
-    { time: "21:42:08", connector: "SAP S/4HANA",        event: "Full sync completed",             type: "success" },
-    { time: "21:40:14", connector: "Workday",             event: "Delta sync — 241 new records",    type: "success" },
-    { time: "21:38:22", connector: "Ariba / Coupa",       event: "Latency spike detected — 142ms",  type: "warning" },
-    { time: "21:36:11", connector: "Banking APIs",        event: "Real-time feed active",           type: "success" },
-    { time: "21:34:08", connector: "RAFM Rules Engine",   event: "Rule set updated — v4.2.1",       type: "info"    },
-    { time: "21:32:44", connector: "Oracle ERP Cloud",    event: "Delta sync — 1,204 records",      type: "success" },
-    { time: "21:30:18", connector: "Golden Record",       event: "Conflict resolution — 48 merged", type: "info"    },
-    { time: "21:28:04", connector: "Salesforce CRM",      event: "Delta sync — 88 new records",     type: "success" },
-    { time: "21:24:11", connector: "OFAC List",           event: "Sanctions list refreshed",        type: "success" },
-    { time: "21:18:44", connector: "Ariba / Coupa",       event: "Retry attempt 1 of 3",            type: "warning" }
-];
-
+window.RAFM_ALERTS         = RAFM_ALERTS;
 window.CONNECTOR_DATA_LIST = CONNECTOR_DATA_LIST;
-window.ENGINE_DATA         = ENGINE_DATA;
+window.CIRCLE_DATA         = CIRCLE_DATA;
+window.VENDOR_DATA         = VENDOR_DATA;
+window.QUARTERLY_PL        = QUARTERLY_PL;
+window.REGULATORY_FILINGS  = REGULATORY_FILINGS;
 window.ACTIVITY_LOG        = ACTIVITY_LOG;
-
-/* ══════════════════════════════════════════════════════════
-   15. EXTENDED KPI LIBRARY
-   ══════════════════════════════════════════════════════════ */
-
-const KPI_LIBRARY = [
-    { id: "arpu",         label: "ARPU (Blended)",      value: "₹181",   unit: "/mo",   delta: "+₹12",    deltaLabel: "vs last year", accentColor: "#00C0AE", default: true  },
-    { id: "churn",        label: "Monthly Churn",        value: "1.42",   unit: "%",     delta: "-0.18%",  deltaLabel: "vs last year", accentColor: "#FD349C", default: true  },
-    { id: "ebitda",       label: "EBITDA Margin",        value: "34.6",   unit: "%",     delta: "+2.1%",   deltaLabel: "vs last year", accentColor: "#76D2FF", default: true  },
-    { id: "spectrum",     label: "Spectrum Coverage",    value: "2.8",    unit: "×",     delta: "+0.3×",   deltaLabel: "vs last year", accentColor: "#B497FF", default: true  },
-    { id: "fcf",          label: "Free Cash Flow",       value: "₹2,340", unit: " Cr",   delta: "+₹340 Cr",deltaLabel: "vs last year", accentColor: "#63EBDA", default: true  },
-    { id: "subscribers",  label: "Active Subscribers",   value: "312",    unit: "M",     delta: "+18M",    deltaLabel: "vs last year", accentColor: "#1E49E2", default: true  },
-    { id: "netrevenue",   label: "Net Revenue",          value: "₹3,420", unit: " Cr",   delta: "+₹240 Cr",deltaLabel: "vs last year", accentColor: "#00B8F5", default: false },
-    { id: "grossadds",    label: "Monthly Gross Adds",   value: "5.1",    unit: "M",     delta: "+0.4M",   deltaLabel: "vs last year", accentColor: "#00C0AE", default: false },
-    { id: "prepaidarpu",  label: "Prepaid ARPU",         value: "₹162",   unit: "/mo",   delta: "+₹8",     deltaLabel: "vs last year", accentColor: "#63EBDA", default: false },
-    { id: "postpaidarpu", label: "Postpaid ARPU",        value: "₹312",   unit: "/mo",   delta: "+₹24",    deltaLabel: "vs last year", accentColor: "#B497FF", default: false },
-    { id: "fiveg",        label: "5G Subscribers",       value: "38",     unit: "M",     delta: "+12M",    deltaLabel: "vs last year", accentColor: "#1E49E2", default: false },
-    { id: "volte",        label: "VoLTE Penetration",    value: "68.4",   unit: "%",     delta: "+8.2%",   deltaLabel: "vs last year", accentColor: "#76D2FF", default: false },
-    { id: "calldrop",     label: "Call Drop Rate",       value: "1.42",   unit: "%",     delta: "-0.24%",  deltaLabel: "vs last year", accentColor: "#F59E0B", default: false },
-    { id: "datarevenue",  label: "Data Revenue %",       value: "58.4",   unit: "%",     delta: "+4.2%",   deltaLabel: "vs last year", accentColor: "#00B8F5", default: false },
-    { id: "uptime",       label: "Network Uptime",       value: "99.94",  unit: "%",     delta: "+0.02%",  deltaLabel: "vs last year", accentColor: "#00C0AE", default: false },
-    { id: "b2brevenue",   label: "B2B Revenue",          value: "₹390",   unit: " Cr",   delta: "+₹48 Cr", deltaLabel: "vs last year", accentColor: "#B497FF", default: false },
-    { id: "capexratio",   label: "Capex / Revenue",      value: "9.9",    unit: "%",     delta: "-1.2%",   deltaLabel: "vs last year", accentColor: "#F59E0B", default: false },
-    { id: "fcfyield",     label: "FCF Yield",            value: "68.4",   unit: "%",     delta: "+4.1%",   deltaLabel: "vs last year", accentColor: "#63EBDA", default: false }
-];
-
-window.KPI_LIBRARY = KPI_LIBRARY;
-
-/* ══════════════════════════════════════════════════════════
-   16. ISSUES / MAINTENANCE REQUESTS
-   Pre-seeded sample issues for demo
-   ══════════════════════════════════════════════════════════ */
-
-var ISSUES_LOG = [
-    {
-        id:          "ISS-2025-0038",
-        type:        "RAFM Alert",
-        source:      "Interconnect Billing Discrepancy — Jio",
-        priority:    "critical",
-        status:      "in-progress",
-        raisedBy:    "CFO Dashboard",
-        raisedAt:    "05 Jun 2025 · 09:22 IST",
-        assignedTo:  "KPMG GRCS — Revenue Assurance Team",
-        slaHours:    4,
-        slaRemaining:"1h 42m",
-        description: "CDR reconciliation flagged ₹4.8 Cr billing discrepancy with Jio on Mumbai-Delhi route. Requires urgent investigation and formal dispute filing."
-    },
-    {
-        id:          "ISS-2025-0037",
-        type:        "Connector Warning",
-        source:      "Ariba / Coupa — Latency Spike",
-        priority:    "high",
-        status:      "open",
-        raisedBy:    "System Monitor",
-        raisedAt:    "05 Jun 2025 · 07:38 IST",
-        assignedTo:  "KPMG GRCS — Managed Services",
-        slaHours:    8,
-        slaRemaining:"4h 18m",
-        description: "Procurement connector latency spiked to 142ms — 10× normal. Sync delays affecting PO approval workflows."
-    },
-    {
-        id:          "ISS-2025-0036",
-        type:        "PPP Violation",
-        source:      "Split PO — CloudHost Infra Ltd",
-        priority:    "critical",
-        status:      "open",
-        raisedBy:    "PPP Policy Engine",
-        raisedAt:    "03 Jun 2025 · 14:22 IST",
-        assignedTo:  "KPMG GRCS — Internal Audit",
-        slaHours:    2,
-        slaRemaining:"OVERDUE",
-        description: "4 consecutive POs to CloudHost Infra Ltd each valued at ₹48L — just below ₹50L CFO approval threshold. Potential split-PO fraud."
-    },
-    {
-        id:          "ISS-2025-0035",
-        type:        "RAFM Alert",
-        source:      "TAP File Leakage — Zone 3",
-        priority:    "high",
-        status:      "resolved",
-        raisedBy:    "CFO Dashboard",
-        raisedAt:    "02 Jun 2025 · 11:14 IST",
-        assignedTo:  "KPMG GRCS — Roaming Operations",
-        slaHours:    8,
-        slaRemaining:"Resolved",
-        description: "TAP file mismatch in South India zone. ₹1.2 Cr unbilled roaming events identified and recovered."
-    }
-];
-
-window.ISSUES_LOG = ISSUES_LOG;
+window.ISSUES_LOG          = ISSUES_LOG;

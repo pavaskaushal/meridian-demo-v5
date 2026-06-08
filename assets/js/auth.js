@@ -381,7 +381,7 @@ function logout() {
 
 /* Set true to skip auth during development
    Set false before presentation / commit    */
-var DEV_MODE = false;
+var DEV_MODE = true;
 
 document.addEventListener('DOMContentLoaded', function() {
     if (DEV_MODE) {

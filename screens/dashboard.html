@@ -1,8 +1,28 @@
 <div class="section">
-                    <div class="section-header">
-                        <div class="section-title">Tier 1 KPIs · Real-Time</div>
-                        <div class="section-subtitle">Apex Telecom · 22 Circles · June 2025</div>
-                    </div>
+    <div class="section-header">
+        <div class="section-title">CFO Command Board · Apex Telecom</div>
+        <div class="section-subtitle">80 KPIs · 8 Business Lines · 10 Source Systems · Q1 FY26</div>
+    </div>
+</div>
+
+<div class="section">
+    <div id="kpi-tab-bar" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px;">
+        <button class="kpi-tab active" onclick="switchKPITab('finance')"    data-tab="finance">₹ Finance</button>
+        <button class="kpi-tab"        onclick="switchKPITab('commercial')" data-tab="commercial">📈 Commercial</button>
+        <button class="kpi-tab"        onclick="switchKPITab('network')"    data-tab="network">📡 Network</button>
+        <button class="kpi-tab"        onclick="switchKPITab('rafm')"       data-tab="rafm">🛡 RAFM</button>
+        <button class="kpi-tab"        onclick="switchKPITab('hr')"         data-tab="hr">👥 HR</button>
+        <button class="kpi-tab"        onclick="switchKPITab('procurement')" data-tab="procurement">📦 Procurement</button>
+        <button class="kpi-tab"        onclick="switchKPITab('regulatory')" data-tab="regulatory">⚖ Regulatory</button>
+        <button class="kpi-tab"        onclick="switchKPITab('cx')"         data-tab="cx">⭐ Customer</button>
+        <button class="kpi-tab"        onclick="switchKPITab('favourites')" data-tab="favourites">★ Favourites</button>
+    </div>
+    <div id="kpi-tab-subtitle" style="font-size:11px;color:var(--text-muted);margin-bottom:16px;padding-left:2px;">Finance & Treasury · SAP ERP · Oracle Financials</div>
+</div>
+
+<div class="section">
+    <div class="grid-kpi" id="kpi-grid"></div>
+</div>
                     <div class="grid-kpi" id="kpi-grid"></div>
                 </div>
                 <div class="section">

@@ -3,8 +3,10 @@
    Screen 1: CFO Command Board
    ============================================================ */
 
+var ACTIVE_KPI_TAB = 'finance';
+
 function initDashboard() {
-    renderKPICards();
+    switchKPITab('finance');
     renderAlertList();
     renderCharts();
     generateAutoInsight();
@@ -12,6 +14,129 @@ function initDashboard() {
         if (typeof renderCircleMap === 'function') renderCircleMap();
     }, 200);
     startFreshnessTimer();
+}
+
+function switchKPITab(tab) {
+    ACTIVE_KPI_TAB = tab;
+
+    // Update tab buttons
+    document.querySelectorAll('.kpi-tab').forEach(function(btn) {
+        btn.classList.toggle('active', btn.getAttribute('data-tab') === tab);
+    });
+
+    // Update subtitle
+    var subtitles = {
+        finance:     'Finance & Treasury · SAP ERP · Oracle Financials',
+        commercial:  'Commercial & Revenue · Siebel CRM · BSS',
+        network:     'Network & Technology · Huawei OSS · Nokia NetAct',
+        rafm:        'Revenue Assurance & Fraud · Subex RAID',
+        hr:          'HR & Workforce · Workday HCM',
+        procurement: 'Procurement & Vendor · SAP Ariba',
+        regulatory:  'Regulatory & Compliance · Internal GRC',
+        cx:          'Customer Experience · Genesys CX',
+        favourites:  'Your pinned KPIs · Saved to this device'
+    };
+    var subEl = document.getElementById('kpi-tab-subtitle');
+    if (subEl) subEl.textContent = subtitles[tab] || '';
+
+    // Save to localStorage
+    try { localStorage.setItem('meridian-active-tab', tab); } catch(e) {}
+
+    renderKPITab(tab);
+}
+
+function renderKPITab(tab) {
+    var grid = document.getElementById('kpi-grid');
+    if (!grid) return;
+
+    var kpis;
+    if (tab === 'favourites') {
+        var favIds = getFavourites();
+        kpis = window.KPI_MASTER.filter(function(k) { return favIds.indexOf(k.id) > -1; });
+        if (kpis.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text-muted);">' +
+                '<div style="font-size:32px;margin-bottom:12px;">★</div>' +
+                '<div style="font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">No favourites yet</div>' +
+                '<div style="font-size:12px;">Click the ★ on any KPI card to pin it here</div>' +
+            '</div>';
+            return;
+        }
+    } else {
+        kpis = window.KPI_MASTER.filter(function(k) { return k.businessLine === tab; });
+    }
+
+    var favIds = getFavourites();
+
+    grid.innerHTML = kpis.map(function(kpi) {
+        var isUp      = kpi.trend === 'up';
+        var isDown    = kpi.trend === 'down';
+        var deltaClass = isUp ? 'kpi-delta positive' : isDown ? 'kpi-delta negative' : 'kpi-delta neutral';
+        var isFav     = favIds.indexOf(kpi.id) > -1;
+        var pct       = kpi.pctToTarget;
+        var lineColor = pct >= 95 ? '#00C0AE' : pct >= 75 ? '#00B8F5' : pct >= 50 ? '#F59E0B' : pct >= 30 ? '#F97316' : '#FD349C';
+        var sys       = window.SOURCE_SYSTEMS[kpi.system] || {};
+
+        return '<div class="kpi-card" style="cursor:pointer;position:relative;" onclick="openKPIDetail(\'' + kpi.id + '\')">' +
+            '<div class="kpi-card-accent" style="background:' + lineColor + '"></div>' +
+
+            // Favourite star
+            '<div style="position:absolute;top:8px;right:28px;font-size:14px;cursor:pointer;color:' + (isFav ? '#F59E0B' : 'var(--text-muted)') + ';opacity:' + (isFav ? '1' : '0.4') + ';" ' +
+                'onclick="event.stopPropagation();toggleFavourite(\'' + kpi.id + '\')" title="Pin to Favourites">★</div>' +
+
+            // Expand icon
+            '<div style="position:absolute;top:8px;right:8px;opacity:0.3;font-size:10px;color:var(--text-muted);">↗</div>' +
+
+            // System tag
+            '<div style="font-size:9px;font-weight:700;letter-spacing:1px;color:' + lineColor + ';opacity:0.8;margin-bottom:4px;text-transform:uppercase;">' + (kpi.system || '') + '</div>' +
+
+            '<div class="kpi-label">' + kpi.label + '</div>' +
+
+            '<div class="kpi-value">' +
+                '<span id="kpi-val-' + kpi.id + '">' + kpi.value + '</span>' +
+                '<span style="font-size:14px;color:var(--text-secondary);font-weight:400;margin-left:2px;">' + kpi.unit + '</span>' +
+            '</div>' +
+
+            '<div class="' + deltaClass + '">' + kpi.delta + ' <span class="kpi-delta-label">YoY</span></div>' +
+
+            // Target progress
+            '<div style="margin-top:8px;">' +
+                '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">' +
+                    '<span style="font-size:9px;color:var(--text-muted);">To Target</span>' +
+                    '<span style="font-size:9px;font-weight:700;color:' + lineColor + ';">' + kpi.pctToTarget + '%</span>' +
+                '</div>' +
+                '<div style="height:3px;background:var(--border);border-radius:2px;">' +
+                    '<div style="height:3px;background:' + lineColor + ';border-radius:2px;width:' + Math.min(kpi.pctToTarget, 100) + '%;transition:width 0.6s ease;"></div>' +
+                '</div>' +
+            '</div>' +
+
+            // Benchmark
+            '<div style="margin-top:8px;display:flex;justify-content:space-between;align-items:center;">' +
+                '<span style="font-size:9px;color:var(--text-muted);">vs ' + (kpi.benchmarkLabel || 'Benchmark') + '</span>' +
+                '<span style="font-size:9px;font-weight:700;color:var(--text-muted);">' + kpi.benchmark + (kpi.unit ? ' ' + kpi.unit : '') + '</span>' +
+            '</div>' +
+
+            // Freshness
+            '<div style="position:absolute;bottom:8px;right:10px;display:flex;align-items:center;gap:5px;">' +
+                '<div style="width:5px;height:5px;border-radius:50%;background:#00C0AE;animation:livePulse 1.5s ease-in-out infinite alternate;"></div>' +
+                '<span class="kpi-freshness" style="font-size:9px;color:var(--text-muted);">Live</span>' +
+            '</div>' +
+
+        '</div>';
+    }).join('');
+}
+
+/* ── FAVOURITES ─────────────────────────────────────────── */
+function getFavourites() {
+    try { return JSON.parse(localStorage.getItem('meridian-favourites') || '[]'); } catch(e) { return []; }
+}
+
+function toggleFavourite(id) {
+    var favs = getFavourites();
+    var idx  = favs.indexOf(id);
+    if (idx > -1) favs.splice(idx, 1);
+    else favs.push(id);
+    try { localStorage.setItem('meridian-favourites', JSON.stringify(favs)); } catch(e) {}
+    renderKPITab(ACTIVE_KPI_TAB);
 }
 
 function generateAutoInsight() {
@@ -52,7 +177,7 @@ function renderKPICards() {
     grid.innerHTML = KPI_DATA.map(function(kpi) {
         var deltaClass = getDeltaClass(kpi.delta, kpi.id === 'churn');
         return '<div class="kpi-card" onclick="openKPIModal(\'' + kpi.id + '\')" style="cursor:pointer;" title="Click to expand">' +
-            '<div class="kpi-card-accent" style="background:' + kpi.accentColor + '"></div>' +
+            '<div class="kpi-card-accent" style="background:' + lineColor + '"></div>' +
             '<div class="kpi-label">' + kpi.label + '</div>' +
             '<div class="kpi-value">' +
                 '<span id="kpi-val-' + kpi.id + '">0</span>' +
@@ -265,7 +390,7 @@ function applyWidgets() {
         if (!kpi) return '';
         var deltaClass = getDeltaClass(kpi.delta, kpi.id === 'churn' || kpi.id === 'calldrop' || kpi.id === 'capexratio');
         return '<div class="kpi-card" onclick="openKPIModal(\'' + kpi.id + '\')" style="cursor:pointer;" title="Click to expand">' +
-            '<div class="kpi-card-accent" style="background:' + kpi.accentColor + '"></div>' +
+            '<div class="kpi-card-accent" style="background:' + lineColor + '"></div>' +
             '<div class="kpi-label">' + kpi.label + '</div>' +
             '<div class="kpi-value">' + kpi.value +
                 '<span style="font-size:14px;color:var(--text-secondary);font-weight:400;">' + kpi.unit + '</span>' +
