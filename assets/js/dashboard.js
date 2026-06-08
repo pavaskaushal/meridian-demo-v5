@@ -11,6 +11,7 @@ function initDashboard() {
     setTimeout(function() {
         if (typeof renderCircleMap === 'function') renderCircleMap();
     }, 200);
+    startFreshnessTimer();
 }
 
 function generateAutoInsight() {
@@ -59,6 +60,10 @@ function renderKPICards() {
             '</div>' +
             '<div class="kpi-delta ' + deltaClass + '">' + kpi.delta +
                 ' <span class="kpi-delta-label">' + kpi.deltaLabel + '</span>' +
+            '</div>' +
+            '<div style="position:absolute;bottom:8px;right:10px;display:flex;align-items:center;gap:5px;">' +
+                '<div style="width:5px;height:5px;border-radius:50%;background:#00C0AE;animation:livePulse 1.5s ease-in-out infinite alternate;"></div>' +
+                '<span class="kpi-freshness" style="font-size:9px;color:var(--text-muted);">Live · just now</span>' +
             '</div>' +
             '<div style="position:absolute;top:8px;right:8px;opacity:0.3;font-size:10px;color:var(--text-muted);">↗</div>' +
         '</div>';
@@ -268,6 +273,10 @@ function applyWidgets() {
             '<div class="kpi-delta ' + deltaClass + '">' + kpi.delta +
                 ' <span class="kpi-delta-label">' + kpi.deltaLabel + '</span>' +
             '</div>' +
+            '<div style="position:absolute;bottom:8px;right:10px;display:flex;align-items:center;gap:5px;">' +
+                '<div style="width:5px;height:5px;border-radius:50%;background:#00C0AE;animation:livePulse 1.5s ease-in-out infinite alternate;"></div>' +
+                '<span class="kpi-freshness" style="font-size:9px;color:var(--text-muted);">Live · just now</span>' +
+            '</div>' +
             '<div style="position:absolute;top:8px;right:8px;opacity:0.3;font-size:10px;color:var(--text-muted);">↗</div>' +
         '</div>';
     }).join('');
@@ -276,4 +285,22 @@ function applyWidgets() {
     var count = ACTIVE_KPIS.length;
     var cols = count <= 3 ? count : count <= 6 ? 3 : count <= 8 ? 4 : count <= 12 ? 6 : 6;
     grid.style.gridTemplateColumns = 'repeat(' + cols + ', 1fr)';
+}
+
+/* ── DATA FRESHNESS INDICATORS ──────────────────────────── */
+
+var FRESHNESS_START = Date.now();
+var FRESHNESS_TIMER = null;
+
+function startFreshnessTimer() {
+    FRESHNESS_START = Date.now();
+    if (FRESHNESS_TIMER) clearInterval(FRESHNESS_TIMER);
+
+    FRESHNESS_TIMER = setInterval(function() {
+        var mins = Math.floor((Date.now() - FRESHNESS_START) / 60000);
+        var text = mins === 0 ? 'Live · just now' : 'Live · ' + mins + ' min ago';
+        document.querySelectorAll('.kpi-freshness').forEach(function(el) {
+            el.textContent = text;
+        });
+    }, 30000);
 }
