@@ -33,7 +33,7 @@ function showScreen(screenId, navEl) {
     loadScreen(screenId, function() {
         if (screenId === 'dashboard')   initDashboard();
         if (screenId === 'rafm')        initRafm();
-        if (screenId === 'scenario')    initScenario();
+        if (screenId === 'scenario')    { try { initScenario(); } catch(e) { console.error('initScenario error:', e); } }
         if (screenId === 'regulatory')  initRegulatory();
         if (screenId === 'connectors')  initConnectors();
         if (screenId === 'issues')        initIssues();
