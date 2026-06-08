@@ -205,3 +205,93 @@ function renderPLTable() {
         '</tr>';
     }).join('');
 }
+
+/* ── SCENARIO COMPARISON ────────────────────────────────── */
+
+var SAVED_SCENARIOS = [];
+
+function saveCurrentScenario() {
+    if (SAVED_SCENARIOS.length >= 3) {
+        SAVED_SCENARIOS.shift(); // Remove oldest
+    }
+
+    var arpu     = parseFloat(document.getElementById('slider-arpu-change').value);
+    var churn    = parseFloat(document.getElementById('slider-churn-change').value);
+    var spectrum = parseFloat(document.getElementById('slider-spectrum-cost').value);
+    var price    = parseFloat(document.getElementById('slider-price-increase').value);
+    var result   = calculateScenario(arpu, churn, spectrum, price);
+
+    var colors = ['#00C0AE', '#1E49E2', '#F59E0B'];
+    var names  = ['Scenario A', 'Scenario B', 'Scenario C'];
+
+    SAVED_SCENARIOS.push({
+        name:     names[SAVED_SCENARIOS.length],
+        color:    colors[SAVED_SCENARIOS.length],
+        arpu:     arpu,
+        churn:    churn,
+        spectrum: spectrum,
+        price:    price,
+        revenue:  result.scenarioRevenue,
+        ebitda:   result.scenarioEbitda,
+        margin:   result.ebitdaPct,
+        impact:   result.revenueImpact
+    });
+
+    renderScenarioComparison();
+}
+
+function renderScenarioComparison() {
+    var el = document.getElementById('scenario-comparison-body');
+    if (!el || SAVED_SCENARIOS.length === 0) return;
+
+    var metrics = [
+        { label: 'ARPU Change',     key: 'arpu',    suffix: '%', sign: true },
+        { label: 'Churn Change',    key: 'churn',   suffix: '%', sign: true },
+        { label: 'Revenue',         key: 'revenue', prefix: '₹', suffix: ' Cr' },
+        { label: 'EBITDA',          key: 'ebitda',  prefix: '₹', suffix: ' Cr' },
+        { label: 'EBITDA Margin',   key: 'margin',  suffix: '%' },
+        { label: 'Revenue Impact',  key: 'impact',  prefix: '₹', suffix: ' Cr', sign: true, color: true }
+    ];
+
+    var header = '<tr style="border-bottom:1px solid var(--border);">' +
+        '<th style="padding:12px 24px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;">Metric</th>' +
+        SAVED_SCENARIOS.map(function(s) {
+            return '<th style="padding:12px 16px;text-align:right;font-size:11px;font-weight:700;color:' + s.color + ';text-transform:uppercase;">' +
+                s.name + '</th>';
+        }).join('') +
+        '</tr>';
+
+    var rows = metrics.map(function(m) {
+        var cells = SAVED_SCENARIOS.map(function(s) {
+            var val   = s[m.key];
+            var color = 'var(--text-secondary)';
+            if (m.color) color = val >= 0 ? '#00C0AE' : '#FD349C';
+            var display = '';
+            if (m.sign && val >= 0) display += '+';
+            if (m.prefix) display += m.prefix;
+            display += val.toLocaleString('en-IN');
+            display += m.suffix || '';
+            return '<td style="padding:12px 16px;text-align:right;font-size:13px;font-weight:600;color:' + color + ';">' + display + '</td>';
+        }).join('');
+
+        return '<tr style="border-bottom:1px solid var(--border);">' +
+            '<td style="padding:12px 24px;font-size:13px;color:var(--text-primary);">' + m.label + '</td>' +
+            cells + '</tr>';
+    }).join('');
+
+    var clearBtn = '<div style="margin-top:16px;text-align:right;">' +
+        '<button class="btn btn-secondary" onclick="clearScenarios()" style="font-size:11px;">Clear All</button>' +
+        '</div>';
+
+    el.innerHTML =
+        '<table style="width:100%;border-collapse:collapse;">' +
+            '<thead>' + header + '</thead>' +
+            '<tbody>' + rows + '</tbody>' +
+        '</table>' + clearBtn;
+}
+
+function clearScenarios() {
+    SAVED_SCENARIOS = [];
+    var el = document.getElementById('scenario-comparison-body');
+    if (el) el.innerHTML = '<div style="text-align:center;padding:32px;color:var(--text-muted);"><div style="font-size:24px;margin-bottom:8px;">📊</div><div style="font-size:13px;">No scenarios saved yet.</div></div>';
+}
