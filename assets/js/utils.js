@@ -493,3 +493,110 @@ function markAllRead() {
     var dd = document.getElementById('notification-dropdown');
     if (dd) dd.style.display = 'none';
 }
+
+/* ── GLOBAL SEARCH ──────────────────────────────────────── */
+
+var SEARCH_INDEX = [
+    // KPIs
+    { type: 'KPI', label: 'ARPU', value: '₹181/month', screen: 'dashboard', color: '#00C0AE' },
+    { type: 'KPI', label: 'Monthly Churn', value: '1.42%', screen: 'dashboard', color: '#FD349C' },
+    { type: 'KPI', label: 'EBITDA Margin', value: '34.6%', screen: 'dashboard', color: '#00B8F5' },
+    { type: 'KPI', label: 'Free Cash Flow', value: '₹2,340 Cr', screen: 'dashboard', color: '#63EBDA' },
+    { type: 'KPI', label: 'Active Subscribers', value: '312M', screen: 'dashboard', color: '#1E49E2' },
+    { type: 'KPI', label: 'Spectrum Coverage', value: '2.8×', screen: 'dashboard', color: '#B497FF' },
+
+    // RAFM Alerts
+    { type: 'ALERT', label: 'Interconnect Billing Discrepancy', value: '₹4.8 Cr · CRITICAL', screen: 'rafm', color: '#FD349C' },
+    { type: 'ALERT', label: 'TAP File Leakage Zone 3', value: '₹1.2 Cr · HIGH', screen: 'rafm', color: '#F59E0B' },
+    { type: 'ALERT', label: 'Prepaid Credit Leakage', value: '₹0.8 Cr · HIGH', screen: 'rafm', color: '#F59E0B' },
+    { type: 'ALERT', label: 'SIM Box Fraud UP East', value: '₹0.6 Cr · HIGH', screen: 'rafm', color: '#F59E0B' },
+    { type: 'ALERT', label: 'Split PO CloudHost Infra', value: '₹1.92 Cr · CRITICAL', screen: 'rafm', color: '#FD349C' },
+
+    // Circles
+    { type: 'CIRCLE', label: 'Mumbai', value: 'ARPU ₹198 · Churn 1.1%', screen: 'dashboard', color: '#00C0AE' },
+    { type: 'CIRCLE', label: 'Delhi NCR', value: 'ARPU ₹192 · Churn 1.2%', screen: 'dashboard', color: '#1E49E2' },
+    { type: 'CIRCLE', label: 'Maharashtra', value: 'ARPU ₹184 · Churn 1.3%', screen: 'dashboard', color: '#00B8F5' },
+    { type: 'CIRCLE', label: 'Bihar', value: 'ARPU ₹154 · Churn 2.1%', screen: 'dashboard', color: '#FD349C' },
+    { type: 'CIRCLE', label: 'UP East', value: 'ARPU ₹158 · Churn 1.9%', screen: 'dashboard', color: '#F59E0B' },
+    { type: 'CIRCLE', label: 'Karnataka', value: 'ARPU ₹181 · Churn 1.4%', screen: 'dashboard', color: '#00C0AE' },
+
+    // Screens
+    { type: 'SCREEN', label: 'RAFM Risk Monitor', value: 'Revenue assurance & fraud', screen: 'rafm', color: '#1E49E2' },
+    { type: 'SCREEN', label: 'AI Scenario Studio', value: 'What-if modelling', screen: 'scenario', color: '#00C0AE' },
+    { type: 'SCREEN', label: 'Regulatory Calendar', value: 'TRAI filing tracker', screen: 'regulatory', color: '#F59E0B' },
+    { type: 'SCREEN', label: 'Connector Status', value: 'System health monitoring', screen: 'connectors', color: '#00B8F5' },
+    { type: 'SCREEN', label: 'Industry Benchmarking', value: 'Apex vs Airtel vs Jio', screen: 'benchmarking', color: '#B497FF' },
+    { type: 'SCREEN', label: 'DCF Valuation Studio', value: 'Monte Carlo simulation', screen: 'dcf', color: '#63EBDA' },
+
+    // Vendors
+    { type: 'VENDOR', label: 'CloudHost Infra Ltd', value: 'Risk Score 14 · OFAC flag', screen: 'rafm', color: '#FD349C' },
+    { type: 'VENDOR', label: 'TowerCo Solutions', value: 'Risk Score 38 · ₹28.1 Cr', screen: 'rafm', color: '#F59E0B' }
+];
+
+var SEARCH_RESULTS_CACHE = [];
+
+function handleSearch(query) {
+    var dd = document.getElementById('search-dropdown');
+    if (!dd) return;
+
+    if (!query || query.length < 2) {
+        dd.style.display = 'none';
+        return;
+    }
+
+    var q = query.toLowerCase();
+    SEARCH_RESULTS_CACHE = SEARCH_INDEX.filter(function(item) {
+        return item.label.toLowerCase().includes(q) || item.value.toLowerCase().includes(q) || item.type.toLowerCase().includes(q);
+    }).slice(0, 8);
+
+    if (SEARCH_RESULTS_CACHE.length === 0) {
+        dd.style.display = 'none';
+        return;
+    }
+
+    var typeColors = { KPI: '#00C0AE', ALERT: '#FD349C', CIRCLE: '#1E49E2', SCREEN: '#B497FF', VENDOR: '#F59E0B' };
+
+    dd.innerHTML = SEARCH_RESULTS_CACHE.map(function(r, i) {
+        return '<div data-search-idx="' + i + '" style="padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;" ' +
+            'onmouseover="this.style.background=\'var(--bg-hover)\'" onmouseout="this.style.background=\'\'">' +
+            '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                '<div style="font-size:12px;font-weight:600;color:var(--text-primary);">' + r.label + '</div>' +
+                '<div style="font-size:10px;font-weight:700;color:' + (typeColors[r.type] || '#8A9BB0') + ';background:' + (typeColors[r.type] || '#8A9BB0') + '22;padding:2px 8px;border-radius:20px;">' + r.type + '</div>' +
+            '</div>' +
+            '<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">' + r.value + '</div>' +
+        '</div>';
+    }).join('');
+
+    // Event delegation on dropdown
+    dd.onclick = function(e) {
+        var item = e.target.closest('[data-search-idx]');
+        if (!item) return;
+        var idx = parseInt(item.getAttribute('data-search-idx'));
+        var result = SEARCH_RESULTS_CACHE[idx];
+        if (result) selectSearchResult(result.screen, result.label);
+    };
+
+    dd.style.display = 'block';
+}
+
+function selectSearchResult(screen, label) {
+    var dd = document.getElementById('search-dropdown');
+    if (dd) dd.style.display = 'none';
+    document.getElementById('global-search').value = '';
+    CURRENT_SCREEN = null; // Force reload even if same screen
+    var navEl = document.querySelector('[data-screen="' + screen + '"]');
+    showScreen(screen, navEl);
+}
+
+function closeSearch() {
+    var dd = document.getElementById('search-dropdown');
+    if (dd) dd.style.display = 'none';
+}
+// Close search on outside click
+document.addEventListener('click', function(e) {
+    var wrapper = document.getElementById('global-search');
+    var dd = document.getElementById('search-dropdown');
+    if (wrapper && dd && !wrapper.contains(e.target) && !dd.contains(e.target)) {
+        closeSearch();
+    }
+});

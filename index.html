@@ -95,6 +95,17 @@
                 <div class="topbar-sub" id="topbar-subtitle">Real-time financial intelligence · Apex Telecom</div>
             </div>
             <div class="topbar-right">
+                <div style="position:relative;">
+                    <input type="text" id="global-search" placeholder="Search KPIs, alerts, circles..." 
+                        style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px 5px 32px;font-size:12px;color:var(--text-primary);width:220px;transition:all 0.2s;"
+                        oninput="handleSearch(this.value)"
+                        onfocus="this.style.borderColor='var(--kpmg-cyan)';this.style.width='280px'"
+                        onblur="this.style.borderColor='var(--border)';this.style.width='220px'" onkeydown="if(event.key==='Escape')closeSearch()">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;"><!---->
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;width:320px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:1000;overflow:hidden;max-height:400px;overflow-y:auto;"></div>
+                </div>
                 <div class="operator-tag">APEX TELECOM · 22 CIRCLES</div>
                 <button class="btn btn-secondary" onclick="generateBoardPack()" style="font-size:11px;padding:4px 12px;display:flex;align-items:center;gap:6px;">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
