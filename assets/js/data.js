@@ -1513,16 +1513,16 @@ var RAFM_ALERTS = [
 
 /* ── CONNECTOR DATA ─────────────────────────────────────── */
 var CONNECTOR_DATA_LIST = [
-    { id: 'SAP',      name: 'SAP ERP',           status: 'live',    lastSync: '2 min ago',  records: '2.4M',   kpis: ['revenue','ebitda','ebitda-margin','fcf','capex','net-debt','roce','interest-coverage','working-capital','dividend-payout'] },
-    { id: 'ORACLE',   name: 'Oracle Financials',  status: 'live',    lastSync: '5 min ago',  records: '840K',   kpis: ['roce','dividend-payout'] },
-    { id: 'SIEBEL',   name: 'Siebel CRM',         status: 'live',    lastSync: '1 min ago',  records: '312M',   kpis: ['arpu','churn','subscribers','arpu-5g','market-share','postpaid-mix','data-revenue','nps','roaming-revenue','b2b-revenue'] },
-    { id: 'HUAWEI',   name: 'Huawei OSS',         status: 'live',    lastSync: '30 sec ago', records: '184K',   kpis: ['network-uptime','call-drop','data-speed','5g-coverage','latency','bts-count','energy-cost','fault-resolution'] },
-    { id: 'NOKIA',    name: 'Nokia NetAct',        status: 'live',    lastSync: '3 min ago',  records: '48K',    kpis: ['volte','spectrum-efficiency'] },
-    { id: 'SUBEX',    name: 'Subex RAID',          status: 'warning', lastSync: '18 min ago', records: '9.2M',   kpis: ['fraud-loss','recovery-rate','open-alerts','billing-accuracy','interconnect-accuracy','tap-success','sim-box','dispute-value','rafm-roi','leakage-pct'] },
-    { id: 'WORKDAY',  name: 'Workday HCM',         status: 'live',    lastSync: '4 min ago',  records: '48.2K',  kpis: ['headcount','attrition','revenue-per-employee','training-hours','gender-diversity','open-positions','cost-per-employee','employee-nps','overtime-pct','contractor-ratio'] },
-    { id: 'ARIBA',    name: 'SAP Ariba',           status: 'live',    lastSync: '6 min ago',  records: '1.84M',  kpis: ['active-vendors','po-value','contract-compliance','savings-pct','vendor-risk-score','ontime-delivery','sla-breach','payment-terms','single-source','dispute-rate'] },
-    { id: 'GRC',      name: 'Internal GRC',        status: 'live',    lastSync: '8 min ago',  records: '4.2K',   kpis: ['trai-filings','pending-compliance','qos-score','spectrum-fees','regulatory-fines','license-fees','audit-findings','data-privacy','compliance-score','license-renewals'] },
-    { id: 'GENESYS',  name: 'Genesys CX',          status: 'live',    lastSync: '2 min ago',  records: '28.4M',  kpis: ['csat','fcr','aht','complaint-rate','digital-adoption','app-rating','ivr-containment','escalation-rate','repeat-contacts','resolution-sla'] }
+    { id: 'SAP',      name: 'SAP ERP',           type: 'ERP',         status: 'live',    lastSync: '2 min ago',  records: '2.4M',   latency: '42ms',  uptime: '99.98%', kpis: ['revenue','ebitda','ebitda-margin','fcf','capex','net-debt','roce','interest-coverage','working-capital','dividend-payout'] },
+    { id: 'ORACLE',   name: 'Oracle Financials',  type: 'ERP',         status: 'live',    lastSync: '5 min ago',  records: '840K',   latency: '38ms',  uptime: '99.96%', kpis: ['roce','dividend-payout'] },
+    { id: 'SIEBEL',   name: 'Siebel CRM',         type: 'CRM',         status: 'live',    lastSync: '1 min ago',  records: '312M',   latency: '28ms',  uptime: '99.94%', kpis: ['arpu','churn','subscribers','arpu-5g','market-share','postpaid-mix','data-revenue','nps','roaming-revenue','b2b-revenue'] },
+    { id: 'HUAWEI',   name: 'Huawei OSS',         type: 'Network OSS', status: 'live',    lastSync: '30 sec ago', records: '184K',   latency: '18ms',  uptime: '99.99%', kpis: ['network-uptime','call-drop','data-speed','5g-coverage','latency','bts-count','energy-cost','fault-resolution'] },
+    { id: 'NOKIA',    name: 'Nokia NetAct',        type: 'Network OSS', status: 'live',    lastSync: '3 min ago',  records: '48K',    latency: '22ms',  uptime: '99.97%', kpis: ['volte','spectrum-efficiency'] },
+    { id: 'SUBEX',    name: 'Subex RAID',          type: 'RAFM',        status: 'warning', lastSync: '18 min ago', records: '9.2M',   latency: '184ms', uptime: '98.42%', kpis: ['fraud-loss','recovery-rate','open-alerts','billing-accuracy','interconnect-accuracy','tap-success','sim-box','dispute-value','rafm-roi','leakage-pct'] },
+    { id: 'WORKDAY',  name: 'Workday HCM',         type: 'HRIS',        status: 'live',    lastSync: '4 min ago',  records: '48.2K',  latency: '54ms',  uptime: '99.91%', kpis: ['headcount','attrition','revenue-per-employee','training-hours','gender-diversity','open-positions','cost-per-employee','employee-nps','overtime-pct','contractor-ratio'] },
+    { id: 'ARIBA',    name: 'SAP Ariba',           type: 'Procurement', status: 'live',    lastSync: '6 min ago',  records: '1.84M',  latency: '62ms',  uptime: '99.88%', kpis: ['active-vendors','po-value','contract-compliance','savings-pct','vendor-risk-score','ontime-delivery','sla-breach','payment-terms','single-source','dispute-rate'] },
+    { id: 'GRC',      name: 'Internal GRC',        type: 'Compliance',  status: 'live',    lastSync: '8 min ago',  records: '4.2K',   latency: '44ms',  uptime: '99.84%', kpis: ['trai-filings','pending-compliance','qos-score','spectrum-fees','regulatory-fines','license-fees','audit-findings','data-privacy','compliance-score','license-renewals'] },
+    { id: 'GENESYS',  name: 'Genesys CX',          type: 'CX Platform', status: 'live',    lastSync: '2 min ago',  records: '28.4M',  latency: '32ms',  uptime: '99.96%', kpis: ['csat','fcr','aht','complaint-rate','digital-adoption','app-rating','ivr-containment','escalation-rate','repeat-contacts','resolution-sla'] }
 ];
 
 /* ── CIRCLE DATA ────────────────────────────────────────── */
@@ -1584,11 +1584,14 @@ var REGULATORY_FILINGS = [
 
 /* ── ACTIVITY LOG ───────────────────────────────────────── */
 var ACTIVITY_LOG = [
-    { time: '09:42', user: 'CFO', action: 'Reviewed Q1 FY26 Revenue Report', type: 'view' },
-    { time: '09:18', user: 'RAFM', action: 'Escalated ALT001 — Jio Interconnect Dispute', type: 'alert' },
-    { time: '08:54', user: 'Finance', action: 'Updated EBITDA forecast — +₹42 Cr revision', type: 'update' },
-    { time: '08:30', user: 'Network', action: 'Mumbai Circle outage resolved — 2.4 hrs', type: 'resolved' },
-    { time: '08:15', user: 'System', action: 'Daily data refresh complete — 10 systems synced', type: 'system' }
+    { time: '09:42', connector: 'SAP ERP',      event: 'Full sync complete — 2.4M records updated', type: 'success' },
+    { time: '09:18', connector: 'Subex RAID',   event: 'Warning: sync delay >15 min — investigating', type: 'warning' },
+    { time: '08:54', connector: 'Siebel CRM',   event: 'Subscriber delta sync — 840K records', type: 'success' },
+    { time: '08:30', connector: 'Huawei OSS',   event: 'Network performance refresh complete', type: 'success' },
+    { time: '08:15', connector: 'Genesys CX',   event: 'CX metrics updated — 28.4M interactions', type: 'success' },
+    { time: '07:58', connector: 'Workday HCM',  event: 'Headcount delta sync — 48,200 records', type: 'success' },
+    { time: '07:42', connector: 'SAP Ariba',    event: 'PO data refresh — 1.84M records', type: 'success' },
+    { time: '07:30', connector: 'Internal GRC', event: 'Compliance calendar updated — 12 items', type: 'success' }
 ];
 
 /* ── ISSUES LOG ─────────────────────────────────────────── */
@@ -1597,6 +1600,19 @@ var ISSUES_LOG = [
     { id: 'ISS002', title: 'SAP-Subex Data Reconciliation', priority: 'MEDIUM', status: 'Pending', owner: 'Finance', slaRemaining: '7 days' },
     { id: 'ISS003', title: 'Huawei OSS API Latency >500ms', priority: 'HIGH', status: 'Escalated', owner: 'Network', slaRemaining: '1 day' },
     { id: 'ISS004', title: 'TAP File South Zone Recovery', priority: 'MEDIUM', status: 'Resolved', owner: 'RAFM', slaRemaining: 'Resolved' }
+];
+
+/* ── ENGINE DATA ────────────────────────────────────────── */
+var ENGINE_DATA = [
+    { name: 'Revenue Assurance Engine', status: 'live',    uptime: '99.94%', latency: '28ms',  throughput: '2.4M/hr' },
+    { name: 'Fraud Detection Engine',   status: 'live',    uptime: '99.88%', latency: '42ms',  throughput: '8.2M/hr' },
+    { name: 'Billing Validation Engine',status: 'live',    uptime: '99.92%', latency: '18ms',  throughput: '4.8M/hr' },
+    { name: 'CDR Processing Engine',    status: 'live',    uptime: '99.96%', latency: '12ms',  throughput: '18.4M/hr' },
+    { name: 'Roaming Settlement Engine',status: 'warning', uptime: '98.42%', latency: '184ms', throughput: '0.8M/hr' },
+    { name: 'KPI Computation Engine',   status: 'live',    uptime: '99.98%', latency: '8ms',   throughput: '80 KPIs/min' },
+    { name: 'AI Insight Engine',        status: 'live',    uptime: '99.84%', latency: '240ms', throughput: '12 insights/hr' },
+    { name: 'Alert Detection Engine',   status: 'live',    uptime: '99.91%', latency: '22ms',  throughput: '9.2M/hr' },
+    { name: 'Regulatory Filing Engine', status: 'live',    uptime: '99.78%', latency: '88ms',  throughput: '4.2K/day' }
 ];
 
 /* ── CHART DATA ─────────────────────────────────────────── */
@@ -1633,6 +1649,7 @@ window.KPI_DATA            = KPI_DATA;
 window.SCENARIO_BASE       = SCENARIO_BASE;
 window.SCENARIO_SLIDERS    = SCENARIO_SLIDERS;
 window.RAFM_ALERTS         = RAFM_ALERTS;
+window.ENGINE_DATA         = ENGINE_DATA;
 window.CONNECTOR_DATA_LIST = CONNECTOR_DATA_LIST;
 window.CIRCLE_DATA         = CIRCLE_DATA;
 window.VENDOR_DATA         = VENDOR_DATA;

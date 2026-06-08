@@ -9,6 +9,7 @@ function initConnectors() {
     renderEngineGrid();
     renderActivityLog();
     renderVolumeChart();
+    renderConnectorKPIMap();
 }
 
 function renderConnectorSummary() {
@@ -106,4 +107,67 @@ function renderActivityLog() {
             '<div><div style="font-size:12px;font-weight:600;color:var(--text-primary);">' + entry.connector + '</div><div style="font-size:11px;color:var(--text-secondary);">' + entry.event + '</div></div>' +
         '</div>';
     }).join('');
+}
+
+/* ── CONNECTOR → KPI MAPPING ────────────────────────────── */
+
+var EXPANDED_CONNECTOR = null;
+
+function renderConnectorKPIMap() {
+    var el = document.getElementById('connector-kpi-map');
+    if (!el || !window.CONNECTOR_DATA_LIST) return;
+
+    el.innerHTML = window.CONNECTOR_DATA_LIST.map(function(conn, i) {
+        var statusColor = conn.status === 'live' ? '#00C0AE' : conn.status === 'warning' ? '#F59E0B' : '#FD349C';
+        var sys = window.SOURCE_SYSTEMS ? (window.SOURCE_SYSTEMS[conn.id] || {}) : {};
+        var isExpanded = EXPANDED_CONNECTOR === conn.id;
+
+        var kpiCards = '';
+        if (isExpanded && conn.kpis) {
+            var kpis = conn.kpis.map(function(kpiId) {
+                return window.KPI_MASTER ? window.KPI_MASTER.find(function(k) { return k.id === kpiId; }) : null;
+            }).filter(Boolean);
+
+            kpiCards = '<div style="padding:16px 24px;background:var(--bg);border-top:1px solid var(--border);">' +
+                '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px;">KPIs fed by ' + conn.name + ' · ' + kpis.length + ' metrics</div>' +
+                '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">' +
+                kpis.map(function(kpi) {
+                    var pct = kpi.pctToTarget;
+                    var color = pct >= 95 ? '#00C0AE' : pct >= 75 ? '#00B8F5' : pct >= 50 ? '#F59E0B' : pct >= 30 ? '#F97316' : '#FD349C';
+                    return '<div onclick="openKPIDetail(\'' + kpi.id + '\')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;border-top:2px solid ' + color + ';transition:all 0.15s;" onmouseover="this.style.borderColor=\'' + color + '\'" onmouseout="this.style.borderTopColor=\'' + color + '\';this.style.borderBottomColor=\'var(--border)\';this.style.borderLeftColor=\'var(--border)\';this.style.borderRightColor=\'var(--border)\'">' +
+                        '<div style="font-size:9px;font-weight:700;letter-spacing:1px;color:' + color + ';text-transform:uppercase;margin-bottom:4px;">' + kpi.system + '</div>' +
+                        '<div style="font-size:11px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">' + kpi.label + '</div>' +
+                        '<div style="font-size:16px;font-weight:700;color:var(--text-primary);font-family:var(--font-mono);">' + kpi.value + '<span style="font-size:10px;color:var(--text-muted);margin-left:2px;">' + kpi.unit + '</span></div>' +
+                        '<div style="font-size:10px;color:' + (kpi.trend === 'up' ? '#00C0AE' : '#FD349C') + ';margin-top:2px;">' + kpi.delta + ' YoY</div>' +
+                        '<div style="margin-top:6px;height:2px;background:var(--border);border-radius:1px;">' +
+                            '<div style="height:2px;background:' + color + ';border-radius:1px;width:' + Math.min(pct, 100) + '%;"></div>' +
+                        '</div>' +
+                    '</div>';
+                }).join('') +
+                '</div></div>';
+        }
+
+        return '<div style="border-bottom:1px solid var(--border);">' +
+            '<div onclick="toggleConnectorKPI(\'' + conn.id + '\')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 24px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background=\'var(--bg-hover)\'" onmouseout="this.style.background=\'\'">' +
+                '<div style="display:flex;align-items:center;gap:16px;">' +
+                    '<div style="width:8px;height:8px;border-radius:50%;background:' + statusColor + ';box-shadow:0 0 6px ' + statusColor + ';"></div>' +
+                    '<div>' +
+                        '<div style="font-size:13px;font-weight:600;color:var(--text-primary);">' + conn.name + '</div>' +
+                        '<div style="font-size:11px;color:var(--text-muted);">Last sync: ' + conn.lastSync + ' · ' + conn.records + ' records</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div style="display:flex;align-items:center;gap:16px;">' +
+                    '<div style="font-size:11px;font-weight:700;color:' + statusColor + ';background:' + statusColor + '22;padding:3px 10px;border-radius:20px;text-transform:uppercase;">' + conn.status + '</div>' +
+                    '<div style="font-size:11px;color:var(--text-muted);">' + (conn.kpis ? conn.kpis.length : 0) + ' KPIs</div>' +
+                    '<div style="font-size:14px;color:var(--text-muted);transition:transform 0.2s;transform:rotate(' + (isExpanded ? '90' : '0') + 'deg);">›</div>' +
+                '</div>' +
+            '</div>' +
+            kpiCards +
+        '</div>';
+    }).join('');
+}
+
+function toggleConnectorKPI(id) {
+    EXPANDED_CONNECTOR = EXPANDED_CONNECTOR === id ? null : id;
+    renderConnectorKPIMap();
 }
