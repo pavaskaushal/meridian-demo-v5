@@ -260,6 +260,7 @@ function openSummaryModal(filing) {
 
 function closeModal(event) {
     if (event && event.target !== event.currentTarget) return;
-    document.getElementById('modal-overlay').classList.remove('active');
+    var overlay = document.getElementById('modal-overlay');
+    if (overlay) overlay.classList.remove('active');
     document.body.style.overflow = '';
 }

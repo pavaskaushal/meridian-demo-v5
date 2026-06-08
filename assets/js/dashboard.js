@@ -429,3 +429,137 @@ function startFreshnessTimer() {
         });
     }, 30000);
 }
+
+/* ── KPI DETAIL MODAL ───────────────────────────────────── */
+
+function openKPIDetail(id) {
+    var kpi = window.KPI_MASTER.find(function(k) { return k.id === id; });
+    if (!kpi) return;
+
+    var bl       = window.BUSINESS_LINES.find(function(b) { return b.id === kpi.businessLine; }) || {};
+    var sys      = window.SOURCE_SYSTEMS[kpi.system] || {};
+    var pct      = kpi.pctToTarget;
+    var color    = pct >= 95 ? '#00C0AE' : pct >= 75 ? '#00B8F5' : pct >= 50 ? '#F59E0B' : pct >= 30 ? '#F97316' : '#FD349C';
+    var isFav    = getFavourites().indexOf(id) > -1;
+    var deltaClass = kpi.trend === 'up' ? '#00C0AE' : kpi.trend === 'down' ? '#FD349C' : '#8A9BB0';
+
+    var box = document.getElementById('modal-box');
+    if (!box) return;
+
+    box.innerHTML =
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">' +
+            '<div>' +
+                '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:' + color + ';text-transform:uppercase;margin-bottom:4px;">' + (bl.label || kpi.businessLine) + ' · ' + kpi.system + '</div>' +
+                '<div style="font-size:22px;font-weight:700;color:var(--text-primary);">' + kpi.label + '</div>' +
+                '<div style="font-size:12px;color:var(--text-muted);margin-top:2px;">' + (kpi.period || '') + ' · ' + (kpi.systemFull || '') + '</div>' +
+            '</div>' +
+            '<div style="display:flex;gap:8px;align-items:center;">' +
+                '<button onclick="toggleFavourite(\'' + id + '\');openKPIDetail(\'' + id + '\')" style="background:transparent;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px;color:' + (isFav ? '#F59E0B' : 'var(--text-muted)') + ';">★</button>' +
+                '<button onclick="closeModal()" style="background:transparent;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:16px;color:var(--text-muted);">✕</button>' +
+            '</div>' +
+        '</div>' +
+
+        // Primary metric row
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;">' +
+            '<div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);">' +
+                '<div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Current Value</div>' +
+                '<div style="font-size:32px;font-weight:700;color:var(--text-primary);font-family:var(--font-mono);">' + kpi.value + '<span style="font-size:14px;color:var(--text-secondary);margin-left:4px;">' + kpi.unit + '</span></div>' +
+                '<div style="font-size:12px;color:' + deltaClass + ';margin-top:4px;font-weight:600;">' + kpi.delta + ' YoY</div>' +
+            '</div>' +
+            '<div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);">' +
+                '<div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">FY26 Target</div>' +
+                '<div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:8px;">' + (kpi.targetFY || kpi.target) + '</div>' +
+                '<div style="height:4px;background:var(--border);border-radius:2px;">' +
+                    '<div style="height:4px;background:' + color + ';border-radius:2px;width:' + Math.min(pct, 100) + '%;"></div>' +
+                '</div>' +
+                '<div style="font-size:11px;color:' + color + ';font-weight:700;margin-top:4px;">' + pct + '% to target</div>' +
+            '</div>' +
+            '<div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);">' +
+                '<div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Benchmark</div>' +
+                '<div style="font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:4px;">' + kpi.benchmark + ' ' + kpi.unit + '</div>' +
+                '<div style="font-size:11px;color:var(--text-muted);">' + (kpi.benchmarkLabel || '') + '</div>' +
+                '<div style="font-size:11px;font-weight:700;margin-top:4px;color:' + (kpi.rank === 1 ? '#00C0AE' : kpi.rank <= 2 ? '#00B8F5' : kpi.rank <= 3 ? '#F59E0B' : '#FD349C') + ';">Rank ' + kpi.rank + ' of ' + kpi.rankOf + ' operators</div>' +
+            '</div>' +
+        '</div>' +
+
+        // Trend chart
+        '<div style="background:var(--bg);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border);margin-bottom:16px;">' +
+            '<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-bottom:12px;">5-Quarter Trend</div>' +
+            '<div style="height:120px;position:relative;"><canvas id="kpi-modal-trend"></canvas></div>' +
+        '</div>' +
+
+        // Insight, Risk, Opportunity
+        '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">' +
+            insightCard('💡 INSIGHT', kpi.insight, '#00B8F5') +
+            insightCard('⚠ RISK', kpi.risk, '#FD349C') +
+            insightCard('🎯 OPPORTUNITY', kpi.opportunity, '#00C0AE') +
+        '</div>' +
+
+        // Formula bar
+        '<div style="background:var(--bg);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);margin-bottom:10px;">' +
+            '<div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Formula</div>' +
+            '<div style="font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);line-height:1.6;">' + (kpi.formula || 'N/A') + '</div>' +
+        '</div>' +
+
+        // Source system and tags
+        '<div style="background:var(--bg);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);display:flex;gap:24px;">' +
+            '<div style="flex:1;">' +
+                '<div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Source System</div>' +
+                '<div style="font-size:12px;color:var(--text-secondary);">' + (kpi.systemFull || kpi.system) + '</div>' +
+            '</div>' +
+            '<div style="width:1px;background:var(--border);"></div>' +
+            '<div>' +
+                '<div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Tags</div>' +
+                '<div style="display:flex;gap:4px;flex-wrap:wrap;">' +
+                (kpi.tags || []).map(function(t) {
+                    return '<span style="font-size:10px;background:var(--border);color:var(--text-muted);padding:2px 8px;border-radius:20px;">' + t + '</span>';
+                }).join('') +
+                '</div>' +
+            '</div>' +
+        '</div>';
+
+    // Show modal
+    var overlay = document.getElementById('modal-overlay');
+    if (overlay) {
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    // Render trend chart
+    setTimeout(function() {
+        var ctx = document.getElementById('kpi-modal-trend');
+        if (!ctx || !kpi.trend5Q) return;
+        var quarters = ['Q1 FY25', 'Q2 FY25', 'Q3 FY25', 'Q4 FY25', 'Q1 FY26'];
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: quarters,
+                datasets: [{
+                    data: kpi.trend5Q,
+                    borderColor: color,
+                    backgroundColor: color + '22',
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointBackgroundColor: color,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8A9BB0', font: { size: 10 } } },
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8A9BB0', font: { size: 10 } } }
+                }
+            }
+        });
+    }, 100);
+}
+
+function insightCard(title, text, color) {
+    return '<div style="background:var(--bg);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);border-top:2px solid ' + color + ';">' +
+        '<div style="font-size:10px;font-weight:700;letter-spacing:1px;color:' + color + ';margin-bottom:8px;">' + title + '</div>' +
+        '<div style="font-size:12px;color:var(--text-secondary);line-height:1.6;">' + (text || 'N/A') + '</div>' +
+    '</div>';
+}
