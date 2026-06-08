@@ -379,9 +379,9 @@ function logout() {
 
 /* ── INIT ───────────────────────────────────────────────── */
 
-/* Set true to skip auth during development
-   Set false before presentation / commit    */
-var DEV_MODE = true;
+/* Pass ?dev in URL to skip auth (e.g. index.html?dev).
+   Plain index.html always shows the PIN screen.          */
+var DEV_MODE = (typeof location !== 'undefined' && new URLSearchParams(location.search).has('dev'));
 
 document.addEventListener('DOMContentLoaded', function() {
     if (DEV_MODE) {

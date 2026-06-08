@@ -159,16 +159,6 @@ function generateAutoInsight() {
     riskEl.innerHTML = riskText;
     arpuEl.innerHTML = arpuText;
 }
-        'Give me exactly 2 insights for the CFO morning briefing. First: the single biggest revenue risk right now in one sentence. Second: the single biggest revenue opportunity in one sentence. Be specific with numbers.',
-        null,
-        function(response) {
-            var lines = response.split('\n').filter(function(l) { return l.trim().length > 10; });
-            riskEl.innerHTML = formatGeminiResponse(lines[0] || response.substring(0, 200));
-            arpuEl.innerHTML = formatGeminiResponse(lines[1] || '');
-        },
-        function() {
-            // Silently fail — show static insight instead
-        }
 
 function renderKPICards() {
     var grid = document.getElementById('kpi-grid');
@@ -275,12 +265,12 @@ function handleQuery() {
         resp.style.display = 'block';
         resp.innerHTML = '<div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);display:flex;align-items:center;gap:12px;"><div class="loading-spinner" style="width:20px;height:20px;border-width:2px;"></div><span style="color:var(--text-muted);font-size:13px;">Meridian AI is analysing...</span></div>';
 
-        callGemini(query, null,
+        callGroq(query, null,
             function(response) {
                 resp.innerHTML =
                     '<div style="padding:16px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);border-left:3px solid var(--kpmg-cyan);">' +
                         '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);margin-bottom:10px;text-transform:uppercase;">Meridian AI Response</div>' +
-                        '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">' + formatGeminiResponse(response) + '</div>' +
+                        '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">' + formatAIResponse(response) + '</div>' +
                         '<div style="font-size:10px;color:var(--text-muted);margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">Apex Telecom · June 2025 · Powered by Groq AI</div>' +
                     '</div>';
             },

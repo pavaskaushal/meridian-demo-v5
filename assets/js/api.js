@@ -1,7 +1,10 @@
 /* ============================================================
-   MERIDIAN V2 · API
-   Gemini AI integration
+   MERIDIAN V4 · API
+   Groq AI integration — llama-3.3-70b-versatile
    ============================================================ */
+
+/* Optionally hard-code a key here so the prompt never appears */
+var GROQ_API_KEY_PRESET = '';
 
 var APEX_CONTEXT = function() {
     return [
@@ -17,9 +20,19 @@ var APEX_CONTEXT = function() {
     ].join("\n");
 };
 
-function callGemini(prompt, context, callback, onError) {
+/* Load persisted key on startup */
+(function() {
+    if (GROQ_API_KEY_PRESET) {
+        window.GROQ_API_KEY = GROQ_API_KEY_PRESET;
+    } else {
+        var stored = localStorage.getItem('meridian_groq_key');
+        if (stored) window.GROQ_API_KEY = stored;
+    }
+})();
+
+function callGroq(prompt, context, callback, onError) {
     var apiKey = window.GROQ_API_KEY;
-    if (!apiKey) { onError("No API key."); return; }
+    if (!apiKey) { onError("No API key — click the AI button to add one."); return; }
 
     var fullPrompt = APEX_CONTEXT() + "\n\n" +
         (context ? context + "\n\n" : "") +
@@ -49,7 +62,7 @@ function callGemini(prompt, context, callback, onError) {
     .catch(function(e) { onError(e.message); });
 }
 
-function formatGeminiResponse(text) {
+function formatAIResponse(text) {
     return text
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/^- (.*)/gm, '<div style="display:flex;gap:8px;margin-bottom:4px;"><span style="color:var(--kpmg-cyan);">•</span><span>$1</span></div>')
@@ -63,9 +76,10 @@ function showApiKeyPrompt(callback) {
     var modal = document.getElementById('modal-box');
     modal.innerHTML =
         '<div class="modal-header">' +
-            '<div><div class="modal-title">Enter Gemini API Key</div></div>' +
+            '<div><div class="modal-title">Connect Groq AI</div></div>' +
+            '<div class="modal-close" onclick="closeModal()">✕</div>' +
         '</div>' +
-        '<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:20px;">Enter your Google Gemini API key to enable AI responses. Stored in memory only.</p>' +
+        '<p style="font-size:13px;color:var(--text-secondary);line-height:1.6;margin-bottom:20px;">Enter your Groq API key to enable AI responses. Saved to browser storage — never sent to KPMG servers.</p>' +
         '<input type="password" id="api-key-input" placeholder="gsk_..." ' +
             'style="width:100%;background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:10px 16px;font-size:13px;color:var(--text-primary);margin-bottom:16px;box-sizing:border-box;">' +
         '<div style="display:flex;gap:12px;">' +
@@ -82,6 +96,12 @@ function saveApiKey() {
     var key = document.getElementById('api-key-input').value.trim();
     if (!key) return;
     window.GROQ_API_KEY = key;
+    localStorage.setItem('meridian_groq_key', key);
     closeModal();
     if (window._apiKeyCallback) { window._apiKeyCallback(); window._apiKeyCallback = null; }
+}
+
+function forgetApiKey() {
+    window.GROQ_API_KEY = null;
+    localStorage.removeItem('meridian_groq_key');
 }
