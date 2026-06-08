@@ -9,6 +9,18 @@
    1. SIDEBAR COMPONENTS
    ══════════════════════════════════════════════════════════ */
 
+/* ── SIDEBAR BASE COLOUR ────────────────────────────────────
+   Pins all text inside the sidebar to white-based colours.
+   The sidebar background is always KPMG Deep Navy (#0C233C)
+   regardless of light/dark mode. Without this, body.light-mode
+   would override --text-primary to #0F172A (near-black),
+   making any sidebar element that uses text variables invisible
+   on the navy background.
+*/
+.sidebar {
+  color: rgba(255, 255, 255, 0.65);
+}
+
 /* ── BRAND MARK ────────────────────────────────────────────
    The "MERIDIAN" logo text at the top of the sidebar.
 */
@@ -23,7 +35,8 @@
   font-weight: 700;
   letter-spacing: 3px;
   /* wide letter spacing gives it a premium, logo-like feel */
-  color: var(--text-primary);
+  color: #FFFFFF;
+  /* pinned white — sidebar is always KPMG navy, never inherits light-mode text */
   text-transform: uppercase;
 }
 
