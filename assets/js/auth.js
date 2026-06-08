@@ -302,10 +302,14 @@ function pinSuccess() {
             // Show main app
             var app = document.querySelector('.app-wrapper');
             if (app) {
+                app.style.display    = 'flex';
                 app.style.visibility = 'visible';
                 app.style.opacity    = '0';
                 app.style.transition = 'opacity 0.4s ease';
-                setTimeout(function() { app.style.opacity = '1'; }, 50);
+                setTimeout(function() {
+                    app.style.opacity = '1';
+                    showScreen('dashboard', document.querySelector('[data-screen="dashboard"]'));
+                }, 50);
             }
         }, 400);
     }, 500);
@@ -377,7 +381,7 @@ function logout() {
 
 /* Set true to skip auth during development
    Set false before presentation / commit    */
-var DEV_MODE = true;
+var DEV_MODE = false;
 
 document.addEventListener('DOMContentLoaded', function() {
     if (DEV_MODE) {
