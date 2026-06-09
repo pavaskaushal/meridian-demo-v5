@@ -104,8 +104,6 @@
   padding: var(--space-lg) var(--space-md);
   border-bottom: 1px solid var(--sidebar-border);
   flex-shrink: 0;
-  /* Subtle gradient — deepens from the top for depth */
-  background: linear-gradient(180deg, rgba(0,51,141,0.25) 0%, transparent 100%);
 }
 
 
