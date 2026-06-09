@@ -22,27 +22,30 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* KPI TABS */
+        /* KPI TABS — Palantir-style: sharp, understated, data-focused */
         .kpi-tab {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 5px 14px;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 5px 12px;
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
+            letter-spacing: 0.4px;
             color: var(--text-muted);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             white-space: nowrap;
+            text-transform: uppercase;
         }
         .kpi-tab:hover {
             border-color: var(--kpmg-cyan);
             color: var(--kpmg-cyan);
+            background: rgba(0, 184, 245, 0.05);
         }
         .kpi-tab.active {
-            background: var(--kpmg-cyan);
+            background: rgba(0, 184, 245, 0.10);
             border-color: var(--kpmg-cyan);
-            color: #0A0F1E;
+            color: var(--kpmg-cyan);
             font-weight: 700;
         }
     </style>

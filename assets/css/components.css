@@ -268,10 +268,10 @@
 }
 
 .kpi-card:hover {
-  transform: translateY(-2px);
-  /* card moves 2px upward — subtle lift effect */
-  box-shadow: var(--shadow-md);
-  border-color: var(--border-light);
+  /* Palantir: no lift — intelligence platforms don't bounce.
+     Border brightens; background barely shifts. Data stays still. */
+  border-color: rgba(0, 184, 245, 0.30);
+  background: var(--bg-hover);
 }
 
 /* ── ACCENT BAR ─────────────────────────────────────────────
@@ -287,20 +287,19 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
-  border-radius: var(--radius-md) var(--radius-md) 0 0;
-  /* rounded only on top corners to match the card */
+  height: 2px;
+  /* 2px — precise, not decorative */
 }
 
 /* ── KPI LABEL ──────────────────────────────────────────────
    The small text above the number. e.g. "ARPU (BLENDED)"
 */
 .kpi-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   margin-bottom: var(--space-sm);
   margin-top: var(--space-xs);
 }
@@ -373,8 +372,7 @@
 }
 
 .data-card:hover {
-  border-color: var(--border-light);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 /* ── CARD HEADER ────────────────────────────────────────────
@@ -885,18 +883,34 @@ body.light-mode .theme-toggle-icon {
   transform: rotate(180deg);
 }
 
-/* Fix card backgrounds in light mode */
-body.light-mode .data-card {
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+/* ── LIGHT MODE STRUCTURAL FIXES ────────────────────────────
+   rgba(255,255,255,0.07) borders are invisible on white.
+   Override with solid low-opacity black borders in light mode.
+*/
+body.light-mode .data-card,
+body.light-mode .kpi-card,
+body.light-mode .watch-section,
+body.light-mode .brief-card {
+  border-color: rgba(0, 0, 0, 0.09);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+body.light-mode .card-header,
+body.light-mode .watch-section-header {
+  border-bottom-color: rgba(0, 0, 0, 0.08);
 }
 
 body.light-mode .sidebar {
-  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.06);
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.12);
 }
 
-/* Fix chart tooltip in light mode */
 body.light-mode .topbar {
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* KPI label is more readable in light mode with slightly stronger muted */
+body.light-mode .kpi-label {
+  color: var(--text-muted);  /* uses updated #475569 in light mode */
 }
 
 /* ══════════════════════════════════════════════════════════
