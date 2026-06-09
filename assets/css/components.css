@@ -283,12 +283,7 @@
    height: 3px          thin line — prominent but not heavy
 */
 .kpi-card-accent {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  /* 2px — precise, not decorative */
+  display: none;
 }
 
 /* ── KPI LABEL ──────────────────────────────────────────────
