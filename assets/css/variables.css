@@ -44,10 +44,10 @@
      --nav-active-bg     Active nav item background tint.
      --nav-active-text   Active nav item label colour (sky blue).
   */
-  /* Deep charcoal — Palantir Foundry left-rail feel.
-     Lifted above the true-black page, clear structural separation,
-     retains the dark professional tone. KPMG cyan accents on dark. */
-  --bg-sidebar:       #111827;
+  /* Soft black — barely lifted from the #080808 page background.
+     Creates structural separation through brightness, not hue.
+     KPMG cyan accents stand out cleanly against the near-black. */
+  --bg-sidebar:       #141414;
   --sidebar-border:   rgba(255, 255, 255, 0.07);
   --nav-hover:        rgba(255, 255, 255, 0.06);
   --nav-active-bg:    rgba(0, 184, 245, 0.14);
