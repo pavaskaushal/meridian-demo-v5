@@ -67,34 +67,33 @@ function buildAlertCard(alert) {
     var maxExp = 5; // Cr — scale bar against 5 Cr max
     var barW   = Math.min(Math.round((expNum / maxExp) * 100), 100);
 
-    return '<div class="alert-item" style="flex-direction:column;align-items:stretch;padding:0;margin-bottom:8px;border-radius:var(--radius-sm);border:1px solid var(--border);">' +
+    return '<div class="alert-item" onclick="openModal(\'' + alert.id + '\')" style="flex-direction:column;align-items:stretch;padding:0;margin-bottom:8px;border-radius:var(--radius-sm);border:1px solid var(--border);cursor:pointer;">' +
         // Header row
         '<div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px 10px;">' +
             
             '<div style="flex:1;min-width:0;">' +
                 '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
-                    '<div class="alert-title" onclick="openModal(\'' + alert.id + '\')" style="cursor:pointer;flex:1;">' + alert.title + '</div>' +
+                    '<div class="alert-title" style="flex:1;">' + alert.title + '</div>' +
                     '<div style="font-family:var(--font-mono);font-size:16px;font-weight:700;color:' + color + ';flex-shrink:0;">' + alert.amount + '</div>' +
                 '</div>' +
                 '<div class="alert-description">' + alert.description.substring(0, 100) + '...</div>' +
             '</div>' +
         '</div>' +
         // Exposure bar
-        '<div style="padding:6px 16px;border-top:1px solid var(--border);">' +
+        '<div style="padding:6px 16px;">' +
             '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">' +
                 '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">EXPOSURE</span>' +
-                '<span style="font-family:var(--font-mono);font-size:9px;color:' + color + ';">' + alert.amount + '</span>' +
-            '</div>' +
+                '</div>' +
             '<div style="height:2px;background:var(--border);border-radius:2px;">' +
                 '<div style="height:2px;background:' + color + ';border-radius:2px;width:' + barW + '%;transition:width 0.6s ease;"></div>' +
             '</div>' +
         '</div>' +
         // Meta row
-        '<div style="display:flex;align-items:center;gap:12px;padding:8px 16px;border-top:1px solid var(--border);background:rgba(255,255,255,0.02);">' +
+        '<div style="display:flex;align-items:center;gap:12px;padding:8px 16px;">' +
             '<span style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--text-muted);letter-spacing:0.5px;">' + sev.toUpperCase() + '</span>' +
             '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">⏱ ' + (alert.age||0) + 'd open</span>' +
             '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">⊙ ' + (alert.circle||'—') + '</span>' +
-            '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);">👤 ' + (alert.owner||'—') + '</span>' +
+            '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);"> ' + (alert.owner||'—') + '</span>' +
             '<div style="flex:1;"></div>' +
             '<button onclick="openRaiseIssueModal(\'RAFM Alert\',\'' + alert.title.replace(/'/g,"\\'") + '\',\'' + alert.description.substring(0,100).replace(/'/g,"\\'") + '\',\'' + alert.severity + '\')" ' +
                 'style="font-size:10px;padding:3px 10px;background:transparent;border:1px solid var(--border-light);border-radius:4px;color:var(--text-muted);cursor:pointer;white-space:nowrap;font-family:var(--font-mono);">Raise Issue</button>' +

@@ -1474,7 +1474,7 @@ var SCENARIO_SLIDERS = [
 /* ── RAFM ALERTS ────────────────────────────────────────── */
 var RAFM_ALERTS = [
     {
-        id: 'ALT001', severity: 'CRITICAL', title: 'Interconnect Billing Discrepancy — Jio',
+        id: 'ALT001', severity: 'CRITICAL', title: 'Interconnect Billing Discrepancy — Jio', operator: 'Reliance Jio', route: 'Pan-India Termination', cdrCount: '2.3M records', detectedAt: '18 days ago', action: 'File TDSAT arbitration before deadline. Escalate to CFO if Jio does not respond in 5 days.',
         amount: '₹4.8 Cr', circle: 'Pan-India', category: 'Interconnect',
         description: 'CDR mismatch of 2.3M records between Apex and Jio billing systems. Dispute period: Q4 FY25. Arbitration deadline in 18 days.',
         age: 18, status: 'OPEN', owner: 'RAFM Team'
@@ -1486,7 +1486,7 @@ var RAFM_ALERTS = [
         age: 12, status: 'OPEN', owner: 'Procurement Team'
     },
     {
-        id: 'ALT003', severity: 'HIGH', title: 'TAP File Leakage — South India Zone',
+        id: 'ALT003', severity: 'HIGH', title: 'TAP File Leakage — South India Zone', operator: 'Multiple Roaming Partners', route: 'Inbound Roaming · South India', cdrCount: '~18,000 sessions', detectedAt: '8 days ago', action: 'Reprocess failed TAP files. Raise billing query to partner operators within 48 hours.',
         amount: '₹1.2 Cr', circle: 'South India', category: 'Roaming',
         description: 'TAP file mismatch in South India zone — 4.1% failure rate vs 2.6% national average. ₹1.2 Cr unbilled roaming events.',
         age: 8, status: 'OPEN', owner: 'RAFM Team'
@@ -1504,37 +1504,37 @@ var RAFM_ALERTS = [
         age: 3, status: 'OPEN', owner: 'Fraud Team'
     },
     {
-        id: 'ALT006', severity: 'MEDIUM', title: 'Roaming Partner Dispute — 3 Partners',
+        id: 'ALT006', severity: 'MEDIUM', title: 'Roaming Partner Dispute — 3 Partners', operator: '3 International Partners', route: 'Outbound Roaming · International', cdrCount: 'TAP reject rate >3%', detectedAt: '22 days ago', action: 'Initiate formal settlement via GSMA BCH. Escalate to VP Roaming if unresolved in 14 days.',
         amount: '₹1.5 Cr', circle: 'International', category: 'Roaming',
         description: 'Settlement disputes with 3 international roaming partners. TAP reject rate above 3% threshold.',
         age: 22, status: 'OPEN', owner: 'RAFM Team'
     },
     {
-        id: 'ALT007', severity: 'CRITICAL', title: 'Interconnect Billing Discrepancy — Airtel',
+        id: 'ALT007', severity: 'CRITICAL', title: 'Interconnect Billing Discrepancy — Airtel', operator: 'Bharti Airtel', route: 'North India Termination', cdrCount: '1.8M records', detectedAt: '12 days ago', action: 'File TDSAT arbitration within 12 days. Freeze billing adjustments pending resolution.',
         amount: '₹3.2 Cr', circle: 'North India', category: 'Interconnect',
         description: 'CDR mismatch of 1.8M records between Apex and Airtel billing systems. Peak traffic period Q3 FY25 under dispute. TDSAT filing deadline in 12 days.',
         age: 12, status: 'OPEN', owner: 'RAFM Team'
     },
     {
-        id: 'ALT008', severity: 'HIGH', title: 'IUC Rate Dispute — BSNL',
+        id: 'ALT008', severity: 'HIGH', title: 'IUC Rate Dispute — BSNL', operator: 'BSNL', route: 'Pan-India Off-Net', cdrCount: '0.4M calls · 18.3M minutes', detectedAt: '9 days ago', action: 'Issue formal rate correction notice to BSNL. Escalate to DoT if unresolved in 7 days.',
         amount: '₹1.1 Cr', circle: 'Pan-India', category: 'Interconnect',
         description: 'BSNL applying pre-2017 IUC rates to 0.4M off-net calls. Rate differential of ₹0.06/min across 18.3M minutes. Formal dispute notice issued.',
         age: 9, status: 'OPEN', owner: 'RAFM Team'
     },
     {
-        id: 'ALT009', severity: 'MEDIUM', title: 'Port-in CDR Mismatch — Vi',
+        id: 'ALT009', severity: 'MEDIUM', title: 'Port-in CDR Mismatch — Vi', operator: 'Vodafone Idea', route: 'MNP Port-in · West India', cdrCount: '0.2M records', detectedAt: '6 days ago', action: 'Coordinate with NPC for reconciliation. Billing team to issue credit adjustment.',
         amount: '₹0.7 Cr', circle: 'West India', category: 'Interconnect',
         description: 'Porting-related CDR discrepancy with Vi — 0.2M records unmatched post-MNP. Billing adjustment pending reconciliation with NPC.',
         age: 6, status: 'OPEN', owner: 'Billing Team'
     },
     {
-        id: 'ALT010', severity: 'HIGH', title: 'TAP File Leakage — North East Zone',
+        id: 'ALT010', severity: 'HIGH', title: 'TAP File Leakage — North East Zone', operator: '4 Roaming Partners', route: 'Inbound Roaming · North East', cdrCount: '~23,000 sessions', detectedAt: '5 days ago', action: 'Reprocess rejected TAP files. Raise billing queries to partner operators within 48 hours.',
         amount: '₹0.9 Cr', circle: 'North East', category: 'Roaming',
         description: 'TAP file rejection rate of 5.2% in North East zone — highest nationally. 0.9 Cr unbilled inbound roaming events from 4 partner operators.',
         age: 5, status: 'OPEN', owner: 'RAFM Team'
     },
     {
-        id: 'ALT011', severity: 'MEDIUM', title: 'IOT Reconciliation Gap — UAE Partner',
+        id: 'ALT011', severity: 'MEDIUM', title: 'IOT Reconciliation Gap — UAE Partner', operator: 'Etisalat UAE', route: 'Outbound Data Roaming · UAE', cdrCount: '23,000 data sessions', detectedAt: '14 days ago', action: 'Fix SGSN routing config. Submit IOT dispute to Etisalat via GSMA BCH within 30 days.',
         amount: '₹0.5 Cr', circle: 'International', category: 'Roaming',
         description: 'Inter-Operator Tariff reconciliation gap with Etisalat UAE. 23,000 data sessions unbilled due to SGSN routing anomaly in Q2 FY25.',
         age: 14, status: 'OPEN', owner: 'RAFM Team'

@@ -468,21 +468,72 @@ function closeNotificationsOutside(e) {
 
 function renderNotifications() {
     var list = document.getElementById('notification-list');
-    if (!list || !window.RAFM_ALERTS) return;
+    if (!list) return;
 
-    var alerts = window.RAFM_ALERTS.slice(0, 3);
-    var severityColors = { CRITICAL: '#FD349C', HIGH: '#F59E0B', MEDIUM: '#00B8F5' };
+    var items = [];
 
-    list.innerHTML = alerts.map(function(a) {
-        var color = severityColors[a.severity] || '#8A9BB0';
+    // Critical + High RAFM alerts — need action
+    (window.RAFM_ALERTS || []).filter(function(a) {
+        return a.severity === 'CRITICAL' || a.severity === 'HIGH';
+    }).slice(0, 3).forEach(function(a) {
+        items.push({
+            type: 'ALERT',
+            title: a.title,
+            meta: a.amount + ' · ' + (a.age||0) + 'd open · ' + (a.circle||''),
+            action: 'View in RAFM',
+            screen: 'rafm',
+            urgent: a.severity === 'CRITICAL'
+        });
+    });
+
+    // Regulatory deadlines — due soon
+    (window.REGULATORY_FILINGS || []).filter(function(r) {
+        return r.status === 'DUE' || r.status === 'PENDING';
+    }).slice(0, 2).forEach(function(r) {
+        items.push({
+            type: 'REGULATORY',
+            title: r.title,
+            meta: 'Due ' + r.due,
+            action: 'View Calendar',
+            screen: 'regulatory',
+            urgent: r.status === 'DUE'
+        });
+    });
+
+    // Vendor flags
+    (window.VENDOR_DATA || []).filter(function(v) {
+        return v.flag === true;
+    }).slice(0, 1).forEach(function(v) {
+        items.push({
+            type: 'VENDOR',
+            title: v.name + ' — Risk Flag',
+            meta: 'Score ' + (100 - (v.risk||50)) + ' · ₹' + v.spend + ' Cr exposure',
+            action: 'View RAFM',
+            screen: 'rafm',
+            urgent: v.risk > 80
+        });
+    });
+
+    if (items.length === 0) {
+        list.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-muted);font-size:12px;">No pending actions</div>';
+        return;
+    }
+
+    // Update badge count
+    var badge = document.getElementById('notif-badge');
+    if (badge) { badge.textContent = items.length; badge.style.display = 'flex'; }
+
+    list.innerHTML = items.map(function(item) {
+        var typeColor = item.type === 'ALERT' ? (item.urgent ? '#FD349C' : '#F59E0B') : item.type === 'REGULATORY' ? '#00B8F5' : '#F59E0B';
         return '<div style="padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.15s;" ' +
+            'onclick="showScreen(\'' + item.screen + '\',document.querySelector(\'[data-screen=' + item.screen + ']\'));toggleNotifications();" ' +
             'onmouseover="this.style.background=\'var(--bg-hover)\'" onmouseout="this.style.background=\'\'">' +
-            '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">' +
-                '<div style="font-size:12px;font-weight:600;color:var(--text-primary);flex:1;padding-right:8px;">' + a.title + '</div>' +
-                '<div style="font-size:11px;font-weight:700;color:' + color + ';white-space:nowrap;">' + a.amount + '</div>' +
+            '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">' +
+                '<span style="font-family:var(--font-mono);font-size:8px;font-weight:700;letter-spacing:0.8px;color:' + typeColor + ';background:' + typeColor + '15;border:1px solid ' + typeColor + '33;border-radius:2px;padding:1px 5px;">' + item.type + '</span>' +
+                (item.urgent ? '<span style="width:5px;height:5px;border-radius:50%;background:#FD349C;flex-shrink:0;"></span>' : '') +
             '</div>' +
-            '<div style="font-size:11px;color:var(--text-muted);">' + a.description.substring(0, 80) + '...</div>' +
-            '<div style="margin-top:6px;"><span style="font-size:10px;font-weight:700;letter-spacing:1px;color:' + color + ';background:' + color + '22;padding:2px 8px;border-radius:20px;">' + a.severity + '</span></div>' +
+            '<div style="font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:3px;">' + item.title + '</div>' +
+            '<div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">' + item.meta + '</div>' +
         '</div>';
     }).join('');
 }

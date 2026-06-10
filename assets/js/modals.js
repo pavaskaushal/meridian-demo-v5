@@ -13,7 +13,7 @@ function openModal(alertId) {
     modal.innerHTML =
         '<div class="modal-header">' +
             '<div>' +
-                '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:' + color + ';margin-bottom:6px;text-transform:uppercase;">' + alert.type + '</div>' +
+                '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:' + color + ';margin-bottom:6px;text-transform:uppercase;">' + (alert.category || alert.type || 'RAFM ALERT') + '</div>' +
                 '<div class="modal-title">' + alert.title + '</div>' +
             '</div>' +
             '<div class="modal-close" onclick="closeModal()">✕</div>' +
@@ -26,7 +26,7 @@ function openModal(alertId) {
         '<div class="modal-row"><span class="modal-row-label">Detected</span><span class="modal-row-value">' + alert.detectedAt + '</span></div>' +
         '<div style="margin-top:20px;padding:16px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid ' + color + ';">' +
             '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:' + color + ';margin-bottom:8px;text-transform:uppercase;">Recommended Action</div>' +
-            '<div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">' + alert.action + '</div>' +
+            '<div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">' + (alert.action || 'Review and escalate to RAFM team.') + '</div>' +
         '</div>' +
         '<div style="display:flex;gap:12px;margin-top:20px;">' +
             '<button class="btn btn-primary" onclick="closeModal()">Acknowledge</button>' +
