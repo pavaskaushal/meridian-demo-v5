@@ -113,9 +113,9 @@
         <div class="sidebar-footer">
             <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:4px;">
                 <img id="kpmg-logo" src="assets/kpmg-white.svg" style="height:20px;width:auto;" alt="KPMG">
-                <span style="font-size:14px;font-style:italic;font-weight:600;color:#FFFFFF;letter-spacing:0.5px;line-height:1;">Lucid™</span>
+                <span id="lucid-wordmark" style="font-size:14px;font-style:italic;font-weight:600;letter-spacing:0.5px;line-height:1;">Lucid™</span>
             </div>
-            <div style="font-size:10px;color:rgba(255,255,255,0.40);letter-spacing:0.5px;">Confidential · Demo Only</div>
+            <div id="sidebar-confidential" style="font-size:10px;letter-spacing:0.5px;">Confidential · Demo Only</div>
         </div>
     </aside>
 
@@ -124,35 +124,31 @@
         <header class="topbar">
             <div class="topbar-left">
                 <div class="topbar-title" id="topbar-title">CFO Command Board</div>
-                <div class="topbar-sub" id="topbar-subtitle">Real-time financial intelligence · Apex Telecom</div>
             </div>
             <div class="topbar-right">
                 <div style="position:relative;">
-                    <input type="text" id="global-search" placeholder="Search KPIs, alerts, circles..." 
-                        style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 12px 5px 32px;font-size:12px;color:var(--text-primary);width:220px;transition:all 0.2s;"
+                    <input type="text" id="global-search" placeholder="Search KPIs, alerts..."
+                        style="background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:4px 10px 4px 28px;font-size:11px;color:var(--text-primary);width:180px;transition:all 0.2s;"
                         oninput="handleSearch(this.value)"
-                        onfocus="this.style.borderColor='var(--kpmg-cyan)';this.style.width='280px'"
-                        onblur="this.style.borderColor='var(--border)';this.style.width='220px'" onkeydown="if(event.key==='Escape')closeSearch()">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;"><!---->
+                        onfocus="this.style.borderColor='var(--kpmg-cyan)';this.style.width='240px'"
+                        onblur="this.style.borderColor='var(--border-light)';this.style.width='180px'" onkeydown="if(event.key==='Escape')closeSearch()">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;">
                         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
-                    <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;width:320px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:1000;overflow:hidden;max-height:400px;overflow-y:auto;"></div>
+                    <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;width:300px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-sm);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:1000;overflow:hidden;max-height:400px;overflow-y:auto;"></div>
                 </div>
                 <div class="operator-tag">APEX TELECOM · 22 CIRCLES</div>
-                <button class="btn btn-secondary" onclick="generateBoardPack()" style="font-size:11px;padding:4px 12px;display:flex;align-items:center;gap:6px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <button class="btn btn-secondary" onclick="generateBoardPack()" style="font-size:10px;padding:3px 10px;display:flex;align-items:center;gap:5px;">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Board Pack
                 </button>
-                <button class="btn btn-secondary" onclick="openWidgetEditor()" style="font-size:11px;padding:4px 12px;display:flex;align-items:center;gap:6px;">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                    Customise
-                </button>
                 <button class="compact-toggle" onclick="toggleCompact()" title="Toggle compact layout">
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
                     <span id="compact-label">Compact</span>
                 </button>
                 <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle">
-                    <svg class="theme-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <!-- Sun icon — shown in dark mode (click to go light) -->
+                    <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
                         <circle cx="12" cy="12" r="5"/>
                         <line x1="12" y1="1" x2="12" y2="3"/>
                         <line x1="12" y1="21" x2="12" y2="23"/>
@@ -162,6 +158,10 @@
                         <line x1="21" y1="12" x2="23" y2="12"/>
                         <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
                         <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    </svg>
+                    <!-- Moon icon — shown in light mode (click to go dark) -->
+                    <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:none;">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                     </svg>
                     <span id="theme-label">LIGHT MODE</span>
                 </button>
@@ -202,17 +202,65 @@
     <div class="modal-box" id="modal-box"></div>
 </div>
 
+<!-- FLOATING ASK MERIDIAN BUTTON -->
+<button class="ask-meridian-fab" id="ask-meridian-fab" onclick="toggleAskPanel()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+    MERIDIAN
+</button>
+
+<!-- ASK MERIDIAN SLIDE-IN PANEL -->
+<div class="ask-meridian-panel" id="ask-meridian-panel">
+    <div class="ask-panel-header">
+        <div style="display:flex;align-items:center;gap:9px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--kpmg-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            <span style="font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--text-primary);text-transform:uppercase;">Meridian Intelligence</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:1px;color:var(--kpmg-cyan);background:rgba(0,184,245,0.08);border:1px solid rgba(0,184,245,0.20);border-radius:2px;padding:2px 6px;">GROQ</span>
+        </div>
+        <button class="ask-panel-close" onclick="toggleAskPanel()">✕</button>
+    </div>
+
+    <!-- Quick chips -->
+    <div class="ask-panel-chips">
+        <button class="ask-chip" onclick="setQuery('What is our ARPU vs competitors?')">ARPU VS PEERS</button>
+        <button class="ask-chip" onclick="setQuery('Summarise the top revenue risks')">REVENUE RISKS</button>
+        <button class="ask-chip" onclick="setQuery('What is the EBITDA forecast for Q1 FY26?')">EBITDA OUTLOOK</button>
+        <button class="ask-chip" onclick="setQuery('Tell me about our 5G performance')">5G PERFORMANCE</button>
+        <button class="ask-chip" onclick="setQuery('Which circles have the highest churn?')">CIRCLE CHURN</button>
+        <button class="ask-chip" onclick="setQuery('What is our free cash flow trend?')">FCF TREND</button>
+    </div>
+
+    <!-- Input -->
+    <div class="ask-panel-input-row">
+        <input type="text" id="ai-query-input"
+            placeholder="Ask about Apex Telecom..."
+            onkeydown="if(event.key==='Enter') handleQuery()"
+            onfocus="this.style.borderColor='var(--kpmg-cyan)'"
+            onblur="this.style.borderColor='var(--border-light)'">
+        <button class="btn btn-primary" onclick="handleQuery()" style="padding:8px 14px;font-size:12px;white-space:nowrap;flex-shrink:0;">Ask</button>
+    </div>
+
+    <!-- Response -->
+    <div class="ask-panel-response">
+        <div id="ai-response" style="display:none;"></div>
+        <div id="ask-panel-empty" style="text-align:center;padding:40px 20px;color:var(--text-muted);">
+            <div style="font-size:10px;font-family:var(--font-mono);color:var(--border-light);letter-spacing:1px;margin-bottom:16px;">_ _ _ _ _ _ _ _ _ _</div>
+            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">Awaiting Query</div>
+            <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);opacity:0.6;">Revenue · Margins · ARPU · Network · Risk</div>
+        </div>
+    </div>
+</div>
+
 <!-- SCRIPTS — loaded in dependency order -->
 <script src="assets/libs/chart.min.js"></script>
 <script src="assets/js/auth.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="assets/js/data.js"></script>
 <script src="assets/js/utils.js?v=2"></script>
-<script src="assets/js/charts.js"></script>
+<script src="assets/js/charts.js?v=5"></script>
 <script src="assets/js/modals.js"></script>
 <script src="assets/js/theme.js"></script>
 <script src="assets/js/api.js"></script>
-<script src="assets/js/dashboard.js"></script>
+<script src="assets/js/dashboard.js?v=5"></script>
 <script src="assets/js/rafm.js"></script>
 <script src="assets/js/scenario.js?v=999"></script>
 <script src="assets/js/regulatory.js"></script>
@@ -222,7 +270,7 @@
 <script src="assets/js/dcf.js"></script>
 <script src="assets/js/circlemap.js"></script>
 <script src="assets/js/pdf.js"></script>
-<script src="assets/js/router.js"></script>
+<script src="assets/js/router.js?v=5"></script>
 
 <script>
 /* Startup */

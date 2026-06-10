@@ -1,193 +1,216 @@
 /* ============================================================
    MERIDIAN V5 · DASHBOARD
-   Screen 1: CFO Command Board — 3-Zone Layout
+   CFO Command Board — New Layout
+   1. AI Executive Brief
+   2. Alert / QTD Strip
+   3. KPI Explorer (tabs + 4×2 grid)
+   4. ARPU Trend Chart (full width)
+   5. Circle Map (full width)
+   6. Floating Ask Meridian panel
    ============================================================ */
 
-var ACTIVE_KPI_TAB = 'finance';
+var ACTIVE_KPI_TAB = 'favourites';
 var ARPU_VIEW      = 'trend';
 
 /* ── INIT ───────────────────────────────────────────────────── */
 
 function initDashboard() {
-    renderMorningBrief();
-    renderWatchPanel();
-    switchKPITab('finance');
-    renderCharts();
+    renderAIBrief();
+    renderAlertStrip();
+
+    // Start on saved tab, favourites if any, else finance
+    var savedTab = null;
+    try { savedTab = localStorage.getItem('meridian-active-tab'); } catch(e) {}
+    var startTab = savedTab || (getFavourites().length > 0 ? 'favourites' : 'finance');
+    switchKPITab(startTab);
+
+    // Charts and circle map run independently — a failure in one doesn't block the other
     setTimeout(function() {
-        if (typeof renderCircleMap === 'function') renderCircleMap();
-    }, 200);
+        try {
+            renderCharts();
+        } catch(e) {
+            console.error('[Meridian] renderCharts error:', e);
+            var chartBody = document.getElementById('arpu-chart-container');
+            if (chartBody) {
+                chartBody.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#FD349C;font-size:11px;font-family:monospace;">Chart error: ' + e.message + '</div>';
+            }
+        }
+    }, 150);
     startFreshnessTimer();
 }
 
 
 /* ══════════════════════════════════════════════════════════════
-   ZONE 1 — MORNING BRIEF
-   5 always-visible headline KPIs at the top of the dashboard.
+   SECTION 1 — AI EXECUTIVE BRIEF
+   Shows a smart static summary on load; calls Groq on demand.
    ══════════════════════════════════════════════════════════════ */
 
-function renderMorningBrief() {
-    var container = document.getElementById('morning-brief');
-    if (!container) return;
+function renderAIBrief() {
+    var el = document.getElementById('ai-brief-text');
+    if (!el) return;
 
-    var revenue = window.KPI_MASTER && window.KPI_MASTER.find(function(k) { return k.id === 'revenue'; });
-    var margin  = window.KPI_MASTER && window.KPI_MASTER.find(function(k) { return k.id === 'ebitda-margin'; });
-    var churn   = window.KPI_MASTER && window.KPI_MASTER.find(function(k) { return k.id === 'churn'; });
+    // Build a static data-driven brief from KPI_MASTER
+    var revenue  = findKPI('revenue');
+    var margin   = findKPI('ebitda-margin');
+    var arpu     = findKPI('arpu');
+    var churn    = findKPI('churn');
+    var fcf      = findKPI('fcf');
+    var alerts   = window.RAFM_ALERTS || [];
+    var critCount = alerts.filter(function(a) { return (a.severity||'').toUpperCase() === 'CRITICAL'; }).length;
 
-    var alerts    = window.RAFM_ALERTS || [];
-    var critCount = alerts.filter(function(a) { return (a.severity || '').toUpperCase() === 'CRITICAL'; }).length;
-    var alertColor = critCount > 0 ? '#FD349C' : '#00C0AE';
-    var alertLabel = critCount + ' Critical · ' + alerts.length + ' Total';
+    var revTxt  = revenue ? 'Revenue at <strong>₹' + revenue.value.toLocaleString('en-IN') + ' Cr</strong> — ' +
+        (parseFloat(revenue.delta) >= 0 ? '<span class="brief-pos">' : '<span class="brief-neg">') +
+        revenue.delta + ' YoY</span>, tracking at ' + revenue.pctToTarget + '% of quarterly target.' : '';
 
-    var now     = Date.now();
-    var filings = (window.REGULATORY_FILINGS || [])
-        .filter(function(f) { return f.status !== 'SUBMITTED'; })
-        .sort(function(a, b) { return new Date(a.due) - new Date(b.due); });
-    var nextFiling = filings[0];
-    var daysToReg  = nextFiling ? Math.ceil((new Date(nextFiling.due) - now) / 86400000) : null;
-    var regColor   = daysToReg === null ? '#8A9BB0' : daysToReg <= 7 ? '#FD349C' : daysToReg <= 30 ? '#F59E0B' : '#00C0AE';
-    var regTitle   = nextFiling ? nextFiling.title.split('—')[0].split('–')[0].trim() : 'On Track';
-    var regSub     = daysToReg !== null ? daysToReg + ' days' : 'All filed';
+    var mrgTxt  = margin ? ' EBITDA margin <strong>' + margin.value + '%</strong> ' +
+        (parseFloat(margin.deltaQoQ) >= 0 ? '<span class="brief-pos">+' + margin.deltaQoQ + ' QoQ</span>' : '<span class="brief-neg">' + margin.deltaQoQ + ' QoQ</span>') +
+        ' — 130bps below Airtel benchmark.' : '';
 
-    var cards = [
-        {
-            label: 'Total Revenue',
-            value: revenue ? revenue.value.toLocaleString('en-IN') : '3,510',
-            unit:  revenue ? revenue.unit : '₹ Cr',
-            delta: revenue ? revenue.delta + ' YoY' : '+8.4% YoY',
-            pct:   revenue ? revenue.pctToTarget : 97.5,
-            color: '#1E49E2',
-            spark: revenue ? revenue.trend5Q : null
-        },
-        {
-            label: 'EBITDA Margin',
-            value: margin ? margin.value : '34.9',
-            unit:  margin ? margin.unit : '%',
-            delta: margin ? margin.delta + ' YoY' : '+1.6pp YoY',
-            pct:   margin ? margin.pctToTarget : 96.9,
-            color: '#00C0AE',
-            spark: margin ? margin.trend5Q : null
-        },
-        {
-            label: 'Monthly Churn',
-            value: churn ? churn.value : '1.42',
-            unit:  churn ? churn.unit : '%',
-            delta: churn ? churn.delta + ' YoY' : '-0.18pp YoY',
-            pct:   churn ? churn.pctToTarget : 88,
-            color: (churn && parseFloat(churn.value) < 2) ? '#00C0AE' : '#F59E0B',
-            spark: churn ? churn.trend5Q : null
-        },
-        {
-            label: 'RAFM Alerts',
-            value: alerts.length,
-            unit:  'active',
-            delta: alertLabel,
-            pct:   null,
-            color: alertColor,
-            pulse: true,
-            spark: null
-        },
-        {
-            label: 'Next Compliance',
-            value: regTitle.length > 18 ? regTitle.substring(0, 16) + '…' : regTitle,
-            unit:  '',
-            delta: regSub,
-            pct:   null,
-            color: regColor,
-            spark: null
-        }
-    ];
+    var fcfTxt  = fcf ? ' Free cash flow at record <strong>₹' + fcf.value + ' Cr</strong> with capex discipline sustaining conversion.' : '';
 
-    container.innerHTML = cards.map(function(c) {
-        var progressBar = c.pct !== null
-            ? '<div style="height:3px;background:var(--border);border-radius:2px;margin-top:8px;">' +
-              '<div style="height:3px;background:' + c.color + ';border-radius:2px;width:' + Math.min(c.pct, 100) + '%;transition:width 0.8s ease;"></div>' +
-              '</div>'
-            : '';
+    var riskTxt = critCount > 0
+        ? ' <span class="brief-risk">⚠ ' + critCount + ' critical RAFM alert' + (critCount > 1 ? 's' : '') + ' require immediate attention — ' + (alerts[0] ? alerts[0].amount + ' exposure' : '') + '.</span>'
+        : ' RAFM risk posture stable — ' + alerts.length + ' active alerts, none critical.';
 
-        var pulseEl = c.pulse
-            ? '<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:' + c.color + ';animation:livePulse 1.5s ease-in-out infinite alternate;vertical-align:middle;margin-left:4px;"></span>'
-            : '';
+    el.innerHTML = revTxt + mrgTxt + fcfTxt + riskTxt;
+    updateBriefTimestamp();
+}
 
-        var sparkSvg = c.spark ? buildSparkline(c.spark, c.color) : '';
+function generateAIBrief() {
+    var el  = document.getElementById('ai-brief-text');
+    var btn = document.getElementById('ai-brief-btn');
+    if (!el) return;
 
-        return '<div class="brief-card" style="border-top:3px solid ' + c.color + ';">' +
-            '<div class="brief-card-label">' + c.label + '</div>' +
-            '<div style="display:flex;align-items:flex-end;justify-content:space-between;">' +
-                '<div>' +
-                    '<div class="brief-card-value" style="color:' + c.color + ';">' +
-                        c.value +
-                        (c.unit ? '<span style="font-size:11px;color:var(--text-secondary);font-family:var(--font-sans);font-weight:400;margin-left:3px;">' + c.unit + '</span>' : '') +
-                    '</div>' +
-                    '<div style="font-size:10px;color:var(--text-muted);margin-top:3px;">' + c.delta + pulseEl + '</div>' +
-                '</div>' +
-                (sparkSvg ? '<div style="opacity:0.85;flex-shrink:0;">' + sparkSvg + '</div>' : '') +
-            '</div>' +
-            progressBar +
-        '</div>';
-    }).join('');
+    // Build context from data
+    var kpiSummary = (window.KPI_MASTER || []).slice(0, 12).map(function(k) {
+        return k.label + ': ' + k.value + ' ' + k.unit + ' (' + k.delta + ' YoY, ' + k.pctToTarget + '% to target)';
+    }).join('; ');
+
+    var alertSummary = (window.RAFM_ALERTS || []).slice(0, 3).map(function(a) {
+        return a.severity + ': ' + a.title + ' — ' + a.amount;
+    }).join('; ');
+
+    var prompt = 'You are a CFO intelligence assistant for Apex Telecom, an Indian telco with 22 circles and 312M subscribers. ' +
+        'Write a concise 2-sentence executive brief (max 60 words) covering: financial performance, key risk, and one opportunity. ' +
+        'Use specific numbers. Tone: direct, board-room ready. KPIs: ' + kpiSummary + '. Alerts: ' + alertSummary;
+
+    if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
+    el.innerHTML = '<span style="color:var(--text-muted);font-style:italic;">Analysing with Meridian AI…</span>';
+
+    showApiKeyPrompt(function() {
+        callGroq(prompt, null,
+            function(response) {
+                el.innerHTML = '<span style="color:var(--text-secondary);line-height:1.8;">' + response + '</span>';
+                updateBriefTimestamp();
+                if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Regenerate'; }
+            },
+            function(err) {
+                renderAIBrief(); // fall back to static
+                if (btn) { btn.disabled = false; btn.innerHTML = 'Regenerate'; }
+            }
+        );
+    });
+}
+
+function updateBriefTimestamp() {
+    var ts = document.getElementById('ai-brief-timestamp');
+    if (ts) {
+        var now = new Date();
+        ts.textContent = 'Generated ' + now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    }
+}
+
+function findKPI(id) {
+    return window.KPI_MASTER && window.KPI_MASTER.find(function(k) { return k.id === id; });
 }
 
 
 /* ══════════════════════════════════════════════════════════════
-   ZONE 2R — WATCH PANEL
-   Populates alerts, AI insight, and readies the Ask input.
+   SECTION 2 — ALERT / QTD STRIP
    ══════════════════════════════════════════════════════════════ */
 
-function renderWatchPanel() {
-    var alertsEl  = document.getElementById('watch-alerts');
-    var badgeEl   = document.getElementById('watch-alert-badge');
+function renderAlertStrip() {
+    renderAlertStripLeft();
+    renderAlertStripRight();
+}
+
+function renderAlertStripLeft() {
+    var el = document.getElementById('alert-strip-left');
+    if (!el) return;
+
     var alerts    = window.RAFM_ALERTS || [];
-    var critCount = alerts.filter(function(a) { return (a.severity || '').toUpperCase() === 'CRITICAL'; }).length;
+    var critical  = alerts.filter(function(a) { return (a.severity||'').toUpperCase() === 'CRITICAL'; }).length;
+    var high      = alerts.filter(function(a) { return (a.severity||'').toUpperCase() === 'HIGH'; }).length;
+    var total     = alerts.length;
 
-    if (badgeEl) badgeEl.textContent = critCount + ' CRITICAL';
+    el.innerHTML =
+        '<span style="font-size:10px;color:var(--text-muted);font-weight:600;letter-spacing:0.5px;margin-right:4px;">ALERTS</span>' +
+        (critical > 0
+            ? '<span class="strip-badge strip-badge-critical">' + critical + ' CRITICAL</span>'
+            : '') +
+        (high > 0
+            ? '<span class="strip-badge strip-badge-high">' + high + ' HIGH</span>'
+            : '') +
+        '<span class="strip-badge strip-badge-open">' + total + ' OPEN</span>' +
+        '<span style="font-size:10px;color:var(--text-muted);margin-left:6px;cursor:pointer;" ' +
+            'onclick="showScreen(\'rafm\', document.querySelector(\'[data-screen=rafm]\'))" ' +
+            'title="View all alerts">View all →</span>';
+}
 
-    if (alertsEl) {
-        alertsEl.innerHTML = alerts.slice(0, 3).map(function(alert) {
-            var color = getSeverityColor(alert.severity);
-            var sev   = (alert.severity || '').toLowerCase();
-            return '<div class="watch-alert-item" onclick="openModal(\'' + alert.id + '\')">' +
-                '<div style="width:3px;min-height:36px;background:' + color + ';border-radius:2px;flex-shrink:0;align-self:stretch;"></div>' +
-                '<div style="flex:1;min-width:0;">' +
-                    '<div style="font-size:11px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + alert.title + '</div>' +
-                    '<div style="display:flex;align-items:center;gap:6px;margin-top:3px;">' +
-                        '<span class="badge badge-' + sev + '" style="font-size:9px;">' + sev.toUpperCase() + '</span>' +
-                        '<span style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);">' + alert.amount + '</span>' +
-                    '</div>' +
-                '</div>' +
-                '<div style="font-size:14px;color:' + color + ';flex-shrink:0;padding-left:4px;">›</div>' +
-            '</div>';
-        }).join('');
+function renderAlertStripRight() {
+    var el = document.getElementById('alert-strip-right');
+    if (!el) return;
+
+    var now   = new Date();
+    var month = now.getMonth(); // 0-based
+    var year  = now.getFullYear();
+
+    var quarter, qStart, qEnd, fyLabel;
+    if (month >= 3 && month <= 5) {
+        quarter = 1; qStart = new Date(year, 3, 1); qEnd = new Date(year, 5, 30);
+        fyLabel = 'Q1 FY' + String(year + 1).slice(2);
+    } else if (month >= 6 && month <= 8) {
+        quarter = 2; qStart = new Date(year, 6, 1); qEnd = new Date(year, 8, 30);
+        fyLabel = 'Q2 FY' + String(year + 1).slice(2);
+    } else if (month >= 9 && month <= 11) {
+        quarter = 3; qStart = new Date(year, 9, 1); qEnd = new Date(year, 11, 31);
+        fyLabel = 'Q3 FY' + String(year + 1).slice(2);
+    } else {
+        quarter = 4; qStart = new Date(year, 0, 1); qEnd = new Date(year, 2, 31);
+        fyLabel = 'Q4 FY' + String(year).slice(2);
     }
 
-    var riskEl = document.getElementById('watch-insight-risk');
-    var oppEl  = document.getElementById('watch-insight-arpu');
+    var totalDays   = Math.round((qEnd - qStart) / 86400000) + 1;
+    var elapsed     = Math.min(Math.round((now - qStart) / 86400000) + 1, totalDays);
+    var pct         = Math.round((elapsed / totalDays) * 100);
+    var filled      = Math.round(pct / 10); // blocks out of 10
 
-    if (riskEl) {
-        var topAlert = alerts[0];
-        riskEl.innerHTML = topAlert
-            ? '<strong>' + topAlert.title + '</strong> — ' + topAlert.amount + ' exposure. ' + topAlert.description.substring(0, 110) + '...'
-            : 'Six active RAFM alerts represent <strong>₹9.32 Cr</strong> combined exposure. Priority: ₹4.8 Cr interconnect discrepancy with Jio.';
+    var barBlocks = '';
+    for (var i = 0; i < 10; i++) {
+        barBlocks += '<div class="qtd-block' + (i < filled ? ' filled' : '') + '"></div>';
     }
 
-    if (oppEl) {
-        var arpu = window.KPI_MASTER && window.KPI_MASTER.find(function(k) { return k.id === 'arpu'; });
-        oppEl.innerHTML = arpu
-            ? 'ARPU at <strong>' + arpu.value + ' ' + arpu.unit + '</strong>, ' + arpu.delta + ' YoY. 5G subscribers at 2.4\xd7 blended ARPU — accelerating 5G migration is the highest-value lever.'
-            : 'ARPU growing steadily. 5G ARPU of ₹312 (2.4\xd7 blended) makes 5G migration the primary growth lever for FY26.';
-    }
+    el.innerHTML =
+        '<span style="font-size:10px;font-weight:700;color:var(--text-secondary);letter-spacing:0.5px;">' + fyLabel + '</span>' +
+        '<div class="qtd-bar">' + barBlocks + '</div>' +
+        '<span style="font-size:10px;font-weight:700;color:var(--kpmg-cyan);">' + pct + '%</span>' +
+        '<span style="font-size:10px;color:var(--text-muted);">Day ' + elapsed + ' of ' + totalDays + '</span>';
 }
 
 
 /* ══════════════════════════════════════════════════════════════
-   SPARKLINES — tiny inline SVG trend chart for KPI cards
+   SPARKLINES — inline SVG
+   Pass fullWidth=true for card-bottom full-width sparkline
    ══════════════════════════════════════════════════════════════ */
 
-function buildSparkline(data, color) {
+function buildSparkline(data, color, fullWidth) {
     if (!data || data.length < 2) return '';
-    var min = Math.min.apply(null, data);
-    var max = Math.max.apply(null, data);
+    var min   = Math.min.apply(null, data);
+    var max   = Math.max.apply(null, data);
     var range = max - min || 1;
-    var W = 60, H = 28, P = 3;
+    var W = fullWidth ? 200 : 60;
+    var H = fullWidth ? 36 : 28;
+    var P = 3;
 
     var pts = data.map(function(v, i) {
         var x = P + (i / (data.length - 1)) * (W - P * 2);
@@ -197,8 +220,9 @@ function buildSparkline(data, color) {
 
     var lastPt = pts[pts.length - 1].split(',');
     var area   = P.toFixed(1) + ',' + H + ' ' + pts.join(' ') + ' ' + (W - P).toFixed(1) + ',' + H;
+    var wAttr  = fullWidth ? 'width="100%"' : 'width="' + W + '"';
 
-    return '<svg width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" style="display:block;overflow:visible;">' +
+    return '<svg ' + wAttr + ' height="' + H + '" viewBox="0 0 ' + W + ' ' + H + '" style="display:block;overflow:visible;">' +
         '<polygon points="' + area + '" fill="' + color + '" opacity="0.12"/>' +
         '<polyline points="' + pts.join(' ') + '" fill="none" stroke="' + color + '" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' +
         '<circle cx="' + lastPt[0] + '" cy="' + lastPt[1] + '" r="2.5" fill="' + color + '"/>' +
@@ -207,7 +231,7 @@ function buildSparkline(data, color) {
 
 
 /* ══════════════════════════════════════════════════════════════
-   ZONE 2L — KPI EXPLORER — tab switching + card rendering
+   SECTION 3+4 — KPI EXPLORER
    ══════════════════════════════════════════════════════════════ */
 
 function switchKPITab(tab) {
@@ -218,6 +242,7 @@ function switchKPITab(tab) {
     });
 
     var subtitles = {
+        favourites:  'Your pinned KPIs \xb7 Saved to this device',
         finance:     'Finance & Treasury \xb7 SAP ERP \xb7 Oracle Financials',
         commercial:  'Commercial & Revenue \xb7 Siebel CRM \xb7 BSS',
         network:     'Network & Technology \xb7 Huawei OSS \xb7 Nokia NetAct',
@@ -225,8 +250,7 @@ function switchKPITab(tab) {
         hr:          'HR & Workforce \xb7 Workday HCM',
         procurement: 'Procurement & Vendor \xb7 SAP Ariba',
         regulatory:  'Regulatory & Compliance \xb7 Internal GRC',
-        cx:          'Customer Experience \xb7 Genesys CX',
-        favourites:  'Your pinned KPIs \xb7 Saved to this device'
+        cx:          'Customer Experience \xb7 Genesys CX'
     };
     var subEl = document.getElementById('kpi-tab-subtitle');
     if (subEl) subEl.textContent = subtitles[tab] || '';
@@ -240,101 +264,102 @@ function renderKPITab(tab) {
     if (!grid) return;
 
     var kpis;
+    var favIds = getFavourites();
+
     if (tab === 'favourites') {
-        var favIds = getFavourites();
-        kpis = window.KPI_MASTER.filter(function(k) { return favIds.indexOf(k.id) > -1; });
+        kpis = (window.KPI_MASTER || []).filter(function(k) { return favIds.indexOf(k.id) > -1; });
         if (kpis.length === 0) {
-            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px;color:var(--text-muted);">' +
-                '<div style="font-size:32px;margin-bottom:12px;">★</div>' +
-                '<div style="font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">No favourites yet</div>' +
-                '<div style="font-size:12px;">Click the ★ on any KPI card to pin it here</div>' +
-            '</div>';
+            grid.innerHTML =
+                '<div style="grid-column:1/-1;text-align:center;padding:56px 24px;color:var(--text-muted);">' +
+                    '<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 14px;display:block;opacity:0.3;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>' +
+                    '<div style="font-size:14px;font-weight:600;color:var(--text-secondary);margin-bottom:8px;">No favourites yet</div>' +
+                    '<div style="font-size:12px;">Click the ★ on any KPI card to pin it here</div>' +
+                '</div>';
             return;
         }
     } else {
-        kpis = window.KPI_MASTER.filter(function(k) { return k.businessLine === tab; });
+        // Limit to 8 per business line
+        kpis = (window.KPI_MASTER || []).filter(function(k) { return k.businessLine === tab; }).slice(0, 8);
     }
 
-    var favIds = getFavourites();
-
     grid.innerHTML = kpis.map(function(kpi) {
-        var isUp   = kpi.trend === 'up';
-        var isDown = kpi.trend === 'down';
-        var deltaClass = isUp ? 'kpi-delta positive' : isDown ? 'kpi-delta negative' : 'kpi-delta neutral';
-        var isFav  = favIds.indexOf(kpi.id) > -1;
-        var pct    = kpi.pctToTarget;
-        var color  = pct >= 95 ? '#00C0AE' : pct >= 75 ? '#00B8F5' : pct >= 50 ? '#F59E0B' : pct >= 30 ? '#F97316' : '#FD349C';
-        var spark  = kpi.trend5Q ? buildSparkline(kpi.trend5Q, color) : '';
+        return buildKPICard(kpi, favIds.indexOf(kpi.id) > -1);
+    }).join('');
+}
 
-        return '<div class="kpi-card" style="cursor:pointer;position:relative;" onclick="openKPIDetail(\'' + kpi.id + '\')">' +
-            '<div class="kpi-card-accent" style="background:' + color + '"></div>' +
+function buildKPICard(kpi, isFav) {
+    var pct        = kpi.pctToTarget || 0;
+    var color      = pct >= 95 ? '#00C0AE' : pct >= 75 ? '#00B8F5' : pct >= 50 ? '#F59E0B' : '#FD349C';
+    var statusLabel = pct >= 95 ? 'ON TRACK' : pct >= 75 ? 'WATCH' : pct >= 50 ? 'AT RISK' : 'CRITICAL';
+    var spark      = kpi.trend5Q ? buildSparkline(kpi.trend5Q, color, true) : '';
 
-            '<div style="position:absolute;top:8px;right:26px;font-size:13px;cursor:pointer;color:' + (isFav ? '#F59E0B' : 'var(--text-muted)') + ';opacity:' + (isFav ? '1' : '0.35') + ';" ' +
-                'onclick="event.stopPropagation();toggleFavourite(\'' + kpi.id + '\')" title="Pin to Favourites">★</div>' +
-            '<div style="position:absolute;top:8px;right:8px;opacity:0.25;font-size:10px;color:var(--text-muted);">↗</div>' +
+    // vs-target calculation — sign flip handled by pctToTarget color
+    var vtNum     = kpi.target ? ((parseFloat(kpi.value) / parseFloat(kpi.target) - 1) * 100) : null;
+    var vtStr     = vtNum !== null ? (vtNum >= 0 ? '+' : '') + vtNum.toFixed(1) + '% vs target' : null;
+    var vtColor   = pct >= 95 ? '#00C0AE' : pct >= 75 ? '#00B8F5' : pct >= 50 ? '#F59E0B' : '#FD349C';
 
-            '<div style="font-size:9px;font-weight:700;letter-spacing:1px;color:' + color + ';opacity:0.8;margin-bottom:3px;text-transform:uppercase;">' + (kpi.system || '') + '</div>' +
+    var yoyColor  = kpi.trend === 'up' ? '#00C0AE' : kpi.trend === 'down' ? '#FD349C' : '#8A9BB0';
+    var yoyArrow  = kpi.trend === 'up' ? '▲' : kpi.trend === 'down' ? '▼' : '–';
 
+    return '<div class="kpi-card" onclick="openKPIDetail(\'' + kpi.id + '\')">' +
+
+        // ── Top row: label + status badge
+        '<div class="kpi-card-header">' +
             '<div class="kpi-label">' + kpi.label + '</div>' +
-
-            '<div style="display:flex;align-items:flex-end;justify-content:space-between;margin:4px 0 2px;">' +
-                '<div>' +
-                    '<div class="kpi-value">' +
-                        '<span id="kpi-val-' + kpi.id + '">' + kpi.value + '</span>' +
-                        '<span style="font-size:13px;color:var(--text-secondary);font-weight:400;margin-left:2px;">' + kpi.unit + '</span>' +
-                    '</div>' +
-                    '<div class="' + deltaClass + '">' + kpi.delta + ' <span class="kpi-delta-label">YoY</span></div>' +
-                '</div>' +
-                (spark ? '<div style="flex-shrink:0;opacity:0.9;">' + spark + '</div>' : '') +
+            '<div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">' +
+                '<span class="kpi-status-badge" style="color:' + color + ';border-color:' + color + '30;background:' + color + '12;">' + statusLabel + '</span>' +
+                '<span class="kpi-fav-btn' + (isFav ? ' active' : '') + '" ' +
+                    'onclick="event.stopPropagation();toggleFavourite(\'' + kpi.id + '\')" ' +
+                    'style="color:' + (isFav ? '#F59E0B' : 'var(--text-muted)') + ';opacity:' + (isFav ? '1' : '0.4') + ';" ' +
+                    'title="Pin to Favourites">★</span>' +
             '</div>' +
+        '</div>' +
 
-            '<div style="margin-top:6px;">' +
-                '<div style="display:flex;justify-content:space-between;margin-bottom:2px;">' +
-                    '<span style="font-size:9px;color:var(--text-muted);">To Target</span>' +
-                    '<span style="font-size:9px;font-weight:700;color:' + color + ';">' + pct + '%</span>' +
-                '</div>' +
-                '<div style="height:3px;background:var(--border);border-radius:2px;">' +
-                    '<div style="height:3px;background:' + color + ';border-radius:2px;width:' + Math.min(pct, 100) + '%;transition:width 0.6s ease;"></div>' +
-                '</div>' +
-            '</div>' +
+        // ── Value
+        '<div class="kpi-value-row">' +
+            '<span class="kpi-value">' + kpi.value + '</span>' +
+            '<span class="kpi-unit">' + kpi.unit + '</span>' +
+        '</div>' +
 
-            '<div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center;">' +
-                '<span style="font-size:9px;color:var(--text-muted);">vs ' + (kpi.benchmarkLabel || 'Benchmark') + '</span>' +
-                '<span style="font-size:9px;font-weight:700;color:var(--text-muted);">' + kpi.benchmark + (kpi.unit ? ' ' + kpi.unit : '') + '</span>' +
-            '</div>' +
+        // ── Delta lines
+        (vtStr ? '<div class="kpi-delta-line" style="color:' + vtColor + ';">' + vtStr + '</div>' : '') +
+        '<div class="kpi-delta-line kpi-delta-yoy" style="color:' + yoyColor + ';">' +
+            yoyArrow + ' ' + kpi.delta + ' YoY' +
+        '</div>' +
 
-            '<div style="position:absolute;bottom:8px;right:8px;display:flex;align-items:center;gap:4px;">' +
+        // ── Sparkline — full width
+        (spark ? '<div class="kpi-sparkline-wrap">' + spark + '</div>' : '') +
+
+        // ── Footer
+        '<div class="kpi-card-footer">' +
+            '<div style="display:flex;align-items:center;gap:4px;">' +
                 '<div style="width:4px;height:4px;border-radius:50%;background:#00C0AE;animation:livePulse 1.5s ease-in-out infinite alternate;"></div>' +
                 '<span class="kpi-freshness" style="font-size:9px;color:var(--text-muted);">Live</span>' +
             '</div>' +
+            '<span style="font-size:9px;color:var(--text-muted);opacity:0.5;">↗</span>' +
+        '</div>' +
 
-        '</div>';
-    }).join('');
+    '</div>';
 }
 
 
 /* ══════════════════════════════════════════════════════════════
-   ZONE 3 — ARPU CHART TOGGLE
+   ARPU CHART TOGGLE
    ══════════════════════════════════════════════════════════════ */
 
 function toggleARPUView(view) {
     ARPU_VIEW = view;
-    var trendCanvas = document.getElementById('arpu-chart');
-    var compCanvas  = document.getElementById('competitor-chart');
-    var trendBtn    = document.getElementById('arpu-view-trend');
-    var compBtn     = document.getElementById('arpu-view-comp');
-    var subtitle    = document.getElementById('arpu-chart-subtitle');
-    if (!trendCanvas || !compCanvas) return;
+    var trendBtn = document.getElementById('arpu-view-trend');
+    var compBtn  = document.getElementById('arpu-view-comp');
+    var subtitle = document.getElementById('arpu-chart-subtitle');
 
     if (view === 'trend') {
-        trendCanvas.style.display = 'block';
-        compCanvas.style.display  = 'none';
+        if (typeof renderTrendSVG === 'function') renderTrendSVG();
         if (trendBtn) { trendBtn.style.background = 'var(--kpmg-cyan)'; trendBtn.style.color = '#0A0F1E'; trendBtn.style.fontWeight = '700'; }
         if (compBtn)  { compBtn.style.background  = 'transparent'; compBtn.style.color = 'var(--text-muted)'; compBtn.style.fontWeight = '400'; }
         if (subtitle) subtitle.textContent = 'Historical Jul\'24–Jun\'25 \xb7 AI Forecast Jul–Sep\'25';
     } else {
-        trendCanvas.style.display = 'none';
-        compCanvas.style.display  = 'block';
+        if (typeof renderCompetitorSVG === 'function') renderCompetitorSVG();
         if (compBtn)  { compBtn.style.background  = 'var(--kpmg-cyan)'; compBtn.style.color = '#0A0F1E'; compBtn.style.fontWeight = '700'; }
         if (trendBtn) { trendBtn.style.background = 'transparent'; trendBtn.style.color = 'var(--text-muted)'; trendBtn.style.fontWeight = '400'; }
         if (subtitle) subtitle.textContent = 'Indian telecom operators \xb7 Blended ARPU ₹/month';
@@ -360,70 +385,7 @@ function toggleFavourite(id) {
 
 
 /* ══════════════════════════════════════════════════════════════
-   DATA FRESHNESS INDICATOR
-   ══════════════════════════════════════════════════════════════ */
-
-var FRESHNESS_START = Date.now();
-var FRESHNESS_TIMER = null;
-
-function startFreshnessTimer() {
-    FRESHNESS_START = Date.now();
-    if (FRESHNESS_TIMER) clearInterval(FRESHNESS_TIMER);
-    FRESHNESS_TIMER = setInterval(function() {
-        var mins = Math.floor((Date.now() - FRESHNESS_START) / 60000);
-        var text = mins === 0 ? 'Live' : 'Live \xb7 ' + mins + 'm';
-        document.querySelectorAll('.kpi-freshness').forEach(function(el) { el.textContent = text; });
-    }, 30000);
-}
-
-
-/* ══════════════════════════════════════════════════════════════
-   AI — ASK MERIDIAN
-   ══════════════════════════════════════════════════════════════ */
-
-function handleQuery() {
-    var input = document.getElementById('ai-query-input');
-    var resp  = document.getElementById('ai-response');
-    var query = input ? input.value.trim() : '';
-    if (!query || !resp) return;
-
-    showApiKeyPrompt(function() {
-        resp.style.display = 'block';
-        resp.innerHTML =
-            '<div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);display:flex;align-items:center;gap:10px;">' +
-                '<div class="loading-spinner" style="width:16px;height:16px;border-width:2px;flex-shrink:0;"></div>' +
-                '<span style="color:var(--text-muted);font-size:12px;">Meridian AI is analysing…</span>' +
-            '</div>';
-
-        callGroq(query, null,
-            function(response) {
-                resp.innerHTML =
-                    '<div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);border-left:3px solid var(--kpmg-cyan);">' +
-                        '<div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);margin-bottom:8px;text-transform:uppercase;">Meridian AI Response</div>' +
-                        '<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;">' + formatAIResponse(response) + '</div>' +
-                        '<div style="font-size:10px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">Apex Telecom \xb7 Q1 FY26 \xb7 Powered by Groq AI</div>' +
-                    '</div>';
-            },
-            function(error) {
-                resp.innerHTML =
-                    '<div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid rgba(253,52,156,0.3);border-left:3px solid #FD349C;">' +
-                        '<div style="font-size:12px;color:#FD349C;">Error: ' + error + '</div>' +
-                        '<div style="font-size:11px;color:var(--text-muted);margin-top:6px;">Check your API key or try again.</div>' +
-                    '</div>';
-            }
-        );
-    });
-}
-
-function setQuery(text) {
-    var input = document.getElementById('ai-query-input');
-    if (input) input.value = text;
-    handleQuery();
-}
-
-
-/* ══════════════════════════════════════════════════════════════
-   KPI DETAIL MODAL
+   KPI DETAIL MODAL — kept from V5 original
    ══════════════════════════════════════════════════════════════ */
 
 function openKPIDetail(id) {
@@ -447,8 +409,8 @@ function openKPIDetail(id) {
                 '<div style="font-size:12px;color:var(--text-muted);margin-top:2px;">' + (kpi.period || '') + ' \xb7 ' + (kpi.systemFull || '') + '</div>' +
             '</div>' +
             '<div style="display:flex;gap:8px;align-items:center;">' +
-                '<button onclick="toggleFavourite(\'' + id + '\');openKPIDetail(\'' + id + '\')" style="background:transparent;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px;color:' + (isFav ? '#F59E0B' : 'var(--text-muted)') + ';">★</button>' +
-                '<button onclick="closeModal()" style="background:transparent;border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:16px;color:var(--text-muted);">✕</button>' +
+                '<button onclick="toggleFavourite(\'' + id + '\');openKPIDetail(\'' + id + '\')" style="background:transparent;border:1px solid var(--border);border-radius:4px;padding:4px 10px;cursor:pointer;font-size:14px;color:' + (isFav ? '#F59E0B' : 'var(--text-muted)') + ';">★</button>' +
+                '<button onclick="closeModal()" style="background:transparent;border:1px solid var(--border);border-radius:4px;padding:4px 10px;cursor:pointer;font-size:16px;color:var(--text-muted);">✕</button>' +
             '</div>' +
         '</div>' +
 
@@ -478,9 +440,9 @@ function openKPIDetail(id) {
         '</div>' +
 
         '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">' +
-            insightCard('💡 INSIGHT', kpi.insight, '#00B8F5') +
-            insightCard('⚠ RISK', kpi.risk, '#FD349C') +
-            insightCard('🎯 OPPORTUNITY', kpi.opportunity, '#00C0AE') +
+            insightCard('INSIGHT', kpi.insight, '#00B8F5') +
+            insightCard('RISK', kpi.risk, '#FD349C') +
+            insightCard('OPPORTUNITY', kpi.opportunity, '#00C0AE') +
         '</div>' +
 
         '<div style="background:var(--bg);border-radius:var(--radius-sm);padding:14px;border:1px solid var(--border);margin-bottom:10px;">' +
@@ -537,89 +499,95 @@ function insightCard(title, text, color) {
 
 
 /* ══════════════════════════════════════════════════════════════
-   WIDGET EDITOR MODAL
+   FLOATING ASK MERIDIAN PANEL
    ══════════════════════════════════════════════════════════════ */
 
-var ACTIVE_KPIS = window.KPI_LIBRARY
-    ? window.KPI_LIBRARY.filter(function(k) { return k.default; }).map(function(k) { return k.id; })
-    : ['arpu', 'churn', 'ebitda', 'spectrum', 'fcf', 'subscribers'];
+var ASK_PANEL_OPEN = false;
 
-function openWidgetEditor() {
-    var modal = document.getElementById('modal-box');
-    modal.innerHTML =
-        '<div class="modal-header">' +
-            '<div>' +
-                '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-cyan);margin-bottom:6px;text-transform:uppercase;">Dashboard Customisation</div>' +
-                '<div class="modal-title">Manage KPI Widgets</div>' +
-            '</div>' +
-            '<div class="modal-close" onclick="closeModal()">✕</div>' +
-        '</div>' +
-        '<div style="font-size:12px;color:var(--text-muted);margin-bottom:20px;">Select which KPIs to display. Choose up to 12.</div>' +
-        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;">' +
-            window.KPI_LIBRARY.map(function(kpi) {
-                var isActive = ACTIVE_KPIS.indexOf(kpi.id) !== -1;
-                return '<div onclick="toggleWidget(\'' + kpi.id + '\')" id="widget-toggle-' + kpi.id + '" ' +
-                    'style="background:' + (isActive ? 'rgba(0,192,174,0.1)' : 'var(--bg)') + ';' +
-                    'border:1px solid ' + (isActive ? '#00C0AE' : 'var(--border)') + ';' +
-                    'border-radius:8px;padding:12px;cursor:pointer;transition:all 0.15s;">' +
-                    '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">' +
-                        '<div style="width:8px;height:8px;border-radius:50%;background:' + kpi.accentColor + ';margin-top:3px;"></div>' +
-                        '<div style="width:16px;height:16px;border-radius:50%;background:' + (isActive ? '#00C0AE' : 'var(--border)') + ';display:flex;align-items:center;justify-content:center;" id="widget-check-' + kpi.id + '">' +
-                            (isActive ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : '') +
-                        '</div>' +
-                    '</div>' +
-                    '<div style="font-size:11px;font-weight:600;color:var(--text-primary);">' + kpi.label + '</div>' +
-                    '<div style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:' + kpi.accentColor + ';margin-top:2px;">' + kpi.value + kpi.unit + '</div>' +
-                '</div>';
-            }).join('') +
-        '</div>' +
-        '<div style="display:flex;gap:12px;align-items:center;">' +
-            '<button class="btn btn-primary" onclick="applyWidgets()">Apply Changes</button>' +
-            '<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>' +
-            '<span style="font-size:11px;color:var(--text-muted);margin-left:auto;" id="widget-count">' + ACTIVE_KPIS.length + ' of 18 selected</span>' +
-        '</div>';
-
-    document.getElementById('modal-overlay').classList.add('active');
-    document.body.style.overflow = 'hidden';
-}
-
-function toggleWidget(kpiId) {
-    var idx = ACTIVE_KPIS.indexOf(kpiId);
-    if (idx === -1) {
-        if (ACTIVE_KPIS.length >= 12) { alert('Maximum 12 KPIs allowed. Remove one first.'); return; }
-        ACTIVE_KPIS.push(kpiId);
-    } else {
-        if (ACTIVE_KPIS.length <= 1) { alert('At least 1 KPI must be selected.'); return; }
-        ACTIVE_KPIS.splice(idx, 1);
+function toggleAskPanel() {
+    ASK_PANEL_OPEN = !ASK_PANEL_OPEN;
+    var panel = document.getElementById('ask-meridian-panel');
+    var fab   = document.getElementById('ask-meridian-fab');
+    if (panel) panel.classList.toggle('open', ASK_PANEL_OPEN);
+    if (fab)   fab.classList.toggle('active', ASK_PANEL_OPEN);
+    if (ASK_PANEL_OPEN) {
+        setTimeout(function() {
+            var input = document.getElementById('ai-query-input');
+            if (input) input.focus();
+        }, 260);
     }
-    var isNow  = ACTIVE_KPIS.indexOf(kpiId) !== -1;
-    var card   = document.getElementById('widget-toggle-' + kpiId);
-    var check  = document.getElementById('widget-check-' + kpiId);
-    card.style.background = isNow ? 'rgba(0,192,174,0.1)' : 'var(--bg)';
-    card.style.border     = '1px solid ' + (isNow ? '#00C0AE' : 'var(--border)');
-    check.style.background = isNow ? '#00C0AE' : 'var(--border)';
-    check.innerHTML = isNow ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : '';
-    document.getElementById('widget-count').textContent = ACTIVE_KPIS.length + ' of 18 selected';
 }
 
-function applyWidgets() {
-    closeModal();
-    switchKPITab(ACTIVE_KPI_TAB);
+function handleQuery() {
+    var input = document.getElementById('ai-query-input');
+    var resp  = document.getElementById('ai-response');
+    var query = input ? input.value.trim() : '';
+    if (!query || !resp) return;
+
+    showApiKeyPrompt(function() {
+        var emptyState = document.getElementById('ask-panel-empty');
+        if (emptyState) emptyState.style.display = 'none';
+        resp.style.display = 'block';
+        resp.innerHTML =
+            '<div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);display:flex;align-items:center;gap:10px;">' +
+                '<div class="loading-spinner" style="width:14px;height:14px;border-width:2px;flex-shrink:0;"></div>' +
+                '<span style="color:var(--text-muted);font-size:12px;">Analysing…</span>' +
+            '</div>';
+
+        callGroq(query, null,
+            function(response) {
+                resp.innerHTML =
+                    '<div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border:1px solid var(--border-light);border-left:3px solid var(--kpmg-purple);">' +
+                        '<div style="font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--kpmg-purple);margin-bottom:8px;text-transform:uppercase;">Meridian AI</div>' +
+                        '<div style="font-size:12px;color:var(--text-secondary);line-height:1.7;">' + formatAIResponse(response) + '</div>' +
+                        '<div style="font-size:10px;color:var(--text-muted);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">Apex Telecom \xb7 Q1 FY26 \xb7 Groq AI</div>' +
+                    '</div>';
+            },
+            function(error) {
+                resp.innerHTML =
+                    '<div style="padding:12px;background:var(--bg);border-radius:var(--radius-sm);border-left:3px solid #FD349C;">' +
+                        '<div style="font-size:12px;color:#FD349C;">Error: ' + error + '</div>' +
+                    '</div>';
+            }
+        );
+    });
+}
+
+function setQuery(text) {
+    var input = document.getElementById('ai-query-input');
+    if (input) input.value = text;
+    if (!ASK_PANEL_OPEN) toggleAskPanel();
+    setTimeout(handleQuery, 50);
 }
 
 
 /* ══════════════════════════════════════════════════════════════
-   LEGACY COMPAT — keep old callers from throwing
+   DATA FRESHNESS
    ══════════════════════════════════════════════════════════════ */
 
-function renderAlertList()    { /* superseded by renderWatchPanel */ }
-function generateAutoInsight(){ /* superseded by renderWatchPanel */ }
+var FRESHNESS_START = Date.now();
+var FRESHNESS_TIMER = null;
+
+function startFreshnessTimer() {
+    FRESHNESS_START = Date.now();
+    if (FRESHNESS_TIMER) clearInterval(FRESHNESS_TIMER);
+    FRESHNESS_TIMER = setInterval(function() {
+        var mins = Math.floor((Date.now() - FRESHNESS_START) / 60000);
+        var text = mins === 0 ? 'Live' : 'Live \xb7 ' + mins + 'm';
+        document.querySelectorAll('.kpi-freshness').forEach(function(el) { el.textContent = text; });
+    }, 30000);
+}
+
+
+/* ══════════════════════════════════════════════════════════════
+   LEGACY / COMPAT
+   ══════════════════════════════════════════════════════════════ */
 
 function animateCounter(elementId, targetStr) {
     var el = document.getElementById(elementId);
     if (!el) return;
-    var clean  = String(targetStr).replace(/[₹,]/g, '');
-    var target = parseFloat(clean);
+    var clean   = String(targetStr).replace(/[₹,]/g, '');
+    var target  = parseFloat(clean);
     if (isNaN(target)) { el.textContent = targetStr; return; }
     var isDecimal = clean.indexOf('.') !== -1;
     var decimals  = isDecimal ? (clean.split('.')[1] || '').length : 0;
@@ -634,3 +602,10 @@ function animateCounter(elementId, targetStr) {
         if (step >= steps) clearInterval(timer);
     }, 1000 / steps);
 }
+
+// Stubs so any lingering callers don't throw
+function renderMorningBrief()    {}
+function renderWatchPanel()      {}
+function renderAlertList()       {}
+function generateAutoInsight()   {}
+function openWidgetEditor()      {}

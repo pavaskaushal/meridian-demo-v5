@@ -10,13 +10,15 @@ function toggleTheme() {
     var label   = document.getElementById('theme-label');
     var isLight = body.classList.toggle('light-mode');
 
+    var logo = document.getElementById('kpmg-logo');
     if (isLight) {
         label.textContent = 'DARK MODE';
         updateChartsTheme(true);
-        /* KPMG logo stays white — sidebar is always Deep Navy in both modes */
+        if (logo) logo.src = 'assets/kpmg-blue.svg';
     } else {
         label.textContent = 'LIGHT MODE';
         updateChartsTheme(false);
+        if (logo) logo.src = 'assets/kpmg-white.svg';
     }
 
     try { localStorage.setItem('meridian-theme', isLight ? 'light' : 'dark'); } catch(e) {}
@@ -106,6 +108,8 @@ function initLayoutPreferences() {
             document.body.classList.add('light-mode');
             var themeLabel = document.getElementById('theme-label');
             if (themeLabel) themeLabel.textContent = 'DARK MODE';
+            var logo = document.getElementById('kpmg-logo');
+            if (logo) logo.src = 'assets/kpmg-blue.svg';
         }
 
     } catch(e) {}

@@ -228,7 +228,7 @@
   */
   --sidebar-width:        240px;
   --sidebar-width-collapsed: 56px;
-  --topbar-height:        clamp(52px, 4vw, 60px);
+  --topbar-height:        clamp(44px, 3.5vw, 52px);
 
 
   /* ── TRANSITIONS ───────────────────────────────────────────
@@ -267,7 +267,12 @@ body.light-mode {
   --text-secondary: #1E293B;
   --text-muted:     #475569;
 
-  /* Sidebar stays --bg-sidebar: #111827 — always dark, never overridden */
+  /* Sidebar goes light in light mode */
+  --bg-sidebar:     #FFFFFF;
+  --sidebar-border: rgba(0, 0, 0, 0.08);
+  --nav-hover:      rgba(0, 0, 0, 0.05);
+  --nav-active-bg:  rgba(0, 51, 141, 0.08);
+  --nav-active-text: #00338D;
 }
 
 

@@ -26,8 +26,10 @@ function showScreen(screenId, navEl) {
     };
 
     if (titles[screenId]) {
-        document.getElementById('topbar-title').textContent    = titles[screenId][0];
-        document.getElementById('topbar-subtitle').textContent = titles[screenId][1];
+        var titleEl    = document.getElementById('topbar-title');
+        var subtitleEl = document.getElementById('topbar-subtitle');
+        if (titleEl)    titleEl.textContent    = titles[screenId][0];
+        if (subtitleEl) subtitleEl.textContent = titles[screenId][1];
     }
 
     loadScreen(screenId, function() {
@@ -78,7 +80,7 @@ function loadScreen(screenId, callback) {
     }
 
     // Fetch screen HTML
-    fetch('screens/' + screenId + '.html')
+    fetch('screens/' + screenId + '.html?v=5')
         .then(function(r) {
             if (!r.ok) throw new Error('HTTP ' + r.status + ' — screen not found: ' + screenId);
             return r.text();

@@ -1,13 +1,4 @@
-<!-- ============================================================
-     MERIDIAN V5 · CFO COMMAND BOARD
-     1. AI Executive Brief card
-     2. Alert / QTD strip
-     3. Tab bar + 4×2 KPI grid (8 per tab)
-     4. ARPU Trend chart  (full width)
-     ============================================================ -->
-
-<!-- SECTION 1 · AI EXECUTIVE BRIEF ─────────────────────────── -->
-<div class="ai-brief-card" id="ai-brief-card">
+﻿<div class="ai-brief-card" id="ai-brief-card">
     <div class="ai-brief-header">
         <div style="display:flex;align-items:center;gap:9px;">
             <div style="width:5px;height:5px;border-radius:50%;background:var(--text-muted);animation:livePulse 1.5s ease-in-out infinite alternate;flex-shrink:0;"></div>
@@ -16,86 +7,46 @@
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
             <span id="ai-brief-timestamp" style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);"></span>
-            <button class="btn btn-secondary" onclick="generateAIBrief()" id="ai-brief-btn" style="font-size:10px;padding:3px 10px;display:flex;align-items:center;gap:5px;">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                Regenerate
-            </button>
+            <button class="btn btn-secondary" onclick="generateAIBrief()" id="ai-brief-btn" style="font-size:10px;padding:3px 10px;display:flex;align-items:center;gap:5px;">Regenerate</button>
         </div>
     </div>
-    <div class="ai-brief-body">
-        <div id="ai-brief-text" class="ai-brief-text"></div>
-    </div>
+    <div class="ai-brief-body"><div id="ai-brief-text" class="ai-brief-text"></div></div>
 </div>
-
-<!-- SECTION 2 · ALERT / QTD STRIP ──────────────────────────── -->
 <div class="alert-qtd-strip">
     <div class="alert-strip-left" id="alert-strip-left"></div>
     <div class="strip-divider"></div>
     <div class="alert-strip-right" id="alert-strip-right"></div>
 </div>
-
-<!-- SECTION 3 · KPI EXPLORER ────────────────────────────────── -->
 <div class="kpi-explorer">
     <div class="kpi-tab-bar" id="kpi-tab-bar">
-        <button class="kpi-tab active" onclick="switchKPITab('favourites')" data-tab="favourites">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:3px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Favourites
-        </button>
-        <button class="kpi-tab" onclick="switchKPITab('finance')"     data-tab="finance">Finance</button>
-        <button class="kpi-tab" onclick="switchKPITab('commercial')"  data-tab="commercial">Commercial</button>
-        <button class="kpi-tab" onclick="switchKPITab('network')"     data-tab="network">Network</button>
-        <button class="kpi-tab" onclick="switchKPITab('rafm')"        data-tab="rafm">RAFM</button>
-        <button class="kpi-tab" onclick="switchKPITab('hr')"          data-tab="hr">HR</button>
+        <button class="kpi-tab active" onclick="switchKPITab('favourites')" data-tab="favourites">Favourites</button>
+        <button class="kpi-tab" onclick="switchKPITab('finance')" data-tab="finance">Finance</button>
+        <button class="kpi-tab" onclick="switchKPITab('commercial')" data-tab="commercial">Commercial</button>
+        <button class="kpi-tab" onclick="switchKPITab('network')" data-tab="network">Network</button>
+        <button class="kpi-tab" onclick="switchKPITab('rafm')" data-tab="rafm">RAFM</button>
+        <button class="kpi-tab" onclick="switchKPITab('hr')" data-tab="hr">HR</button>
         <button class="kpi-tab" onclick="switchKPITab('procurement')" data-tab="procurement">Procurement</button>
-        <button class="kpi-tab" onclick="switchKPITab('regulatory')"  data-tab="regulatory">Regulatory</button>
-        <button class="kpi-tab" onclick="switchKPITab('cx')"          data-tab="cx">Customer</button>
+        <button class="kpi-tab" onclick="switchKPITab('regulatory')" data-tab="regulatory">Regulatory</button>
+        <button class="kpi-tab" onclick="switchKPITab('cx')" data-tab="cx">Customer</button>
     </div>
     <div class="kpi-tab-subtitle" id="kpi-tab-subtitle">Your pinned KPIs · Saved to this device</div>
     <div class="grid-kpi" id="kpi-grid"></div>
 </div>
-
-<!-- SECTION 4 · ARPU TREND CHART ────────────────────────────── -->
 <div class="data-card" style="margin-bottom:var(--space-2xl);">
     <div class="card-header">
         <div>
-            <div class="card-title">ARPU Trend — 15 Month View</div>
-            <div class="card-subtitle" id="arpu-chart-subtitle">Historical Jul'24–Jun'25 · AI Forecast Jul–Sep'25</div>
+            <div class="card-title">ARPU Trend - 15 Month View</div>
+            <div class="card-subtitle" id="arpu-chart-subtitle">Historical · AI Forecast</div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
             <div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
-                <button id="arpu-view-trend" onclick="toggleARPUView('trend')"
-                    style="font-size:10px;padding:4px 12px;background:var(--kpmg-cyan);color:#0A0F1E;border:none;cursor:pointer;font-weight:700;transition:all 0.15s;">Trend</button>
-                <button id="arpu-view-comp" onclick="toggleARPUView('competitors')"
-                    style="font-size:10px;padding:4px 12px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;transition:all 0.15s;">vs Peers</button>
+                <button id="arpu-view-trend" onclick="toggleARPUView('trend')" style="font-size:10px;padding:4px 12px;background:var(--kpmg-cyan);color:#0A0F1E;border:none;cursor:pointer;font-weight:700;">Trend</button>
+                <button id="arpu-view-comp" onclick="toggleARPUView('competitors')" style="font-size:10px;padding:4px 12px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">vs Peers</button>
             </div>
             <div class="badge badge-live">AI FORECAST</div>
         </div>
     </div>
-    <div class="card-body" style="height:240px;position:relative;padding:0;overflow:visible;">
-        <div id="arpu-chart-container" style="width:100%;height:100%;"></div>
-    </div>
-</div>
-
-<div class="grid-kpi" id="kpi-grid"></div>
-</div>
-
-<!-- SECTION 4 · ARPU TREND CHART ────────────────────────────── -->
-<div class="data-card" style="margin-bottom:var(--space-2xl);">
-    <div class="card-header">
-        <div>
-            <div class="card-title">ARPU Trend — 15 Month View</div>
-            <div class="card-subtitle" id="arpu-chart-subtitle">Historical Jul'24–Jun'25 · AI Forecast Jul–Sep'25</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-            <div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
-                <button id="arpu-view-trend" onclick="toggleARPUView('trend')"
-                    style="font-size:10px;padding:4px 12px;background:var(--kpmg-cyan);color:#0A0F1E;border:none;cursor:pointer;font-weight:700;transition:all 0.15s;">Trend</button>
-                <button id="arpu-view-comp" onclick="toggleARPUView('competitors')"
-                    style="font-size:10px;padding:4px 12px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;transition:all 0.15s;">vs Peers</button>
-            </div>
-            <div class="badge badge-live">AI FORECAST</div>
-        </div>
-    </div>
-    <div class="card-body" style="height:240px;position:relative;padding:0;overflow:visible;">
+    <div class="card-body" style="height:320px;position:relative;padding:12px 8px 8px 8px;">
         <div id="arpu-chart-container" style="width:100%;height:100%;"></div>
     </div>
 </div>

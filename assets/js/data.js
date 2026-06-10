@@ -1617,17 +1617,21 @@ var ENGINE_DATA = [
 
 /* ── CHART DATA ─────────────────────────────────────────── */
 var ARPU_CHART_DATA = {
-    months:     ['Q1 FY25', 'Q2 FY25', 'Q3 FY25', 'Q4 FY25', 'Q1 FY26'],
-    historical: [162, 168, 172, 178, 181],
-    forecast:   [null, null, null, null, 181, 184, 188, 190]
+    months: [
+        "Jul'24","Aug'24","Sep'24","Oct'24","Nov'24","Dec'24",
+        "Jan'25","Feb'25","Mar'25","Apr'25","May'25","Jun'25",
+        "Jul'25","Aug'25","Sep'25"
+    ],
+    historical: [162, 163, 165, 167, 169, 171, 173, 175, 177, 178, 180, 181],
+    forecast:   [184, 186, 188]
 };
 
 var COMPETITOR_DATA = [
-    { name: 'Airtel', arpu: 194, color: '#1E49E2' },
-    { name: 'Apex',   arpu: 181, color: '#00C0AE' },
-    { name: 'Jio',    arpu: 168, color: '#00B8F5' },
-    { name: 'Vi',     arpu: 156, color: '#F59E0B' },
-    { name: 'BSNL',   arpu: 98,  color: '#6B7280' }
+    { name: 'Airtel', arpu: 194, color: '#1E49E2', isUs: false },
+    { name: 'Apex',   arpu: 181, color: '#00C0AE', isUs: true  },
+    { name: 'Jio',    arpu: 168, color: '#00B8F5', isUs: false },
+    { name: 'Vi',     arpu: 156, color: '#F59E0B', isUs: false },
+    { name: 'BSNL',   arpu: 98,  color: '#6B7280', isUs: false }
 ];
 
 var CHURN_TREND = [1.78, 1.68, 1.58, 1.46, 1.42];

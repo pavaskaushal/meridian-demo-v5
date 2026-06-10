@@ -1,53 +1,124 @@
 /* ============================================================
-   MERIDIAN V2 · CHARTS
-   All Chart.js drawing functions.
+   MERIDIAN V5 · CHARTS
+   Chart.js interactive charts — hover tooltips, trackable points
    ============================================================ */
 
-function renderCharts() {
-    var arpu    = document.getElementById('arpu-chart');
-    var compete = document.getElementById('competitor-chart');
-    if (!arpu || !compete) return;
+var _arpuChartInstance = null;
+var _compChartInstance = null;
 
-    var existing1 = Chart.getChart(arpu);
-    var existing2 = Chart.getChart(compete);
-    if (existing1) existing1.destroy();
-    if (existing2) existing2.destroy();
+function _destroyARPUChart() {
+    if (_arpuChartInstance) { _arpuChartInstance.destroy(); _arpuChartInstance = null; }
+    if (_compChartInstance) { _compChartInstance.destroy(); _compChartInstance = null; }
+}
 
-    var months = ARPU_CHART_DATA.months;
-    var hist   = ARPU_CHART_DATA.historical;
-    var fore   = ARPU_CHART_DATA.forecast;
+/* ── ARPU TREND LINE CHART (Chart.js) ───────────────────── */
+function renderTrendSVG() {
+    var container = document.getElementById('arpu-chart-container');
+    if (!container) return;
 
+    _destroyARPUChart();
+
+    var months = ARPU_CHART_DATA.months;       // 15 labels
+    var hist   = ARPU_CHART_DATA.historical;   // 12 values
+    var fore   = ARPU_CHART_DATA.forecast;     // 3 values
+
+    // Historical dataset: 12 real + 3 nulls
     var histData = hist.concat([null, null, null]);
+    // Forecast dataset: 11 nulls + last historical point (join) + 3 forecast
     var foreData = [];
-    for (var i = 0; i < 11; i++) foreData.push(null);
-    foreData.push(hist[11]);
+    for (var i = 0; i < hist.length - 1; i++) foreData.push(null);
+    foreData.push(hist[hist.length - 1]);
     foreData = foreData.concat(fore);
 
-    new Chart(arpu, {
+    // Forecast background plugin — shades the forecast zone
+    var forecastZonePlugin = {
+        id: 'forecastZone',
+        beforeDraw: function(chart) {
+            var ctx  = chart.ctx;
+            var xAxis = chart.scales.x;
+            var yAxis = chart.scales.y;
+            var startX = xAxis.getPixelForValue(hist.length - 1);
+            var endX   = xAxis.right;
+            ctx.save();
+            ctx.fillStyle = 'rgba(0, 184, 245, 0.04)';
+            ctx.fillRect(startX, yAxis.top, endX - startX, yAxis.bottom - yAxis.top);
+            // Vertical divider line
+            ctx.beginPath();
+            ctx.moveTo(startX, yAxis.top);
+            ctx.lineTo(startX, yAxis.bottom);
+            ctx.strokeStyle = 'rgba(0, 184, 245, 0.25)';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([4, 4]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            // "AI FORECAST" label
+            ctx.font = '600 9px DM Sans, sans-serif';
+            ctx.fillStyle = '#00B8F5';
+            ctx.letterSpacing = '1px';
+            ctx.fillText('AI FORECAST', startX + 8, yAxis.top + 14);
+            ctx.restore();
+        }
+    };
+
+    container.innerHTML = '<canvas id="arpu-trend-canvas" style="width:100%;height:100%;"></canvas>';
+    var canvas = document.getElementById('arpu-trend-canvas');
+    if (!canvas) return;
+
+    var isLight = document.body.classList.contains('light-mode');
+    var gridColor  = isLight ? 'rgba(0,0,0,0.06)'  : 'rgba(255,255,255,0.06)';
+    var tickColor  = isLight ? '#475569'            : '#6B7280';
+    var tooltipBg  = isLight ? '#FFFFFF'            : '#111111';
+    var tooltipTxt = isLight ? '#0F172A'            : '#F9FAFB';
+
+    _arpuChartInstance = new Chart(canvas, {
         type: 'line',
+        plugins: [forecastZonePlugin],
         data: {
             labels: months,
             datasets: [
                 {
-                    label: 'ARPU (Historical)',
+                    label: 'Historical ARPU',
                     data: histData,
                     borderColor: '#00C0AE',
-                    backgroundColor: 'rgba(0,192,174,0.08)',
+                    backgroundColor: function(ctx) {
+                        var chart = ctx.chart;
+                        var _a = chart.ctx, chartArea = chart.chartArea;
+                        if (!chartArea) return 'transparent';
+                        var gradient = _a.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                        gradient.addColorStop(0,   'rgba(0, 192, 174, 0.18)');
+                        gradient.addColorStop(1,   'rgba(0, 192, 174, 0.00)');
+                        return gradient;
+                    },
                     borderWidth: 2.5,
-                    pointRadius: 3,
-                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#00C0AE',
+                    pointBorderColor: '#0D0D0D',
+                    pointBorderWidth: 1.5,
+                    pointHoverBackgroundColor: '#00C0AE',
+                    pointHoverBorderColor: '#FFFFFF',
+                    pointHoverBorderWidth: 2,
                     fill: true,
+                    tension: 0.35,
                     spanGaps: false
                 },
                 {
                     label: 'AI Forecast',
                     data: foreData,
                     borderColor: '#00B8F5',
+                    backgroundColor: 'transparent',
                     borderWidth: 2,
                     borderDash: [6, 4],
-                    pointRadius: 3,
-                    tension: 0.3,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#00B8F5',
+                    pointBorderColor: '#0D0D0D',
+                    pointBorderWidth: 1.5,
+                    pointHoverBackgroundColor: '#00B8F5',
+                    pointHoverBorderColor: '#FFFFFF',
+                    pointHoverBorderWidth: 2,
                     fill: false,
+                    tension: 0.35,
                     spanGaps: false
                 }
             ]
@@ -55,97 +126,168 @@ function renderCharts() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            resizeDelay: 200,
+            interaction: { mode: 'index', intersect: false },
+            animation: { duration: 600, easing: 'easeInOutQuart' },
             plugins: {
                 legend: {
+                    display: true,
                     position: 'top',
                     align: 'end',
                     labels: {
-                        boxWidth: 8,
-                        boxHeight: 8,
-                        borderRadius: 4,
-                        color: '#C0C8D8',
-                        font: { size: 11 },
+                        color: tickColor,
+                        font: { size: 11, family: 'DM Sans, sans-serif' },
+                        boxWidth: 24,
+                        boxHeight: 2,
                         padding: 16,
-                        usePointStyle: true,
-                        pointStyle: 'circle'
-                    },
-                    margin: 16
+                        usePointStyle: false
+                    }
                 },
                 tooltip: {
-                    backgroundColor: '#111827',
+                    backgroundColor: tooltipBg,
+                    titleColor: tickColor,
+                    bodyColor: tooltipTxt,
+                    borderColor: 'rgba(255,255,255,0.12)',
+                    borderWidth: 1,
+                    padding: 12,
+                    titleFont: { size: 11, family: 'DM Sans, sans-serif', weight: '600' },
+                    bodyFont: { size: 13, family: 'IBM Plex Mono, monospace', weight: '700' },
                     callbacks: {
-                        label: function(c) {
-                            return c.raw === null ? null : ' ₹' + c.raw + '/mo';
+                        title: function(items) { return items[0].label; },
+                        label: function(item) {
+                            if (item.raw === null) return null;
+                            return ' ' + item.dataset.label + ':  ₹' + item.raw;
+                        },
+                        afterBody: function(items) {
+                            var idx = items[0].dataIndex;
+                            if (idx > 0 && histData[idx] !== null && histData[idx-1] !== null) {
+                                var delta = (histData[idx] - histData[idx-1]).toFixed(1);
+                                return [delta >= 0 ? ' ▲ +₹' + delta + ' MoM' : ' ▼ ₹' + delta + ' MoM'];
+                            }
+                            return [];
                         }
                     }
                 }
             },
             scales: {
                 x: {
-                    grid: { color: 'rgba(31,41,55,0.6)' },
-                    ticks: { maxRotation: 0, color: '#9CA3AF' }
+                    grid: { color: gridColor, lineWidth: 1 },
+                    ticks: {
+                        color: function(ctx) {
+                            return ctx.index >= hist.length ? '#00B8F5' : tickColor;
+                        },
+                        font: { size: 10, family: 'DM Sans, sans-serif' },
+                        maxRotation: 0
+                    },
+                    border: { color: 'transparent' }
                 },
                 y: {
-                    min: 160,
-                    max: 195,
-                    grid: { color: 'rgba(31,41,55,0.6)' },
+                    min: 155,
+                    max: 200,
+                    grid: { color: gridColor, lineWidth: 1 },
                     ticks: {
-                        color: '#9CA3AF',
-                        callback: function(v) { return '₹' + v; }
-                    }
+                        color: tickColor,
+                        font: { size: 10, family: 'IBM Plex Mono, monospace' },
+                        callback: function(v) { return '₹' + v; },
+                        stepSize: 5
+                    },
+                    border: { color: 'transparent' }
                 }
             }
         }
     });
+}
 
-    new Chart(compete, {
+/* ── COMPETITOR HORIZONTAL BAR CHART (Chart.js) ─────────── */
+function renderCompetitorSVG() {
+    var container = document.getElementById('arpu-chart-container');
+    if (!container) return;
+
+    _destroyARPUChart();
+
+    var data = COMPETITOR_DATA.slice().sort(function(a, b) { return b.arpu - a.arpu; });
+
+    container.innerHTML = '<canvas id="arpu-comp-canvas" style="width:100%;height:100%;"></canvas>';
+    var canvas = document.getElementById('arpu-comp-canvas');
+    if (!canvas) return;
+
+    var isLight   = document.body.classList.contains('light-mode');
+    var gridColor = isLight ? 'rgba(0,0,0,0.06)'  : 'rgba(255,255,255,0.06)';
+    var tickColor = isLight ? '#475569'            : '#6B7280';
+    var tooltipBg = isLight ? '#FFFFFF'            : '#111111';
+    var tooltipTxt= isLight ? '#0F172A'            : '#F9FAFB';
+
+    var bgColors    = data.map(function(d) { return d.isUs ? 'rgba(0,192,174,0.20)' : 'rgba(55,65,81,0.25)'; });
+    var borderColors= data.map(function(d) { return d.isUs ? '#00C0AE' : '#374151'; });
+
+    _compChartInstance = new Chart(canvas, {
         type: 'bar',
         data: {
-            labels: COMPETITOR_DATA.map(function(d) { return d.name; }),
+            labels: data.map(function(d) { return d.name; }),
             datasets: [{
-                data: COMPETITOR_DATA.map(function(d) { return d.arpu; }),
-                backgroundColor: COMPETITOR_DATA.map(function(d) {
-                    return d.isUs ? 'rgba(0,192,174,0.8)' : 'rgba(75,85,99,0.5)';
-                }),
-                borderColor: COMPETITOR_DATA.map(function(d) {
-                    return d.isUs ? '#00C0AE' : '#4B5563';
-                }),
-                borderWidth: 1,
-                borderRadius: 4
+                label: 'Blended ARPU (₹/month)',
+                data: data.map(function(d) { return d.arpu; }),
+                backgroundColor: bgColors,
+                borderColor: borderColors,
+                borderWidth: 1.5,
+                borderRadius: 3,
+                hoverBackgroundColor: data.map(function(d) { return d.isUs ? 'rgba(0,192,174,0.40)' : 'rgba(55,65,81,0.45)'; })
             }]
         },
         options: {
+            indexAxis: 'y',
             responsive: true,
             maintainAspectRatio: false,
-            resizeDelay: 200,
-            indexAxis: 'y',
+            animation: { duration: 500, easing: 'easeInOutQuart' },
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#111827',
+                    backgroundColor: tooltipBg,
+                    titleColor: tickColor,
+                    bodyColor: tooltipTxt,
+                    borderColor: 'rgba(255,255,255,0.12)',
+                    borderWidth: 1,
+                    padding: 12,
+                    titleFont: { size: 11, family: 'DM Sans, sans-serif' },
+                    bodyFont: { size: 13, family: 'IBM Plex Mono, monospace', weight: '700' },
                     callbacks: {
-                        label: function(c) { return ' ₹' + c.raw + '/month'; }
+                        label: function(item) {
+                            var d = data[item.dataIndex];
+                            return '  ARPU: ₹' + item.raw + (d.isUs ? '  ← Apex Telecom' : '');
+                        }
                     }
                 }
             },
             scales: {
                 x: {
-                    min: 0,
-                    max: 220,
-                    grid: { color: 'rgba(31,41,55,0.6)' },
+                    min: 0, max: 220,
+                    grid: { color: gridColor },
                     ticks: {
-                        color: '#9CA3AF',
-                        callback: function(v) { return '₹' + v; }
-                    }
+                        color: tickColor,
+                        font: { size: 10, family: 'IBM Plex Mono, monospace' },
+                        callback: function(v) { return '₹' + v; },
+                        stepSize: 50
+                    },
+                    border: { color: 'transparent' }
                 },
                 y: {
                     grid: { display: false },
-                    ticks: { color: '#9CA3AF' }
+                    ticks: {
+                        color: function(ctx) {
+                            return data[ctx.index] && data[ctx.index].isUs ? '#00C0AE' : tickColor;
+                        },
+                        font: { size: 12, family: 'DM Sans, sans-serif', weight: '600' }
+                    },
+                    border: { color: 'transparent' }
                 }
             }
         }
     });
+}
+
+/* ── ENTRY POINT called by initDashboard ────────────────── */
+function renderCharts() {
+    renderTrendSVG();
+    // Competitor view rendered lazily via toggleARPUView()
 }
 
 function renderWaterfallChart(arpu, churn, spectrum, price) {

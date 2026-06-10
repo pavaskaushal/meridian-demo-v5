@@ -184,7 +184,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--space-xl);
+  padding: 0 var(--space-lg);
   background-color: var(--bg-card);
   border-bottom: 1px solid var(--border);
 }
@@ -331,43 +331,9 @@
    DASHBOARD V5 — 3-ZONE LAYOUT
    ══════════════════════════════════════════════════════════ */
 
-/* Zone 1 — Morning Brief strip */
-.morning-brief {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: var(--space-md);
-  margin-bottom: var(--space-xl);
-}
-
-/* Zone 2 — KPI Explorer (left) + Watch Panel (right) */
-.dashboard-body {
-  display: flex;
-  gap: var(--space-xl);
-  margin-bottom: var(--space-xl);
-  align-items: flex-start;
-}
-
+/* KPI Explorer — full width, tabs + grid */
 .kpi-explorer {
-  flex: 1;
-  min-width: 0;  /* prevents flex child from overflowing */
-}
-
-.watch-panel {
-  width: 290px;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  position: sticky;
-  top: 0;
-}
-
-/* Zone 3 — Visual Intelligence (charts + map) */
-.viz-row {
-  display: grid;
-  grid-template-columns: 3fr 2fr;
-  gap: var(--space-md);
-  margin-bottom: var(--space-xl);
+  margin-bottom: var(--space-md);
 }
 
 
@@ -396,24 +362,22 @@
     padding: var(--space-sm); width: 36px;
   }
   .sidebar:not(.force-open) .collapse-arrow { transform: rotate(180deg); }
-  .watch-panel { width: 260px; }
 }
 
 /* ── 1300px — hide less-critical topbar elements ──────────── */
 @media (max-width: 1300px) {
-  .operator-tag      { display: none; }
-  .watch-panel       { width: 240px; }
-  .morning-brief     { grid-template-columns: repeat(5, 1fr); }
-  .grid-kpi          { grid-template-columns: repeat(3, 1fr); }
+  .operator-tag { display: none; }
+  .grid-kpi     { grid-template-columns: repeat(3, 1fr); }
+  /* Slide-in panel becomes narrower */
+  .ask-meridian-panel { width: 340px; }
 }
 
-/* ── 1200px — stack dashboard body, single-col viz ────────── */
+/* ── 1200px — tighter grid, hide panel on small screens ────── */
 @media (max-width: 1200px) {
-  .dashboard-body    { flex-direction: column; }
-  .watch-panel       { width: 100%; position: static; }
-  .viz-row           { grid-template-columns: 1fr; }
-  .morning-brief     { grid-template-columns: repeat(3, 1fr); }
-  .grid-kpi          { grid-template-columns: repeat(3, 1fr); }
-  .grid-2-1          { grid-template-columns: 1fr; }
-  .grid-2            { grid-template-columns: 1fr; }
+  .grid-kpi   { grid-template-columns: repeat(3, 1fr); }
+  .grid-2-1   { grid-template-columns: 1fr; }
+  .grid-2     { grid-template-columns: 1fr; }
+  /* Panel goes full-width on small screens */
+  .ask-meridian-panel { width: 100%; right: -100%; }
+  .ask-meridian-panel.open { right: 0; }
 }

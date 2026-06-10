@@ -184,6 +184,55 @@
   color: rgba(255, 255, 255, 0.70);
   font-weight: 600;
 }
+/* ── LIGHT MODE SIDEBAR OVERRIDES ───────────────────────────
+   When body.light-mode, sidebar background flips to white.
+   All hardcoded rgba(255,255,255,x) values need inverting.
+*/
+body.light-mode .sidebar {
+  color: rgba(0, 0, 0, 0.65);
+}
+body.light-mode .brand-mark .brand-name {
+  color: #0F172A;
+}
+body.light-mode .brand-mark .brand-sub {
+  color: rgba(0, 0, 0, 0.50);
+}
+body.light-mode .nav-item {
+  color: rgba(0, 0, 0, 0.65);
+}
+body.light-mode .nav-item:hover {
+  color: #0F172A;
+}
+body.light-mode .nav-item.active {
+  color: var(--nav-active-text);   /* --nav-active-text already set to #00338D in light mode */
+  border-left-color: #00338D;
+}
+body.light-mode .nav-item svg {
+  stroke: currentColor;
+}
+body.light-mode .sidebar-collapse-btn {
+  color: rgba(0, 0, 0, 0.40);
+  border-color: rgba(0, 0, 0, 0.10);
+}
+body.light-mode .sidebar-collapse-btn:hover {
+  color: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.18);
+}
+body.light-mode .sidebar-footer-text {
+  color: rgba(0, 0, 0, 0.45);
+}
+body.light-mode .sidebar-footer-text strong {
+  color: rgba(0, 0, 0, 0.65);
+}
+/* Default (dark mode) colours */
+#lucid-wordmark       { color: #FFFFFF; }
+#sidebar-confidential { color: rgba(255, 255, 255, 0.40); }
+
+/* Light mode — sidebar is white, flip to dark/brand colours */
+body.light-mode #lucid-wordmark       { color: #00338D; }
+body.light-mode #sidebar-confidential { color: rgba(0, 0, 0, 0.45); }
+
 /* ══════════════════════════════════════════════════════════
    2. TOPBAR COMPONENTS
    ══════════════════════════════════════════════════════════ */
@@ -198,15 +247,11 @@
 }
 
 .topbar-title {
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: 0.3px;
-}
-
-.topbar-sub {
-  font-size: 11px;
-  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 /* ── TOPBAR RIGHT ───────────────────────────────────────────
@@ -215,13 +260,15 @@
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
+  gap: var(--space-sm);
+  flex-shrink: 0;
 }
 
 .topbar-timestamp {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
+  white-space: nowrap;
 }
 
 /* ── OPERATOR TAG ───────────────────────────────────────────
@@ -234,12 +281,13 @@
   background: var(--bg);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
-  padding: 4px 12px;
-  font-size: 11px;
+  padding: 3px 9px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-secondary);
-  letter-spacing: 1px;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 /* ══════════════════════════════════════════════════════════
    3. KPI CARDS
@@ -850,17 +898,18 @@
 .theme-toggle {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 5px;
   background: var(--bg);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-full);
-  padding: 4px 12px;
+  padding: 3px 9px;
   cursor: pointer;
   transition: all var(--transition-fast);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
   color: var(--text-secondary);
   letter-spacing: 0.5px;
+  white-space: nowrap;
 }
 
 .theme-toggle:hover {
@@ -869,14 +918,14 @@
 }
 
 .theme-toggle-icon {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   transition: transform var(--transition-mid);
 }
 
-body.light-mode .theme-toggle-icon {
-  transform: rotate(180deg);
-}
+/* In light mode: hide sun, show moon */
+body.light-mode .theme-icon-sun  { display: none !important; }
+body.light-mode .theme-icon-moon { display: inline-block !important; }
 
 /* ── LIGHT MODE STRUCTURAL FIXES ────────────────────────────
    rgba(255,255,255,0.07) borders are invisible on white.
@@ -1017,11 +1066,11 @@ body.compact .watch-section { padding: 10px var(--space-md); }
 .compact-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   background: transparent;
   border: 1px solid var(--border-light);
   border-radius: var(--radius-sm);
-  padding: 4px 10px;
+  padding: 3px 8px;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.8px;
@@ -1029,6 +1078,7 @@ body.compact .watch-section { padding: 10px var(--space-md); }
   cursor: pointer;
   transition: all var(--transition-fast);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 .compact-toggle:hover {
   border-color: var(--kpmg-cyan);
@@ -1041,3 +1091,174 @@ body.compact .compact-toggle {
 }
 
 /* Hide operator tag on narrow screens — handled in layout.css breakpoints */
+
+
+/* ══════════════════════════════════════════════════════════
+   MERIDIAN V5 — NEW DASHBOARD COMPONENTS
+   AI Brief · Alert Strip · KPI Card V5 · Ask Meridian Panel
+   ══════════════════════════════════════════════════════════ */
+
+/* ── AI EXECUTIVE BRIEF CARD ────────────────────────────── */
+.ai-brief-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  overflow: hidden;
+}
+.ai-brief-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px var(--space-md);
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+.ai-brief-body { padding: var(--space-md); }
+.ai-brief-text { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+.ai-brief-text .brief-pos  { color: var(--positive); }
+.ai-brief-text .brief-neg  { color: var(--warning); }
+.ai-brief-text .brief-risk { color: var(--danger); }
+
+
+/* ── ALERT / QTD STRIP ──────────────────────────────────── */
+.alert-qtd-strip {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-md);
+  margin-bottom: var(--space-md);
+  height: 44px;
+  gap: var(--space-md);
+}
+.alert-strip-left  { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.strip-divider     { width: 1px; height: 20px; background: var(--border-light); flex-shrink: 0; }
+.alert-strip-right { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: flex-end; }
+
+.strip-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+}
+.strip-badge-critical { color: #FD349C; border-color: rgba(253,52,156,0.30); background: rgba(253,52,156,0.08); }
+.strip-badge-high     { color: #F59E0B; border-color: rgba(245,158,11,0.30); background: rgba(245,158,11,0.08); }
+.strip-badge-open     { color: var(--text-muted); border-color: var(--border-light); background: transparent; }
+
+.qtd-bar   { display: flex; gap: 2px; align-items: center; }
+.qtd-block { width: 8px; height: 10px; border-radius: 1px; background: var(--border-light); transition: background 0.3s ease; }
+.qtd-block.filled { background: var(--kpmg-cyan); }
+body.light-mode .qtd-block { background: rgba(0,0,0,0.10); }
+
+/* ── KPI CARD POLISHED ──────────────────────────────────── */
+.kpi-card { cursor: pointer; position: relative; display: flex; flex-direction: column; }
+.kpi-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 6px; margin-bottom: var(--space-sm); }
+.kpi-value-row   { display: flex; align-items: baseline; gap: 4px; margin-bottom: 4px; }
+.kpi-value       { font-family: var(--font-mono); font-size: clamp(20px, 1.6vw, 26px); font-weight: 700; color: var(--text-primary); line-height: 1.1; }
+.kpi-unit        { font-size: 12px; color: var(--text-secondary); font-weight: 400; font-family: var(--font-sans); }
+.kpi-delta-line  { font-size: 11px; font-weight: 600; line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kpi-delta-yoy   { font-weight: 500; }
+.kpi-sparkline-wrap { margin-top: auto; padding-top: var(--space-sm); width: 100%; }
+.kpi-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
+
+.kpi-status-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  padding: 2px 6px; border-radius: var(--radius-sm); border: 1px solid;
+  white-space: nowrap; flex-shrink: 0;
+}
+.kpi-fav-btn {
+  cursor: pointer; font-size: 13px; background: none; border: none; padding: 0;
+  line-height: 1; transition: color var(--transition-fast), opacity var(--transition-fast); flex-shrink: 0;
+}
+.kpi-fav-btn:hover  { opacity: 1 !important; color: #F59E0B !important; }
+.kpi-fav-btn.active { color: #F59E0B !important; opacity: 1 !important; }
+body.light-mode .kpi-card { border-color: rgba(0,0,0,0.09); }
+
+/* ── FLOATING ASK MERIDIAN BUTTON ────────────────────────── */
+/* ── FLOATING ASK MERIDIAN BUTTON ────────────────────────── */
+.ask-meridian-fab {
+  position: fixed; bottom: 28px; right: 28px; z-index: 500;
+  display: flex; align-items: center; gap: 7px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 8px 16px;
+  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  cursor: pointer; transition: all var(--transition-fast);
+  box-shadow: none;
+  font-family: var(--font-mono); letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.ask-meridian-fab:hover {
+  background: var(--bg-hover);
+  border-color: var(--kpmg-cyan);
+  color: var(--kpmg-cyan);
+  box-shadow: none;
+  transform: none;
+}
+.ask-meridian-fab.active {
+  border-color: var(--kpmg-cyan);
+  color: var(--kpmg-cyan);
+  background: rgba(0,184,245,0.06);
+}
+body.light-mode .ask-meridian-fab { box-shadow: none; }
+
+/* ── ASK MERIDIAN SLIDE-IN PANEL ────────────────────────── */
+.ask-meridian-panel {
+  position: fixed; top: 0; right: -420px; width: 390px; height: 100vh;
+  background: var(--bg-card); border-left: 1px solid var(--border-light);
+  z-index: 450; display: flex; flex-direction: column;
+  transition: right var(--transition-mid);
+  box-shadow: -12px 0 40px rgba(0,0,0,0.35);
+}
+.ask-meridian-panel.open { right: 0; }
+.ask-panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  flex-shrink: 0; background: transparent;
+}
+.ask-panel-close {
+  background: transparent; border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); color: var(--text-muted);
+  cursor: pointer; font-size: 14px; width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast);
+}
+.ask-panel-close:hover { color: var(--text-primary); border-color: var(--border-light); }
+.ask-panel-chips {
+  display: flex; flex-wrap: wrap; gap: 5px;
+  padding: 12px 18px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.ask-chip {
+  font-size: 9px; font-weight: 700; padding: 3px 8px;
+  border-radius: var(--radius-sm); border: 1px solid var(--border-light);
+  background: transparent; color: var(--text-muted);
+  cursor: pointer; transition: all var(--transition-fast);
+  font-family: var(--font-mono); letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+.ask-chip:hover {
+  border-color: var(--kpmg-cyan);
+  color: var(--kpmg-cyan);
+  background: rgba(0,184,245,0.06);
+}
+.ask-panel-input-row {
+  display: flex; gap: 8px; padding: 12px 18px;
+  border-bottom: 1px solid var(--border); flex-shrink: 0;
+}
+.ask-panel-input-row input {
+  flex: 1; background: var(--bg); border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); padding: 8px 12px;
+  font-size: 12px; color: var(--text-primary);
+  font-family: var(--font-mono); min-width: 0;
+}
+.ask-panel-input-row input:focus  { outline: none; border-color: var(--kpmg-cyan); }
+.ask-panel-input-row input::placeholder { color: var(--text-muted); font-family: var(--font-sans); }
+.ask-panel-response { flex: 1; overflow-y: auto; padding: 14px 18px; }
+body.light-mode .ask-meridian-panel { box-shadow: -12px 0 40px rgba(0,0,0,0.08); }
