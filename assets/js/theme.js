@@ -89,19 +89,8 @@ function initLayoutPreferences() {
             sidebar.classList.add('collapsed');
         }
 
-        // Compact mode
-        if (compactPref === '1') {
-            document.body.classList.add('compact');
-            var label = document.getElementById('compact-label');
-            if (label) label.textContent = 'Normal';
-        }
-
-        // Compact auto-apply on very small screens
-        if (!compactPref && window.innerWidth < 1300) {
-            document.body.classList.add('compact');
-            var label2 = document.getElementById('compact-label');
-            if (label2) label2.textContent = 'Normal';
-        }
+        // Compact is always on — it's the default layout
+        document.body.classList.add('compact');
 
         // Theme
         if (themePref === 'light') {

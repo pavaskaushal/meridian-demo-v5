@@ -80,7 +80,7 @@ function loadScreen(screenId, callback) {
     }
 
     // Fetch screen HTML
-    fetch('screens/' + screenId + '.html?v=5')
+    fetch('screens/' + screenId + '.html?v=' + Date.now())
         .then(function(r) {
             if (!r.ok) throw new Error('HTTP ' + r.status + ' — screen not found: ' + screenId);
             return r.text();
