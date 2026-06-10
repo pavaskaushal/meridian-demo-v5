@@ -1508,6 +1508,36 @@ var RAFM_ALERTS = [
         amount: '₹1.5 Cr', circle: 'International', category: 'Roaming',
         description: 'Settlement disputes with 3 international roaming partners. TAP reject rate above 3% threshold.',
         age: 22, status: 'OPEN', owner: 'RAFM Team'
+    },
+    {
+        id: 'ALT007', severity: 'CRITICAL', title: 'Interconnect Billing Discrepancy — Airtel',
+        amount: '₹3.2 Cr', circle: 'North India', category: 'Interconnect',
+        description: 'CDR mismatch of 1.8M records between Apex and Airtel billing systems. Peak traffic period Q3 FY25 under dispute. TDSAT filing deadline in 12 days.',
+        age: 12, status: 'OPEN', owner: 'RAFM Team'
+    },
+    {
+        id: 'ALT008', severity: 'HIGH', title: 'IUC Rate Dispute — BSNL',
+        amount: '₹1.1 Cr', circle: 'Pan-India', category: 'Interconnect',
+        description: 'BSNL applying pre-2017 IUC rates to 0.4M off-net calls. Rate differential of ₹0.06/min across 18.3M minutes. Formal dispute notice issued.',
+        age: 9, status: 'OPEN', owner: 'RAFM Team'
+    },
+    {
+        id: 'ALT009', severity: 'MEDIUM', title: 'Port-in CDR Mismatch — Vi',
+        amount: '₹0.7 Cr', circle: 'West India', category: 'Interconnect',
+        description: 'Porting-related CDR discrepancy with Vi — 0.2M records unmatched post-MNP. Billing adjustment pending reconciliation with NPC.',
+        age: 6, status: 'OPEN', owner: 'Billing Team'
+    },
+    {
+        id: 'ALT010', severity: 'HIGH', title: 'TAP File Leakage — North East Zone',
+        amount: '₹0.9 Cr', circle: 'North East', category: 'Roaming',
+        description: 'TAP file rejection rate of 5.2% in North East zone — highest nationally. 0.9 Cr unbilled inbound roaming events from 4 partner operators.',
+        age: 5, status: 'OPEN', owner: 'RAFM Team'
+    },
+    {
+        id: 'ALT011', severity: 'MEDIUM', title: 'IOT Reconciliation Gap — UAE Partner',
+        amount: '₹0.5 Cr', circle: 'International', category: 'Roaming',
+        description: 'Inter-Operator Tariff reconciliation gap with Etisalat UAE. 23,000 data sessions unbilled due to SGSN routing anomaly in Q2 FY25.',
+        age: 14, status: 'OPEN', owner: 'RAFM Team'
     }
 ];
 
@@ -1562,7 +1592,20 @@ var VENDOR_DATA = [
     { name: 'SAP India',              spend: 84,  risk: 12, status: 'LOW',    flag: false, category: 'Software' },
     { name: 'Oracle India',           spend: 62,  risk: 14, status: 'LOW',    flag: false, category: 'Software' },
     { name: 'Accenture India',        spend: 142, risk: 18, status: 'LOW',    flag: false, category: 'Services' },
-    { name: 'Subex Ltd',              spend: 28,  risk: 16, status: 'LOW',    flag: false, category: 'Software' }
+    { name: 'Subex Ltd',              spend: 28,  risk: 16, status: 'LOW',      flag: false, category: 'Software' },
+    { name: 'Tata Consultancy',       spend: 186, risk: 20, status: 'LOW',      flag: false, category: 'Services' },
+    { name: 'IBM India',              spend: 94,  risk: 24, status: 'LOW',      flag: false, category: 'Software' },
+    { name: 'Wipro Ltd',              spend: 112, risk: 22, status: 'LOW',      flag: false, category: 'Services' },
+    { name: 'Amdocs India',           spend: 68,  risk: 32, status: 'MEDIUM',   flag: false, category: 'Software' },
+    { name: 'NetCracker Tech',        spend: 44,  risk: 28, status: 'MEDIUM',   flag: false, category: 'Software' },
+    { name: 'Comviva Technologies',   spend: 38,  risk: 19, status: 'LOW',      flag: false, category: 'Software' },
+    { name: 'Tech Mahindra',          spend: 156, risk: 26, status: 'LOW',      flag: false, category: 'Services' },
+    { name: 'GTL Infrastructure',     spend: 82,  risk: 58, status: 'MEDIUM',   flag: true,  category: 'Infrastructure' },
+    { name: 'Sterlite Power',         spend: 54,  risk: 44, status: 'MEDIUM',   flag: false, category: 'Infrastructure' },
+    { name: 'Mahindra Infra',         spend: 36,  risk: 35, status: 'MEDIUM',   flag: false, category: 'Infrastructure' },
+    { name: 'Azure Power',            spend: 28,  risk: 18, status: 'LOW',      flag: false, category: 'Energy' },
+    { name: 'Quess Corp',             spend: 22,  risk: 30, status: 'MEDIUM',   flag: false, category: 'Services' },
+    { name: 'SkyTel Networks',        spend: 8.4, risk: 88, status: 'CRITICAL', flag: true,  category: 'IT' }
 ];
 
 /* ── QUARTERLY P&L ──────────────────────────────────────── */

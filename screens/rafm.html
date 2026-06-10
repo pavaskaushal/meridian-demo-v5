@@ -1,43 +1,48 @@
-<div class="section">
-                    <div class="section-header">
-                        <div class="section-title">RAFM · Revenue Assurance & Fraud Management</div>
-                        <div class="section-subtitle">Real-time anomaly detection · Apex Telecom · 22 Circles</div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="grid-2">
-                        <div class="data-card">
-                            <div class="card-header">
-                                <div>
-                                    <div class="card-title">Interconnect Anomaly Queue</div>
-                                    <div class="card-subtitle">CDR reconciliation · Billing discrepancies</div>
-                                </div>
-                                <div class="badge badge-critical">CRITICAL</div>
-                            </div>
-                            <div id="interconnect-list"></div>
-                        </div>
-                        <div class="data-card">
-                            <div class="card-header">
-                                <div>
-                                    <div class="card-title">Roaming TAP Leakage Queue</div>
-                                    <div class="card-subtitle">TAP file mismatch · IOT reconciliation</div>
-                                </div>
-                                <div class="badge badge-high">HIGH</div>
-                            </div>
-                            <div id="roaming-list"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="data-card">
-                        <div class="card-header">
-                            <div>
-                                <div class="card-title">Vendor Risk Heatmap</div>
-                                <div class="card-subtitle">32 active vendors · CIBIL · GST · OFAC · MCA21 scoring</div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div id="vendor-heatmap" style="display:grid;grid-template-columns:repeat(8,1fr);gap:8px;"></div>
-                        </div>
-                    </div>
+<!-- RAFM RISK MONITOR -->
+
+<!-- SUMMARY STRIP -->
+<div id="rafm-summary-strip" style="display:flex;gap:12px;margin-bottom:20px;"></div>
+
+<!-- ACTIVE QUEUES -->
+<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:10px;">ACTIVE QUEUES</div>
+<div class="grid-2" style="margin-bottom:20px;">
+    <div class="data-card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Interconnect Anomaly Queue</div>
+                <div class="card-subtitle">CDR reconciliation · Billing discrepancies · Subex RAID</div>
+            </div>
+            
+        </div>
+        <div id="interconnect-list" style="max-height:420px;overflow-y:auto;padding:12px;"></div>
+    </div>
+    <div class="data-card">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Roaming TAP Leakage Queue</div>
+                <div class="card-subtitle">TAP file mismatch · IOT reconciliation · GSMA standards</div>
+            </div>
+            
+        </div>
+        <div id="roaming-list" style="max-height:420px;overflow-y:auto;padding:12px;"></div>
+    </div>
+</div>
+
+<!-- VENDOR RISK HEATMAP -->
+<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:10px;">VENDOR RISK</div>
+<div class="data-card">
+    <div class="card-header">
+        <div>
+            <div class="card-title">Vendor Risk Heatmap</div>
+            <div class="card-subtitle">32 active vendors · CIBIL · GST · OFAC · MCA21 scoring</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#00C0AE;"></div><span style="font-size:10px;color:var(--text-muted);">Low</span></div>
+            <div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#F59E0B;"></div><span style="font-size:10px;color:var(--text-muted);">Medium</span></div>
+            <div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;border-radius:2px;background:#FD349C;"></div><span style="font-size:10px;color:var(--text-muted);">Critical</span></div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="vendor-heatmap" style="display:grid;grid-template-columns:repeat(8,1fr);gap:8px;"></div>
+    </div>
 </div>
