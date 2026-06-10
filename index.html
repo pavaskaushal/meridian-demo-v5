@@ -131,9 +131,9 @@
     <main class="main-content">
         <header class="topbar">
             <div class="topbar-left">
-                <div class="topbar-title" id="topbar-title">CFO Command Board</div>
+                <div class="topbar-title" id="topbar-title" style="font-size:14px;font-weight:700;letter-spacing:0.5px;">CFO Command Board</div>
             </div>
-            <div class="topbar-right">
+            <div class="topbar-right" style="gap:10px;">
                 <div style="position:relative;">
                     <input type="text" id="global-search" placeholder="Search KPIs, alerts..."
                         style="background:var(--bg);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:4px 10px 4px 28px;font-size:11px;color:var(--text-primary);width:180px;transition:all 0.2s;"
@@ -143,7 +143,7 @@
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;">
                         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
-                    <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;width:300px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-sm);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:1000;overflow:hidden;max-height:400px;overflow-y:auto;"></div>
+                    <div id="search-dropdown" style="display:none;position:absolute;top:calc(100% + 6px);left:0;width:240px;background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-sm);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:1000;overflow:hidden;max-height:400px;overflow-y:auto;"></div>
                 </div>
                 <div class="operator-tag">APEX TELECOM · 22 CIRCLES</div>
                 <button class="btn btn-secondary" onclick="generateBoardPack()" style="font-size:10px;padding:3px 10px;display:flex;align-items:center;gap:5px;">
@@ -246,9 +246,7 @@
     <div class="ask-panel-response">
         <div id="ai-response" style="display:none;"></div>
         <div id="ask-panel-empty" style="text-align:center;padding:40px 20px;color:var(--text-muted);">
-            <div style="font-size:10px;font-family:var(--font-mono);color:var(--border-light);letter-spacing:1px;margin-bottom:16px;">_ _ _ _ _ _ _ _ _ _</div>
-            <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">Awaiting Query</div>
-            <div style="font-size:10px;font-family:var(--font-mono);color:var(--text-muted);opacity:0.6;">Revenue · Margins · ARPU · Network · Risk</div>
+            <div style="font-family:var(--font-mono);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-muted);opacity:0.5;">Awaiting Query</div>
         </div>
     </div>
 </div>

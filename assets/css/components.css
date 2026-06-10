@@ -244,6 +244,7 @@ body.light-mode #sidebar-confidential { color: rgba(0, 0, 0, 0.45); }
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding-left: 8px;
 }
 
 .topbar-title {
