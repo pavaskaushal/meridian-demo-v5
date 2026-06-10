@@ -17,12 +17,12 @@ var ARPU_VIEW      = 'trend';
 function injectDashboardHTML() {
     var container = document.getElementById('screen-container');
     if (!container) return;
-    container.innerHTML = '<div class="ai-brief-card" id="ai-brief-card"><div class="ai-brief-header"><div style="display:flex;align-items:center;gap:9px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--kpmg-cyan);animation:livePulse 1.5s ease-in-out infinite alternate;flex-shrink:0;"></div><span style="font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--text-primary);text-transform:uppercase;">Meridian Intelligence</span><span style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:0.8px;color:var(--kpmg-cyan);background:rgba(0,184,245,0.08);border:1px solid rgba(0,184,245,0.20);border-radius:2px;padding:2px 6px;margin-left:4px;">GROQ</span></div><div style="display:flex;align-items:center;gap:10px;"><span id="ai-brief-timestamp" style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);"></span><button class="btn btn-secondary" onclick="generateAIBrief()" id="ai-brief-btn" style="font-size:10px;padding:3px 10px;">Regenerate</button></div></div><div class="ai-brief-body"><div id="ai-brief-text" class="ai-brief-text"></div></div></div><div style="display:flex;gap:12px;margin-top:20px;"><div class="alert-strip-left" id="alert-strip-left" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 16px;height:44px;width:fit-content;"></div><div class="alert-strip-right" id="alert-strip-right" style="display:flex;align-items:center;gap:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 24px;height:44px;white-space:nowrap;flex:1;"></div></div><div class="kpi-explorer" style="margin-top:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px 0 16px;"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:10px;">BUSINESS LINES</div><div class="kpi-tab-bar" id="kpi-tab-bar"><button class="kpi-tab active" onclick="switchKPITab(\'favourites\')" data-tab="favourites"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Favourites</button><button class="kpi-tab" onclick="switchKPITab(\'finance\')" data-tab="finance"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Finance</button><button class="kpi-tab" onclick="switchKPITab(\'commercial\')" data-tab="commercial"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Commercial</button><button class="kpi-tab" onclick="switchKPITab(\'network\')" data-tab="network"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/></svg>Network</button><button class="kpi-tab" onclick="switchKPITab(\'rafm\')" data-tab="rafm"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>RAFM</button><button class="kpi-tab" onclick="switchKPITab(\'hr\')" data-tab="hr"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>HR</button><button class="kpi-tab" onclick="switchKPITab(\'procurement\')" data-tab="procurement"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Procurement</button><button class="kpi-tab" onclick="switchKPITab(\'regulatory\')" data-tab="regulatory"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Regulatory</button><button class="kpi-tab" onclick="switchKPITab(\'cx\')" data-tab="cx"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Customer</button></div><div class="kpi-tab-subtitle" id="kpi-tab-subtitle">Your pinned KPIs · Saved to this device</div><div class="grid-kpi" id="kpi-grid"></div></div></div><div class="data-card" style="margin-top:24px;margin-bottom:var(--space-2xl);"><div class="card-header"><div><div class="card-title">ARPU Trend - 15 Month View</div><div class="card-subtitle" id="arpu-chart-subtitle">Historical · AI Forecast</div></div><div style="display:flex;align-items:center;gap:8px;"><div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;"><button id="arpu-view-trend" onclick="toggleARPUView(\'trend\')" style="font-size:10px;padding:4px 12px;background:var(--kpmg-cyan);color:#0A0F1E;border:none;cursor:pointer;font-weight:700;">Trend</button><button id="arpu-view-comp" onclick="toggleARPUView(\'competitors\')" style="font-size:10px;padding:4px 12px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">vs Peers</button></div><div class="badge badge-live">AI FORECAST</div></div></div><div class="card-body" style="height:320px;position:relative;padding:12px 8px 8px 8px;"><div id="arpu-chart-container" style="width:100%;height:100%;"></div></div></div>';
+    container.innerHTML = '<div class="ai-brief-card" id="ai-brief-card"><div class="ai-brief-header"><div style="display:flex;align-items:center;gap:9px;"><div style="width:6px;height:6px;border-radius:50%;background:var(--kpmg-cyan);animation:livePulse 1.5s ease-in-out infinite alternate;flex-shrink:0;"></div><span style="font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--text-primary);text-transform:uppercase;">Meridian Intelligence</span><span style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:0.8px;color:var(--kpmg-cyan);background:rgba(0,184,245,0.08);border:1px solid rgba(0,184,245,0.20);border-radius:2px;padding:2px 6px;margin-left:4px;">GROQ</span></div><div style="display:flex;align-items:center;gap:10px;"><span id="ai-brief-timestamp" style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);"></span><button class="btn btn-secondary" onclick="generateAIBrief()" id="ai-brief-btn" style="font-size:9px;padding:3px 10px;font-family:var(--font-mono);letter-spacing:1px;font-weight:700;">&#8635; REFRESH</button></div></div><div class="ai-brief-body"><div id="ai-brief-text" class="ai-brief-text"></div></div></div><div style="display:flex;gap:12px;margin-top:20px;"><div class="alert-strip-left" id="alert-strip-left" style="display:inline-flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 16px;height:44px;width:fit-content;"></div><div class="alert-strip-right" id="alert-strip-right" style="display:flex;align-items:center;gap:16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 24px;height:44px;white-space:nowrap;flex:1;"></div></div><div class="kpi-explorer" style="margin-top:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px 0 16px;"><div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:10px;">BUSINESS LINES</div><div class="kpi-tab-bar" id="kpi-tab-bar"><button class="kpi-tab active" onclick="switchKPITab(\'favourites\')" data-tab="favourites"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:middle;margin-right:4px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Favourites</button><button class="kpi-tab" onclick="switchKPITab(\'finance\')" data-tab="finance"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Finance</button><button class="kpi-tab" onclick="switchKPITab(\'commercial\')" data-tab="commercial"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Commercial</button><button class="kpi-tab" onclick="switchKPITab(\'network\')" data-tab="network"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/></svg>Network</button><button class="kpi-tab" onclick="switchKPITab(\'rafm\')" data-tab="rafm"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>RAFM</button><button class="kpi-tab" onclick="switchKPITab(\'hr\')" data-tab="hr"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>HR</button><button class="kpi-tab" onclick="switchKPITab(\'procurement\')" data-tab="procurement"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>Procurement</button><button class="kpi-tab" onclick="switchKPITab(\'regulatory\')" data-tab="regulatory"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Regulatory</button><button class="kpi-tab" onclick="switchKPITab(\'cx\')" data-tab="cx"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-right:4px;"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Customer</button></div><div class="kpi-tab-subtitle" id="kpi-tab-subtitle">Your pinned KPIs · Saved to this device</div><div class="grid-kpi" id="kpi-grid"></div></div></div><div class="data-card" style="margin-top:24px;margin-bottom:var(--space-2xl);"><div class="card-header"><div><div class="card-title">ARPU Trend - 15 Month View</div><div class="card-subtitle" id="arpu-chart-subtitle">Historical · AI Forecast</div></div><div style="display:flex;align-items:center;gap:8px;"><div style="display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;"><button id="arpu-view-trend" onclick="toggleARPUView(\'trend\')" style="font-size:10px;padding:4px 12px;background:var(--kpmg-cyan);color:#0A0F1E;border:none;cursor:pointer;font-weight:700;">Trend</button><button id="arpu-view-comp" onclick="toggleARPUView(\'competitors\')" style="font-size:10px;padding:4px 12px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">vs Peers</button></div><div class="badge badge-live">AI FORECAST</div></div></div><div class="card-body" style="height:320px;position:relative;padding:12px 8px 8px 8px;"><div id="arpu-chart-container" style="width:100%;height:100%;"></div></div></div>';
 }
 
 function initDashboard() {
     injectDashboardHTML();
-    renderAIBrief();
+    autoGenerateBriefOnce();
     renderAlertStrip();
 
     // Start on saved tab, favourites if any, else finance
@@ -52,15 +52,73 @@ function initDashboard() {
    Shows a smart static summary on load; calls Groq on demand.
    ══════════════════════════════════════════════════════════════ */
 
+function highlightNumbers(text) {
+    text = text.replace(/(₹[\d,]+\.?\d*\s*(Cr|L|K|M|B)?)/g, '<strong style="color:#00B8F5;font-weight:700;">$1</strong>');
+    text = text.replace(/([+][\d]+\.?\d*%)/g, '<strong style="color:#00C0AE;font-weight:700;">$1</strong>');
+    text = text.replace(/(-[\d]+\.?\d*%)/g, '<strong style="color:#FD349C;font-weight:700;">$1</strong>');
+    text = text.replace(/\b(\d+\.?\d*%)\b/g, '<strong style="color:#00B8F5;font-weight:700;">$1</strong>');
+    text = text.replace(/(\d+\.?\d*\s*(bps|pts))/g, '<strong style="color:#00B8F5;font-weight:700;">$1</strong>');
+    return text;
+}
+
+function buildLiveFeed() {
+    var now = new Date();
+    var fmt = function(m) { var t = new Date(now - m*60000); return t.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); };
+    var arpu = findKPI('arpu'), churn = findKPI('churn');
+    var alerts = window.RAFM_ALERTS || [], topAlert = alerts[0];
+    var updates = [
+        { time: fmt(2),  source: 'BILLING_ERP', text: arpu  ? 'ARPU revised +₹2 → ₹' + arpu.value + ' following reconciliation.' : 'ARPU data refreshed.' },
+        { time: fmt(7),  source: 'CRM_LIVE',    text: churn ? 'Churn updated to ' + churn.value + '% (' + churn.delta + ' YoY). Maharashtra circle flagged.' : 'Churn data refreshed.' },
+        { time: fmt(14), source: topAlert ? 'RAFM_ENGINE' : 'REGULATORY_DB', text: topAlert ? 'Alert escalated: ' + topAlert.title + ' — ' + topAlert.amount + ' exposure detected.' : 'Spectrum fee liability recalculated. No variance from prior period.' }
+    ];
+    return '<div style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;">' +
+        '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:5px;">LIVE UPDATES</div>' +
+        updates.map(function(u) {
+            return '<div style="display:flex;align-items:baseline;gap:8px;padding:2px 0;">' +
+                '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);flex-shrink:0;min-width:40px;">' + u.time + '</span>' +
+                '<span style="font-family:var(--font-mono);font-size:9px;font-weight:600;color:var(--text-muted);flex-shrink:0;">[' + u.source + ']</span>' +
+                '<span style="font-size:11px;color:var(--text-muted);line-height:1.5;">' + highlightNumbers(u.text) + '</span></div>';
+        }).join('') + '</div>';
+}
+
+function renderBriefZones(line1, line2) {
+    return '<div style="display:flex;flex-direction:column;gap:6px;padding-bottom:10px;">' +
+        '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">' + highlightNumbers(line1) + '</div>' +
+        '<div style="font-size:13px;color:var(--text-secondary);line-height:1.7;">' + highlightNumbers(line2) + '</div>' +
+        '</div>' + buildLiveFeed();
+}
+
 function renderAIBrief() {
     var el = document.getElementById('ai-brief-text');
     if (!el) return;
+    var revenue = findKPI('revenue'), margin = findKPI('ebitda-margin'), arpu = findKPI('arpu'), fcf = findKPI('fcf'), churn = findKPI('churn');
+    var alerts = window.RAFM_ALERTS || [];
+    var critCount = alerts.filter(function(a) { return (a.severity||'').toUpperCase() === 'CRITICAL'; }).length;
+    var line1 = '';
+    if (revenue) line1 += 'Revenue ₹' + revenue.value.toLocaleString('en-IN') + ' Cr (' + revenue.delta + ' YoY), ';
+    if (margin)  line1 += 'EBITDA margin ' + margin.value + '% (' + (parseFloat(margin.deltaQoQ) >= 0 ? '+' : '') + margin.deltaQoQ + ' QoQ), ';
+    if (arpu)    line1 += 'ARPU ₹' + arpu.value + '.';
+    if (fcf)     line1 += ' Free cash flow at ₹' + fcf.value + ' Cr with capex discipline sustaining conversion.';
+    var line2 = critCount > 0
+        ? '⚠ ' + critCount + ' critical alert' + (critCount > 1 ? 's' : '') + ' active — ' + (alerts[0] ? alerts[0].amount : '') + ' exposure. RAFM posture requires immediate review.'
+        : 'RAFM posture stable — ' + alerts.length + ' active alerts, none critical. Pipeline conversion tracking above target.';
+    el.innerHTML = renderBriefZones(line1, line2);
+    updateBriefTimestamp();
+}
 
-    var revenue  = findKPI('revenue');
-    var margin   = findKPI('ebitda-margin');
-    var arpu     = findKPI('arpu');
-    var churn    = findKPI('churn');
-    var alerts   = window.RAFM_ALERTS || [];
+var _briefGenerated = false;
+
+function autoGenerateBriefOnce() {
+    var key = null;
+    try { key = localStorage.getItem('meridian-groq-key') || window.GROQ_API_KEY; } catch(e) {}
+    if (key && !_briefGenerated) { generateAIBrief(true); } else { renderAIBrief(); }
+}
+
+function renderAIBrief() {
+    var el = document.getElementById('ai-brief-text');
+    if (!el) return;
+    var revenue = findKPI('revenue'), margin = findKPI('ebitda-margin'), arpu = findKPI('arpu'), fcf = findKPI('fcf'), churn = findKPI('churn');
+    var alerts = window.RAFM_ALERTS || [];
     var critCount = alerts.filter(function(a) { return (a.severity||'').toUpperCase() === 'CRITICAL'; }).length;
 
     var tag = function(label, color) {
@@ -84,9 +142,9 @@ function renderAIBrief() {
 
     var briefHTML =
         '<div style="padding-bottom:2px;">' +
-        row('REVENUE', 'var(--kpmg-cyan)', revContent) +
-        row('EBITDA',  'var(--positive)',  ebitdaContent) +
-        row('RISK',    'var(--danger)',     riskContent) +
+        row('REVENUE', 'var(--text-muted)', revContent) +
+        row('EBITDA',  'var(--text-muted)',  ebitdaContent) +
+        row('RISK',    'var(--text-muted)',     riskContent) +
         '</div>';
 
     var now = new Date();
@@ -115,7 +173,7 @@ function renderAIBrief() {
         updates.map(function(u) {
             return '<div style="display:flex;align-items:baseline;gap:8px;padding:3px 0;">' +
                 '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);flex-shrink:0;">' + u.time + '</span>' +
-                '<span style="font-family:var(--font-mono);font-size:9px;font-weight:700;color:var(--kpmg-cyan);flex-shrink:0;">[' + u.source + ']</span>' +
+                '<span style="font-family:var(--font-mono);font-size:9px;font-weight:600;color:var(--text-muted);flex-shrink:0;">[' + u.source + ']</span>' +
                 '<span style="font-size:11px;color:var(--text-muted);line-height:1.5;">' + u.text + '</span>' +
                 '</div>';
         }).join('') +
@@ -128,40 +186,47 @@ function renderAIBrief() {
     updateBriefTimestamp();
 }
 
-function generateAIBrief() {
+function generateAIBrief(silent) {
     var el  = document.getElementById('ai-brief-text');
     var btn = document.getElementById('ai-brief-btn');
     if (!el) return;
-
-    // Build context from data
     var kpiSummary = (window.KPI_MASTER || []).slice(0, 12).map(function(k) {
         return k.label + ': ' + k.value + ' ' + k.unit + ' (' + k.delta + ' YoY, ' + k.pctToTarget + '% to target)';
     }).join('; ');
-
     var alertSummary = (window.RAFM_ALERTS || []).slice(0, 3).map(function(a) {
         return a.severity + ': ' + a.title + ' — ' + a.amount;
     }).join('; ');
-
     var prompt = 'You are a CFO intelligence assistant for Apex Telecom, an Indian telco with 22 circles and 312M subscribers. ' +
-        'Write a concise 2-sentence executive brief (max 60 words) covering: financial performance, key risk, and one opportunity. ' +
-        'Use specific numbers. Tone: direct, board-room ready. KPIs: ' + kpiSummary + '. Alerts: ' + alertSummary;
-
-    if (btn) { btn.disabled = true; btn.textContent = 'Generating…'; }
-    el.innerHTML = '<span style="color:var(--text-muted);font-style:italic;">Analysing with Meridian AI…</span>';
-
-    showApiKeyPrompt(function() {
+        'Write exactly 2 sentences, max 60 words total. Sentence 1: financial performance with specific numbers for revenue, EBITDA margin, ARPU. ' +
+        'Sentence 2: key risk or opportunity, be direct. Plain prose only, no bullet points, no markdown. ' +
+        'KPIs: ' + kpiSummary + '. Alerts: ' + alertSummary;
+    if (btn) { btn.disabled = true; btn.innerHTML = '… RUNNING'; }
+    renderAIBrief();
+    var doCall = function() {
         callGroq(prompt, null,
             function(response) {
-                el.innerHTML = '<span style="color:var(--text-secondary);line-height:1.8;">' + response + '</span>';
+                var clean = response.replace(/\n+/g, ' ').trim();
+                var parts = clean.match(/[^.!?]+[.!?]+\s*/g) || [clean];
+                var line1 = (parts[0] || clean).trim();
+                var line2 = parts.slice(1).join('').trim() || line1;
+                el.innerHTML = renderBriefZones(line1, line2);
+                _briefGenerated = true;
                 updateBriefTimestamp();
-                if (btn) { btn.disabled = false; btn.innerHTML = '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Regenerate'; }
+                if (btn) { btn.disabled = false; btn.innerHTML = '&#8635; REFRESH'; }
             },
-            function(err) {
-                renderAIBrief(); // fall back to static
-                if (btn) { btn.disabled = false; btn.innerHTML = 'Regenerate'; }
+            function() {
+                renderAIBrief();
+                if (btn) { btn.disabled = false; btn.innerHTML = '&#8635; REFRESH'; }
             }
         );
-    });
+    };
+    if (silent) {
+        var key = null;
+        try { key = localStorage.getItem('meridian-groq-key') || window.GROQ_API_KEY; } catch(e) {}
+        if (key) { doCall(); } else { renderAIBrief(); if (btn) { btn.disabled = false; btn.innerHTML = '&#8635; REFRESH'; } }
+    } else {
+        showApiKeyPrompt(doCall);
+    }
 }
 
 function updateBriefTimestamp() {
@@ -565,7 +630,7 @@ function toggleAskPanel() {
     var panel = document.getElementById('ask-meridian-panel');
     var fab   = document.getElementById('ask-meridian-fab');
     if (panel) panel.classList.toggle('open', ASK_PANEL_OPEN);
-    if (fab)   fab.classList.toggle('active', ASK_PANEL_OPEN);
+    if (fab)   fab.style.display = ASK_PANEL_OPEN ? 'none' : 'flex';
     if (ASK_PANEL_OPEN) {
         setTimeout(function() {
             var input = document.getElementById('ai-query-input');

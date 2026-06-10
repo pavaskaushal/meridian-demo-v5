@@ -316,9 +316,7 @@ body.light-mode #sidebar-confidential { color: rgba(0, 0, 0, 0.45); }
 }
 
 .kpi-card:hover {
-  /* Palantir: no lift — intelligence platforms don't bounce.
-     Border brightens; background barely shifts. Data stays still. */
-  border-color: rgba(0, 184, 245, 0.30);
+  border-color: rgba(255, 255, 255, 0.18);
   background: var(--bg-hover);
 }
 
@@ -1185,27 +1183,28 @@ body.light-mode .kpi-card { border-color: rgba(0,0,0,0.09); }
 .ask-meridian-fab {
   position: fixed; bottom: 28px; right: 28px; z-index: 500;
   display: flex; align-items: center; gap: 7px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
+  background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
+              linear-gradient(135deg, #00338D, #1E49E2, #00B8F5, #00C0AE) border-box;
+  border: 1.5px solid transparent;
   border-radius: var(--radius-sm);
-  padding: 8px 16px;
-  font-size: 11px; font-weight: 700; color: var(--text-muted);
+  padding: 9px 18px;
+  font-size: 11px; font-weight: 700; color: var(--text-primary);
   cursor: pointer; transition: all var(--transition-fast);
   box-shadow: none;
   font-family: var(--font-mono); letter-spacing: 1.5px;
   text-transform: uppercase;
 }
 .ask-meridian-fab:hover {
-  background: var(--bg-hover);
-  border-color: var(--kpmg-cyan);
-  color: var(--kpmg-cyan);
+  background: linear-gradient(rgba(0,184,245,0.08), rgba(0,184,245,0.08)) padding-box,
+              linear-gradient(135deg, #1E49E2, #00B8F5, #00C0AE, #63EBDA) border-box;
+  color: #FFFFFF;
   box-shadow: none;
   transform: none;
 }
 .ask-meridian-fab.active {
-  border-color: var(--kpmg-cyan);
   color: var(--kpmg-cyan);
-  background: rgba(0,184,245,0.06);
+  background: linear-gradient(rgba(0,184,245,0.10), rgba(0,184,245,0.10)) padding-box,
+              linear-gradient(135deg, #1E49E2, #00B8F5, #00C0AE) border-box;
 }
 body.light-mode .ask-meridian-fab { box-shadow: none; }
 

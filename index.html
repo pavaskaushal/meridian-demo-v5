@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meridian · Apex Telecom</title>
+    <link rel="icon" href="data:,">
 
     <style>
         @font-face { font-family: 'DM Sans'; src: url('assets/fonts/DMSans/DMSans-Regular.ttf'); font-weight: 400; }
@@ -38,14 +39,14 @@
             text-transform: uppercase;
         }
         .kpi-tab:hover {
-            border-color: var(--kpmg-cyan);
-            color: var(--kpmg-cyan);
-            background: rgba(0, 184, 245, 0.05);
+            border-color: rgba(255,255,255,0.25);
+            color: var(--text-primary);
+            background: rgba(255,255,255,0.04);
         }
         .kpi-tab.active {
-            background: rgba(0, 184, 245, 0.10);
-            border-color: var(--kpmg-cyan);
-            color: var(--kpmg-cyan);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(255,255,255,0.30);
+            color: var(--text-primary);
             font-weight: 700;
         }
     </style>
@@ -200,8 +201,7 @@
 
 <!-- FLOATING ASK MERIDIAN BUTTON -->
 <button class="ask-meridian-fab" id="ask-meridian-fab" onclick="toggleAskPanel()">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
-    MERIDIAN
+    <span style="color:var(--kpmg-cyan);font-size:13px;font-family:var(--font-mono);">>_</span><span style="color:#FFFFFF;letter-spacing:2px;margin-left:4px;">MERIDIAN</span>
 </button>
 
 <!-- ASK MERIDIAN SLIDE-IN PANEL -->

@@ -126,6 +126,7 @@ function renderTrendSVG() {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: { padding: { right: 20 } },
             interaction: { mode: 'index', intersect: false },
             animation: { duration: 600, easing: 'easeInOutQuart' },
             plugins: {
