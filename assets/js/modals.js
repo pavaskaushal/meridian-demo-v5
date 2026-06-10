@@ -39,21 +39,67 @@ function openModal(alertId) {
 
 function openVendorModal(name, score, exposure, issue) {
     var color  = score < 31 ? '#FD349C' : score < 51 ? '#F59E0B' : '#00C0AE';
-    var status = score < 31 ? 'CRITICAL RISK' : score < 51 ? 'ELEVATED RISK' : 'HEALTHY';
+    var status = score < 31 ? 'CRITICAL RISK' : score < 51 ? 'ELEVATED RISK' : score < 71 ? 'LOW RISK' : 'HEALTHY';
     var modal  = document.getElementById('modal-box');
+
+    // Find vendor data for enriched fields
+    var v = (window.VENDOR_DATA || []).find(function(x) { return x.name === name; }) || {};
+    var financial   = v.financial   || score;
+    var operational = v.operational || score;
+    var compliance  = v.compliance  || score;
+    var riskDetail  = v.riskDetail  || issue || 'No specific risk flags identified.';
+    var action      = v.action      || 'Continue standard monitoring. Review at next vendor assessment.';
+    var category    = v.category    || '—';
+
+    var subBar = function(label, val) {
+        var c = val < 31 ? '#FD349C' : val < 51 ? '#F59E0B' : '#00C0AE';
+        return '<div style="margin-bottom:8px;">' +
+            '<div style="display:flex;justify-content:space-between;margin-bottom:3px;">' +
+                '<span style="font-size:11px;color:var(--text-muted);">' + label + '</span>' +
+                '<span style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:' + c + ';">' + val + '</span>' +
+            '</div>' +
+            '<div style="height:3px;background:var(--border);border-radius:2px;">' +
+                '<div style="height:3px;background:' + c + ';border-radius:2px;width:' + val + '%;"></div>' +
+            '</div>' +
+        '</div>';
+    };
 
     modal.innerHTML =
         '<div class="modal-header">' +
             '<div>' +
-                '<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:' + color + ';margin-bottom:6px;text-transform:uppercase;">VENDOR RISK · ' + status + '</div>' +
+                '<div style="font-family:var(--font-mono);font-size:10px;font-weight:700;letter-spacing:1.5px;color:' + color + ';margin-bottom:6px;text-transform:uppercase;">VENDOR RISK · ' + status + '</div>' +
                 '<div class="modal-title">' + name + '</div>' +
+                '<div style="font-size:12px;color:var(--text-muted);margin-top:2px;">' + category + ' · ' + exposure + ' annual spend</div>' +
             '</div>' +
             '<div class="modal-close" onclick="closeModal()">✕</div>' +
         '</div>' +
-        '<div class="modal-row"><span class="modal-row-label">Risk Score</span><span class="modal-row-value" style="color:' + color + ';font-size:22px;">' + score + ' / 100</span></div>' +
-        '<div class="modal-row"><span class="modal-row-label">Exposure</span><span class="modal-row-value">' + exposure + '</span></div>' +
-        '<div class="modal-row"><span class="modal-row-label">Issues Detected</span><span class="modal-row-value" style="color:' + color + ';">' + (issue || 'None — all checks passed') + '</span></div>' +
-        '<div style="display:flex;gap:12px;margin-top:20px;">' +
+
+        // Overall score
+        '<div style="display:flex;align-items:center;gap:16px;padding:16px;background:var(--bg);border-radius:var(--radius-sm);margin-bottom:16px;">' +
+            '<div style="text-align:center;flex-shrink:0;">' +
+                '<div style="font-family:var(--font-mono);font-size:36px;font-weight:700;color:' + color + ';line-height:1;">' + score + '</div>' +
+                '<div style="font-size:10px;color:var(--text-muted);margin-top:2px;">/ 100</div>' +
+            '</div>' +
+            '<div style="flex:1;">' +
+                subBar('Financial Health', financial) +
+                subBar('Operational Risk', operational) +
+                subBar('Compliance Score', compliance) +
+            '</div>' +
+        '</div>' +
+
+        // Risk identified
+        '<div style="margin-bottom:12px;">' +
+            '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;">RISK IDENTIFIED</div>' +
+            '<div style="font-size:13px;color:var(--text-secondary);line-height:1.6;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">' + riskDetail + '</div>' +
+        '</div>' +
+
+        // Recommended action
+        '<div style="margin-bottom:20px;">' +
+            '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;">RECOMMENDED ACTION</div>' +
+            '<div style="font-size:13px;color:var(--text-secondary);line-height:1.6;padding:12px;background:var(--bg);border-radius:var(--radius-sm);">' + action + '</div>' +
+        '</div>' +
+
+        '<div style="display:flex;gap:12px;">' +
             '<button class="btn btn-primary" onclick="closeModal()">Acknowledge</button>' +
             '<button class="btn btn-secondary" onclick="closeModal()">View Full Report</button>' +
         '</div>';
