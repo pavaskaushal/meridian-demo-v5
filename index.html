@@ -71,8 +71,8 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="brand-mark">
-                <span class="brand-name">Meridian</span>
-                <span class="brand-sub">Apex Telecom · CFO Platform</span>
+                <span class="brand-name" style="font-size:18px;letter-spacing:4px;">MERIDIAN</span>
+                <span class="brand-sub" style="font-size:10px;letter-spacing:0.3px;">Apex Telecom · CFO Platform</span>
                 <div class="live-badge">
                     <div class="live-dot"></div>
                     LIVE
@@ -80,44 +80,56 @@
             </div>
         </div>
         <nav class="sidebar-nav">
+
+            <!-- COMMAND -->
+            <div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.20);padding:12px 16px 6px;text-transform:uppercase;">Command</div>
             <div class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>
+                <span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></span>
                 <span class="nav-label">CFO Command Board</span>
             </div>
             <div class="nav-item" data-screen="rafm" onclick="showScreen('rafm',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                <span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
                 <span class="nav-label">RAFM Risk Monitor</span>
             </div>
             <div class="nav-item" data-screen="scenario" onclick="showScreen('scenario',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></span>
+                <span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></span>
                 <span class="nav-label">AI Scenario Studio</span>
             </div>
+
+            <!-- ANALYSIS -->
+            <div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.20);padding:16px 16px 6px;text-transform:uppercase;">Analysis</div>
             <div class="nav-item" data-screen="regulatory" onclick="showScreen('regulatory',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                <span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
                 <span class="nav-label">Regulatory Calendar</span>
             </div>
-            <div class="nav-item" data-screen="connectors" onclick="showScreen('connectors',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/></svg></span>
-                <span class="nav-label">Connector Status</span>
-            </div>
             <div class="nav-item" data-screen="dcf" onclick="showScreen('dcf',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+                <span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
                 <span class="nav-label">DCF Valuation Studio</span>
             </div>
             <div class="nav-item" data-screen="benchmarking" onclick="showScreen('benchmarking',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
+                <span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
                 <span class="nav-label">Industry Benchmarking</span>
             </div>
+
+        <!-- SYSTEM -->
+            <div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,0.20);padding:16px 16px 6px;text-transform:uppercase;">System</div>
+            <div class="nav-item" data-screen="connectors" onclick="showScreen('connectors',this)">
+                <span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/></svg></span>
+                <span class="nav-label">Connector Status</span>
+            </div>
             <div class="nav-item" data-screen="issues" onclick="showScreen('issues',this)">
-                <span class="nav-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
+                <span class="nav-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></span>
                 <span class="nav-label">Issues & Requests</span>
             </div>
+
         </nav>
+
         <!-- Collapse toggle -->
         <div class="sidebar-collapse-btn" onclick="toggleSidebar()" title="Collapse sidebar">
             <span class="collapse-arrow">‹</span>
             <span class="collapse-text">Collapse</span>
         </div>
+
         <div class="sidebar-footer">
             <div style="display:flex;align-items:flex-end;gap:8px;margin-bottom:4px;">
                 <img id="kpmg-logo" src="assets/kpmg-white.svg" style="height:20px;width:auto;" alt="KPMG">
