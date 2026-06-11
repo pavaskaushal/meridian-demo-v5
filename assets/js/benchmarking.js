@@ -97,12 +97,10 @@ function renderBenchmarkScores() {
     ];
 
     grid.innerHTML = scores.map(function(s) {
-        return '<div class="kpi-card">' +
-            '<div class="kpi-card-accent" style="background:' + s.color + '"></div>' +
-            '<div class="kpi-label">' + s.label + '</div>' +
-            '<div class="kpi-value" style="font-size:28px;">' + s.value +
-                '<span style="font-size:12px;color:var(--text-secondary);font-weight:400;margin-left:4px;">' + s.unit + '</span>' +
-            '</div>' +
+        return '<div style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;">' +
+            '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;">' + s.label.toUpperCase() + '</div>' +
+            '<div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:' + s.color + ';">' + s.value + '</div>' +
+            '<div style="font-size:10px;color:var(--text-muted);margin-top:3px;">' + s.unit + '</div>' +
         '</div>';
     }).join('');
 }
@@ -220,8 +218,9 @@ function renderBenchmarkCharts() {
             },
             options: {
                 responsive: true, maintainAspectRatio: false,
+                layout: { padding: { top: 10, bottom: 0 } },
                 plugins: {
-                    legend: { position: 'right', labels: { color: '#8A9BB0', font: { size: 11 }, padding: 12 } }
+                    legend: { position: 'bottom', labels: { color: '#8A9BB0', font: { size: 11 }, padding: 20, boxWidth: 10, usePointStyle: true } }
                 },
                 cutout: '65%'
             }
