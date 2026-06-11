@@ -6,7 +6,31 @@
 var DCF_RESULTS = null;
 
 function initDCF() {
+    renderDCFStrip();
     updateAllDCFLabels();
+}
+
+function renderDCFStrip() {
+    var el = document.getElementById('dcf-summary-strip');
+    if (!el) return;
+    var revenue = (window.KPI_MASTER || []).find(function(k) { return k.id === 'revenue'; });
+    var margin  = (window.KPI_MASTER || []).find(function(k) { return k.id === 'ebitda-margin'; });
+    var fcf     = (window.KPI_MASTER || []).find(function(k) { return k.id === 'fcf'; });
+    var metrics = [
+        { label: 'ANNUAL REVENUE',   value: revenue ? '₹' + (revenue.value * 4).toLocaleString('en-IN') + ' Cr' : '₹13,740 Cr', sub: 'FY25 annualised base' },
+        { label: 'EBITDA MARGIN',    value: margin  ? margin.value + '%' : '34.6%',     sub: margin ? margin.deltaQoQ + ' QoQ' : '+0.3% QoQ' },
+        { label: 'FREE CASH FLOW',   value: fcf     ? '₹' + fcf.value + ' Cr' : '₹2,340 Cr', sub: 'FY25 · post capex' },
+        { label: 'REVENUE CAGR (3Y)',value: revenue ? revenue.delta : '+8.4%',           sub: '3-year historical' },
+        { label: 'INDIA GDP GROWTH', value: '6.5%',                                       sub: 'Terminal growth anchor' },
+        { label: 'INDUSTRY WACC',    value: '10–12%',                                     sub: 'Indian telecom range' },
+    ];
+    el.innerHTML = metrics.map(function(m) {
+        return '<div style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;">' +
+            '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;">' + m.label + '</div>' +
+            '<div style="font-family:var(--font-mono);font-size:18px;font-weight:700;color:var(--text-primary);">' + m.value + '</div>' +
+            '<div style="font-size:10px;color:var(--text-muted);margin-top:3px;">' + m.sub + '</div>' +
+        '</div>';
+    }).join('');
 }
 
 function updateAllDCFLabels() {
