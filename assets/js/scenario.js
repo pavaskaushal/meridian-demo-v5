@@ -4,9 +4,32 @@
    ============================================================ */
 
 function initScenario() {
+    renderScenarioStrip();
     renderSliders();
     renderWaterfallChart();
     setTimeout(renderPLChart, 300);
+}
+
+function renderScenarioStrip() {
+    var el = document.getElementById('scenario-summary-strip');
+    if (!el) return;
+    var arpu    = (window.KPI_MASTER || []).find(function(k) { return k.id === 'arpu'; });
+    var churn   = (window.KPI_MASTER || []).find(function(k) { return k.id === 'churn'; });
+    var spectrum= (window.KPI_MASTER || []).find(function(k) { return k.id === 'spectrum-fees'; });
+    var margin  = (window.KPI_MASTER || []).find(function(k) { return k.id === 'ebitda-margin'; });
+    var metrics = [
+        { label: 'CURRENT ARPU',           value: arpu     ? '₹' + arpu.value + '/mo'    : '₹181/mo',   sub: arpu     ? arpu.delta + ' YoY'     : '+6.5% YoY' },
+        { label: 'MONTHLY CHURN',          value: churn    ? churn.value + '%'             : '1.42%',     sub: churn    ? churn.delta + ' YoY'    : '-0.18% YoY' },
+        { label: 'SPECTRUM FEE LIABILITY', value: spectrum ? '₹' + spectrum.value + ' Cr' : '₹1,840 Cr', sub: spectrum ? spectrum.delta + ' YoY' : '+8.4% YoY' },
+        { label: 'EBITDA MARGIN',          value: margin   ? margin.value + '%'            : '34.9%',     sub: margin   ? margin.deltaQoQ + ' QoQ': '+0.3% QoQ' },
+    ];
+    el.innerHTML = metrics.map(function(m) {
+        return '<div style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;">' +
+            '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;">' + m.label + '</div>' +
+            '<div style="font-family:var(--font-mono);font-size:20px;font-weight:700;color:var(--text-primary);">' + m.value + '</div>' +
+            '<div style="font-size:10px;color:var(--text-muted);margin-top:3px;">' + m.sub + '</div>' +
+        '</div>';
+    }).join('');
 }
 
 function renderSliders() {
@@ -17,7 +40,7 @@ function renderSliders() {
         return '<div style="margin-bottom:20px;">' +
             '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
                 '<span style="font-size:13px;font-weight:600;color:var(--text-primary);">' + s.label + '</span>' +
-                '<span id="val-' + s.id + '" style="font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--kpmg-cyan);">' + s.default + s.unit + '</span>' +
+                '<span id="val-' + s.id + '" style="font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--text-muted);">' + s.default + s.unit + '</span>' +
             '</div>' +
             '<input type="range" id="slider-' + s.id + '" min="' + s.min + '" max="' + s.max + '" step="' + s.step + '" value="' + s.default + '" ' +
                 'style="width:100%;accent-color:var(--kpmg-cyan);" oninput="updateScenario()">' +
