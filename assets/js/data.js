@@ -1619,10 +1619,88 @@ var QUARTERLY_PL = [
 
 /* ── REGULATORY FILINGS ─────────────────────────────────── */
 var REGULATORY_FILINGS = [
-    { id: 'REG001', title: 'TRAI QoS Report — Q1 FY26',         due: '2026-04-30', status: 'SUBMITTED', category: 'QoS' },
-    { id: 'REG002', title: 'Spectrum Utilisation Report',         due: '2026-05-15', status: 'PENDING',   category: 'Spectrum' },
-    { id: 'REG003', title: 'AGR Revenue Share — Q1 FY26',        due: '2026-04-15', status: 'SUBMITTED', category: 'Revenue Share' },
-    { id: 'REG004', title: 'DoT 5G Rollout Progress Report',     due: '2026-06-30', status: 'DUE',       category: '5G' }
+    {
+        id: 'REG001', title: 'TRAI QoS Report — Q1 FY26', due: '2026-04-30', status: 'SUBMITTED', category: 'QoS',
+        authority: 'TRAI', readiness: 100, accentColor: '#00C0AE',
+        description: 'Quarterly Quality of Service benchmarking report covering all 22 licensed service areas. Includes network availability, call drop rate, data speed and customer satisfaction metrics.',
+        penalty: '₹50 Lakh per circle per quarter',
+        pendingItems: [],
+        filingHistory: [
+            { quarter: 'Q4 FY25', date: '30 Jan 2026', status: 'SUBMITTED', score: 94 },
+            { quarter: 'Q3 FY25', date: '30 Oct 2025', status: 'SUBMITTED', score: 91 },
+            { quarter: 'Q2 FY25', date: '30 Jul 2025', status: 'SUBMITTED', score: 89 }
+        ],
+        keyMetrics: [
+            { label: 'Call Drop Rate', value: '1.42%', benchmark: '<2%', status: 'PASS' },
+            { label: 'Data Throughput', value: '14.2 Mbps', benchmark: '>10 Mbps', status: 'PASS' },
+            { label: 'Network Uptime', value: '99.94%', benchmark: '>99.5%', status: 'PASS' }
+        ],
+        owner: 'Regulatory Affairs Team',
+        nextDue: 'Q2 FY26 — 31 Jul 2026'
+    },
+    {
+        id: 'REG002', title: 'Spectrum Utilisation Report', due: '2026-05-15', status: 'PENDING', category: 'Spectrum',
+        authority: 'DoT', readiness: 45, accentColor: '#F59E0B',
+        description: 'Annual spectrum utilisation efficiency report covering all licensed bands — 700 MHz, 1800 MHz, 2100 MHz, 2300 MHz and 3500 MHz. Must include band-wise utilisation %, coverage maps and 5G deployment progress.',
+        penalty: '₹1 Cr per band per month of delay',
+        pendingItems: [
+            '3500 MHz band utilisation data pending from Network OSS',
+            'Coverage map generation for 5 circles not complete',
+            'DoT portal submission credentials need renewal'
+        ],
+        filingHistory: [
+            { quarter: 'FY25', date: '12 May 2025', status: 'SUBMITTED', score: 78 },
+            { quarter: 'FY24', date: '18 May 2024', status: 'SUBMITTED', score: 72 }
+        ],
+        keyMetrics: [
+            { label: '700 MHz Utilisation', value: '78%', benchmark: '>60%', status: 'PASS' },
+            { label: '3500 MHz Utilisation', value: '64%', benchmark: '>50%', status: 'PASS' },
+            { label: 'Coverage Obligation', value: '87%', benchmark: '>90%', status: 'FAIL' }
+        ],
+        owner: 'Spectrum Management Team',
+        nextDue: 'FY27 — 15 May 2027'
+    },
+    {
+        id: 'REG003', title: 'AGR Revenue Share — Q1 FY26', due: '2026-04-15', status: 'SUBMITTED', category: 'Revenue Share',
+        authority: 'DoT', readiness: 100, accentColor: '#00C0AE',
+        description: 'Adjusted Gross Revenue self-assessment and licence fee payment for Q1 FY26. AGR computed as per Supreme Court ruling inclusive of all non-telecom revenues. Licence fee at 8% and spectrum usage charge at applicable rates.',
+        penalty: 'Interest at 12% p.a. + penalty up to 50% of dues',
+        pendingItems: [],
+        filingHistory: [
+            { quarter: 'Q4 FY25', date: '15 Jan 2026', status: 'SUBMITTED', score: 100 },
+            { quarter: 'Q3 FY25', date: '15 Oct 2025', status: 'SUBMITTED', score: 100 },
+            { quarter: 'Q2 FY25', date: '15 Jul 2025', status: 'SUBMITTED', score: 100 }
+        ],
+        keyMetrics: [
+            { label: 'AGR Amount', value: '₹3,420 Cr', benchmark: 'Self-assessed', status: 'PASS' },
+            { label: 'Licence Fee', value: '₹274 Cr', benchmark: '8% of AGR', status: 'PASS' },
+            { label: 'SUC Payment', value: '₹68 Cr', benchmark: 'Band-wise rate', status: 'PASS' }
+        ],
+        owner: 'Finance & Legal Team',
+        nextDue: 'Q2 FY26 — 15 Jul 2026'
+    },
+    {
+        id: 'REG004', title: 'DoT 5G Rollout Progress Report', due: '2026-06-30', status: 'DUE', category: '5G',
+        authority: 'DoT', readiness: 20, accentColor: '#FD349C',
+        description: 'Semi-annual 5G rollout progress report against committed rollout obligations under spectrum auction terms. Must cover circle-wise BTS count, population coverage %, indoor coverage and Enterprise 5G deployments.',
+        penalty: '₹10 Cr per circle for missed rollout milestones',
+        pendingItems: [
+            'Circle-wise 5G BTS count reconciliation with Huawei OSS pending',
+            'Enterprise 5G deployment certificates from 3 circles missing',
+            'Indoor coverage test reports for Mumbai and Delhi not received',
+            'Population coverage calculation methodology to be confirmed with DoT'
+        ],
+        filingHistory: [
+            { quarter: 'H2 FY25', date: '30 Dec 2025', status: 'SUBMITTED', score: 62 }
+        ],
+        keyMetrics: [
+            { label: '5G BTS Deployed', value: '12,840', benchmark: '14,000 target', status: 'FAIL' },
+            { label: 'Population Coverage', value: '31%', benchmark: '35% target', status: 'FAIL' },
+            { label: 'Enterprise Sites', value: '284', benchmark: '300 target', status: 'FAIL' }
+        ],
+        owner: 'Network & Regulatory Team',
+        nextDue: 'H1 FY27 — 30 Jun 2027'
+    }
 ];
 
 /* ── ACTIVITY LOG ───────────────────────────────────────── */
