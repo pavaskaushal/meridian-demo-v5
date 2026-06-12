@@ -1717,10 +1717,34 @@ var ACTIVITY_LOG = [
 
 /* ── ISSUES LOG ─────────────────────────────────────────── */
 var ISSUES_LOG = [
-    { id: 'ISS001', title: '5G Dashboard KPI Integration', priority: 'HIGH', status: 'In Progress', owner: 'Tech Team', slaRemaining: '3 days' },
-    { id: 'ISS002', title: 'SAP-Subex Data Reconciliation', priority: 'MEDIUM', status: 'Pending', owner: 'Finance', slaRemaining: '7 days' },
-    { id: 'ISS003', title: 'Huawei OSS API Latency >500ms', priority: 'HIGH', status: 'Escalated', owner: 'Network', slaRemaining: '1 day' },
-    { id: 'ISS004', title: 'TAP File South Zone Recovery', priority: 'MEDIUM', status: 'Resolved', owner: 'RAFM', slaRemaining: 'Resolved' }
+    {
+        id: 'ISS-2025-0035', type: 'Connector', source: '5G Dashboard KPI Integration',
+        priority: 'high', status: 'in-progress', raisedBy: 'Network Team',
+        raisedAt: '08 Jun 2026 · 11:20 IST', assignedTo: 'KPMG GRCS — Managed Services',
+        slaRemaining: '3 days',
+        description: 'New 5G performance KPIs (BTS count, population coverage, enterprise sites) from Huawei OSS need to be mapped into the Network business line tab. Schema validation in progress.'
+    },
+    {
+        id: 'ISS-2025-0036', type: 'Data Quality', source: 'SAP-Subex Data Reconciliation',
+        priority: 'medium', status: 'open', raisedBy: 'Finance Team',
+        raisedAt: '09 Jun 2026 · 14:05 IST', assignedTo: 'KPMG GRCS — Managed Services',
+        slaRemaining: '7 days',
+        description: 'Revenue figures from SAP ERP and Subex RAID show a variance of ₹1.2 Cr for May 2026. Requires reconciliation of CDR volumes against billed records before quarter close.'
+    },
+    {
+        id: 'ISS-2025-0037', type: 'Connector', source: 'Huawei OSS API Latency >500ms',
+        priority: 'high', status: 'in-progress', raisedBy: 'Platform Monitoring',
+        raisedAt: '10 Jun 2026 · 09:42 IST', assignedTo: 'KPMG GRCS — Managed Services',
+        slaRemaining: '1 day',
+        description: 'Huawei OSS connector response times have degraded from 28ms to 540ms average over the past 48 hours, impacting Network KPI refresh frequency. Vendor ticket raised, awaiting root cause.'
+    },
+    {
+        id: 'ISS-2025-0034', type: 'Data Quality', source: 'TAP File South Zone Recovery',
+        priority: 'medium', status: 'resolved', raisedBy: 'RAFM Team',
+        raisedAt: '02 Jun 2026 · 16:30 IST', assignedTo: 'KPMG GRCS — Managed Services',
+        slaRemaining: 'Resolved',
+        description: 'Roaming TAP files for the South Zone circles (TN, KA, KL, AP) failed to load for 3 days due to a transmission error from the roaming partner. Files recovered and reprocessed; no revenue impact identified.'
+    }
 ];
 
 /* ── ENGINE DATA ────────────────────────────────────────── */

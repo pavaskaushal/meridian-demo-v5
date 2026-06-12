@@ -20,51 +20,46 @@ function renderIssuesLog() {
     // Summary
     var summary = document.getElementById('issues-summary');
     if (summary) {
-        summary.innerHTML =
-            '<div style="background:rgba(253,52,156,0.1);border:1px solid rgba(253,52,156,0.3);border-radius:8px;padding:12px 20px;display:flex;flex-direction:column;gap:2px;">' +
-                '<div style="font-family:var(--font-mono);font-size:28px;font-weight:700;color:#FD349C;">' + open + '</div>' +
-                '<div style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">Open</div>' +
-            '</div>' +
-            '<div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:12px 20px;display:flex;flex-direction:column;gap:2px;">' +
-                '<div style="font-family:var(--font-mono);font-size:28px;font-weight:700;color:#F59E0B;">' + inprog + '</div>' +
-                '<div style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">In Progress</div>' +
-            '</div>' +
-            '<div style="background:rgba(0,192,174,0.1);border:1px solid rgba(0,192,174,0.3);border-radius:8px;padding:12px 20px;display:flex;flex-direction:column;gap:2px;">' +
-                '<div style="font-family:var(--font-mono);font-size:28px;font-weight:700;color:#00C0AE;">' + resolved + '</div>' +
-                '<div style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">Resolved</div>' +
-            '</div>' +
-            '<div style="background:rgba(30,73,226,0.1);border:1px solid rgba(30,73,226,0.3);border-radius:8px;padding:12px 20px;display:flex;flex-direction:column;gap:2px;">' +
-                '<div style="font-family:var(--font-mono);font-size:28px;font-weight:700;color:#1E49E2;">' + issues.length + '</div>' +
-                '<div style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">Total</div>' +
+        var summaryMetrics = [
+            { label: 'OPEN', value: open, color: '#FD349C' },
+            { label: 'IN PROGRESS', value: inprog, color: '#F59E0B' },
+            { label: 'RESOLVED', value: resolved, color: '#00C0AE' },
+            { label: 'TOTAL', value: issues.length, color: 'var(--text-primary)' }
+        ];
+        summary.innerHTML = summaryMetrics.map(function(m) {
+            return '<div style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;">' +
+                '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;">' + m.label + '</div>' +
+                '<div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:' + m.color + ';">' + m.value + '</div>' +
             '</div>';
+        }).join('');
     }
 
     // Issues table
     container.innerHTML = issues.map(function(issue) {
         var priorityColor = issue.priority === 'critical' ? '#FD349C' : issue.priority === 'high' ? '#F59E0B' : '#00C0AE';
-        var statusColor   = issue.status === 'open' ? '#FD349C' : issue.status === 'in-progress' ? '#F59E0B' : '#00C0AE';
+        var statusColor   = issue.status === 'resolved' ? '#00C0AE' : 'var(--text-muted)';
         var statusLabel   = issue.status === 'open' ? 'OPEN' : issue.status === 'in-progress' ? 'IN PROGRESS' : 'RESOLVED';
         var slaColor      = issue.slaRemaining === 'OVERDUE' ? '#FD349C' : issue.slaRemaining === 'Resolved' ? '#00C0AE' : '#F59E0B';
 
-        return '<div class="data-card" style="margin-bottom:12px;border-left:3px solid ' + priorityColor + '44;cursor:pointer;" onclick="openIssueModal(\'' + issue.id + '\')">' +
-            '<div class="card-header">' +
-                '<div style="flex:1;">' +
-                    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">' +
+        return '<div class="data-card" style="margin-bottom:8px;cursor:pointer;padding:14px 16px;" onclick="openIssueModal(\'' + issue.id + '\')">' +
+            '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;">' +
+                '<div>' +
+                    '<div style="display:flex;align-items:center;gap:10px;margin-bottom:3px;">' +
                         '<span style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">' + issue.id + '</span>' +
-                        '<span style="font-size:10px;font-weight:700;color:' + priorityColor + ';background:' + priorityColor + '18;border:1px solid ' + priorityColor + '44;border-radius:4px;padding:2px 8px;text-transform:uppercase;">' + issue.priority + '</span>' +
-                        '<span style="font-size:10px;font-weight:700;color:' + statusColor + ';background:' + statusColor + '18;border:1px solid ' + statusColor + '44;border-radius:4px;padding:2px 8px;text-transform:uppercase;">' + statusLabel + '</span>' +
+                        '<span style="font-size:10px;font-weight:700;color:' + priorityColor + ';border:1px solid ' + priorityColor + '44;border-radius:var(--radius-sm);padding:2px 8px;text-transform:uppercase;">' + issue.priority + '</span>' +
+                        '<span style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:' + statusColor + ';border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:2px 8px;text-transform:uppercase;">' + statusLabel + '</span>' +
                     '</div>' +
-                    '<div class="card-title">' + issue.source + '</div>' +
-                    '<div class="card-subtitle">' + issue.type + ' · Raised ' + issue.raisedAt + '</div>' +
+                    '<div style="font-size:13px;font-weight:700;color:var(--text-primary);">' + issue.source + '</div>' +
+                    '<div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);margin-top:2px;">' + issue.type + ' · Raised ' + issue.raisedAt + '</div>' +
                 '</div>' +
                 '<div style="text-align:right;flex-shrink:0;">' +
-                    '<div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">SLA Remaining</div>' +
+                    '<div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">SLA Remaining</div>' +
                     '<div style="font-family:var(--font-mono);font-size:14px;font-weight:700;color:' + slaColor + ';">' + issue.slaRemaining + '</div>' +
                 '</div>' +
             '</div>' +
-            '<div style="padding:0 var(--space-lg) var(--space-md);">' +
-                '<div style="font-size:12px;color:var(--text-secondary);line-height:1.5;margin-bottom:8px;">' + issue.description + '</div>' +
-                '<div style="font-size:11px;color:var(--text-muted);">Assigned to: <strong style="color:var(--text-secondary);">' + issue.assignedTo + '</strong></div>' +
+            '<div style="display:flex;align-items:baseline;gap:16px;">' +
+                '<span style="font-size:12px;color:var(--text-muted);flex:1;">' + issue.description + '</span>' +
+                '<span style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">Assigned: ' + issue.assignedTo + '</span>' +
             '</div>' +
         '</div>';
     }).join('');

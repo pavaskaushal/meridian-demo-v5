@@ -100,7 +100,7 @@ function buildLiveFeed() {
             return '<div style="display:flex;align-items:baseline;gap:8px;padding:2px 0;">' +
                 '<span style="font-family:var(--font-mono);font-size:9px;color:var(--text-muted);flex-shrink:0;min-width:40px;">' + u.time + '</span>' +
                 '<span style="font-family:var(--font-mono);font-size:9px;font-weight:600;color:var(--text-muted);flex-shrink:0;">[' + u.source + ']</span>' +
-                '<span style="font-size:11px;color:var(--text-muted);line-height:1.5;">' + highlightNumbers(u.text) + '</span></div>';
+                '<span style="font-size:13px;color:var(--text-muted);line-height:1.5;">' + highlightNumbers(u.text) + '</span></div>';
         }).join('') + '</div>';
 }
 
