@@ -20,7 +20,7 @@ function setTheme(mode) {
     ['dark','mid','light'].forEach(function(m) {
         var btn = document.getElementById('theme-btn-' + m);
         if (btn) {
-            btn.style.background = (m === mode) ? 'rgba(255,255,255,0.08)' : 'transparent';
+            btn.style.background = (m === mode) ? 'var(--active-bg)' : 'transparent';
             btn.style.color = (m === mode) ? 'var(--text-primary)' : 'var(--text-muted)';
         }
     });

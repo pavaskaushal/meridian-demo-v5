@@ -73,6 +73,7 @@
 .sidebar.collapsed .brand-mark,
 .sidebar.collapsed .sidebar-footer { display: none; }
 .sidebar.collapsed .nav-label      { display: none; }
+.sidebar.collapsed .sidebar-nav > div:not(.nav-item) { display: none; }
 .sidebar.collapsed .collapse-text  { display: none; }
 .sidebar.collapsed .sidebar-nav {
   padding: var(--space-md) var(--space-xs);

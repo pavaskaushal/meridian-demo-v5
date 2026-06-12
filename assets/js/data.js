@@ -1440,6 +1440,19 @@ var KPI_MASTER = [
     }
 ];
 
+/* ── NETWORK_KPIS (Board Pack PDF) ─────────────────────────── */
+var NETWORK_KPIS = {
+    callDropRate:    1.42,
+    dataSpeed4G:      22.4,
+    dataSpeed5G:      168,
+    networkUptime:   99.94,
+    voLTEPenetration: 68.4,
+    fiveGCircles:     12,
+    totalSites:       184200,
+    fiberedSites:     82318
+};
+window.NETWORK_KPIS = NETWORK_KPIS;
+
 /* ── LEGACY KPI_DATA (V3 compatibility) ─────────────────── */
 var KPI_DATA = KPI_MASTER.filter(function(k) {
     return ['arpu','churn','ebitda-margin','fcf','subscribers','5g-coverage'].indexOf(k.id) > -1;

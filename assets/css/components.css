@@ -912,8 +912,8 @@ body.light-mode #sidebar-confidential { color: rgba(0, 0, 0, 0.45); }
 }
 
 .theme-toggle:hover {
-  border-color: var(--kpmg-cyan);
-  color: var(--kpmg-cyan);
+  border-color: var(--active-border);
+  color: var(--text-primary);
 }
 
 .theme-toggle-icon {
@@ -1080,13 +1080,13 @@ body.compact .watch-section { padding: 10px var(--space-md); }
   white-space: nowrap;
 }
 .compact-toggle:hover {
-  border-color: var(--kpmg-cyan);
-  color: var(--kpmg-cyan);
+  border-color: var(--active-border);
+  color: var(--text-primary);
 }
 body.compact .compact-toggle {
-  border-color: var(--kpmg-cyan);
-  color: var(--kpmg-cyan);
-  background: rgba(0, 184, 245, 0.06);
+  border-color: var(--active-border);
+  color: var(--text-primary);
+  background: var(--active-bg);
 }
 
 /* Hide operator tag on narrow screens — handled in layout.css breakpoints */
@@ -1119,6 +1119,8 @@ body.compact .compact-toggle {
 .ai-brief-text .brief-neg  { color: var(--warning); }
 .ai-brief-text .brief-risk { color: var(--danger); }
 
+.meridian-icon { filter: invert(1); }
+body.light-mode .meridian-icon { filter: invert(0); }
 
 /* ── ALERT / QTD STRIP ──────────────────────────────────── */
 .alert-qtd-strip {
@@ -1244,9 +1246,9 @@ body.light-mode .ask-meridian-fab { box-shadow: none; }
   text-transform: uppercase;
 }
 .ask-chip:hover {
-  border-color: var(--kpmg-cyan);
-  color: var(--kpmg-cyan);
-  background: rgba(0,184,245,0.06);
+  border-color: var(--active-border);
+  color: var(--text-primary);
+  background: var(--active-bg);
 }
 .ask-panel-input-row {
   display: flex; gap: 8px; padding: 12px 18px;

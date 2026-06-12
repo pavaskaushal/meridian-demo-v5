@@ -48,6 +48,8 @@
      Creates structural separation through brightness, not hue.
      KPMG cyan accents stand out cleanly against the near-black. */
   --bg-sidebar:       #141414;
+  --active-bg: rgba(255,255,255,0.08);
+  --active-border: rgba(255,255,255,0.30);
   --sidebar-border:   rgba(255, 255, 255, 0.07);
   --nav-hover:        rgba(255, 255, 255, 0.06);
   --nav-active-bg:    rgba(0, 184, 245, 0.14);
@@ -252,25 +254,23 @@
    ══════════════════════════════════════════════════════════ */
 
 body.light-mode {
-  --bg:           #F1F5F9;
-  --bg-card:      #FFFFFF;
-  --bg-hover:     #E8EDF4;
-  --bg-input:     #F8FAFC;
-  --border:       rgba(0, 0, 0, 0.10);
-  --border-light: rgba(0, 0, 0, 0.18);
+  --bg:           #F8F8F6;
+  --bg-card:      #F7F7F5;
+  --bg-hover:     #E3E3E2;
+  --bg-input:     #FFFFFF;
+  --border:       rgba(55, 55, 52, 0.10);
+  --border-light: rgba(55, 55, 52, 0.18);
 
-  /* Text — all three levels pass WCAG AA on white backgrounds.
-     primary   #0F172A  contrast 18:1  ✓
-     secondary #1E293B  contrast 13:1  ✓  (was #475569 = 7:1, felt grey)
-     muted     #475569  contrast  7:1  ✓  (was #94A3B8 = 3:1, failed)  */
-  --text-primary:   #0F172A;
-  --text-secondary: #1E293B;
-  --text-muted:     #475569;
+  --text-primary:   #373734;
+  --text-secondary: #5A5A56;
+  --text-muted:     #8A8A85;
 
   /* Sidebar goes light in light mode */
-  --bg-sidebar:     #FFFFFF;
-  --sidebar-border: rgba(0, 0, 0, 0.08);
-  --nav-hover:      rgba(0, 0, 0, 0.05);
+  --bg-sidebar:     #F7F7F5;
+  --active-bg: rgba(55,55,52,0.08);
+  --active-border: rgba(55,55,52,0.30);
+  --sidebar-border: rgba(55, 55, 52, 0.10);
+  --nav-hover:      #E3E3E2;
   --nav-active-bg:  rgba(0, 51, 141, 0.08);
   --nav-active-text: #00338D;
 }

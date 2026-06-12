@@ -9,6 +9,29 @@ function generateBoardPack() {
         return;
     }
 
+    var btn = document.querySelector('[onclick="generateBoardPack()"]');
+    var originalHTML = btn ? btn.innerHTML : null;
+    if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+    }
+
+    try {
+        _generateBoardPackInner();
+    } catch (err) {
+        console.error('[Meridian] Board Pack generation failed:', err);
+        alert('Board Pack generation failed: ' + err.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            if (originalHTML !== null) btn.innerHTML = originalHTML;
+        }
+    }
+}
+
+function _generateBoardPackInner() {
+
     var doc = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
     var W  = 210; // page width mm
@@ -79,20 +102,31 @@ function generateBoardPack() {
 
     function tableRow(y, cols, widths, isHeader, rowColor) {
         var x = ml;
+        doc.setFontSize(isHeader ? 7.5 : 8);
+        doc.setFont('helvetica', isHeader ? 'bold' : 'normal');
+
+        // Pre-wrap each column and find the tallest
+        var wrapped = cols.map(function(col, i) {
+            return doc.splitTextToSize(String(col || ''), widths[i] - 4);
+        });
+        var maxLines = Math.max.apply(null, wrapped.map(function(w) { return w.length; }));
+        var rowHeight = Math.max(6.5, maxLines * 4 + 2.5);
+
         if (rowColor) {
             doc.setFillColor.apply(doc, rowColor);
-            doc.rect(ml, y - 4, cw, 6.5, 'F');
+            doc.rect(ml, y - 4, cw, rowHeight, 'F');
         }
+
         cols.forEach(function(col, i) {
             doc.setFontSize(isHeader ? 7.5 : 8);
             doc.setFont('helvetica', isHeader ? 'bold' : 'normal');
             doc.setTextColor.apply(doc, isHeader ? DGREY : BLACK);
             var align = (i > 0) ? 'right' : 'left';
             var tx = align === 'right' ? x + widths[i] - 2 : x + 2;
-            doc.text(String(col || ''), tx, y, { align: align });
+            doc.text(wrapped[i], tx, y, { align: align });
             x += widths[i];
         });
-        return y + 7;
+        return y + Math.max(7, rowHeight + 0.5);
     }
 
     function badge(x, y, text, color) {
@@ -207,16 +241,19 @@ function generateBoardPack() {
 
     highlights.forEach(function(h) {
         doc.setFillColor.apply(doc, CYAN);
-        doc.circle(ml + 1.5, y - 1, 1, 'F');
         doc.setTextColor.apply(doc, DGREY);
         doc.setFontSize(8.5);
         doc.setFont('helvetica', 'normal');
         var lines = doc.splitTextToSize(h, cw - 8);
+        y = checkPage(y, lines.length * 5 + 3);
+        doc.setFillColor.apply(doc, CYAN);
+        doc.circle(ml + 1.5, y - 1, 1, 'F');
         doc.text(lines, ml + 6, y);
         y += lines.length * 5 + 3;
     });
 
     y += 4;
+    y = checkPage(y, 20);
     y = sectionHeader(y, 'Key Risks Requiring CFO Attention', PINK);
 
     var risks = [
@@ -228,11 +265,12 @@ function generateBoardPack() {
 
     risks.forEach(function(r) {
         var col = r.sev === 'CRITICAL' ? PINK : AMBER;
-        badge(ml, y, r.sev, col);
-        doc.setTextColor.apply(doc, DGREY);
         doc.setFontSize(8.5);
         doc.setFont('helvetica', 'normal');
         var lines = doc.splitTextToSize(r.text, cw - 22);
+        y = checkPage(y, lines.length * 5 + 4);
+        badge(ml, y, r.sev, col);
+        doc.setTextColor.apply(doc, DGREY);
         doc.text(lines, ml + 20, y);
         y += lines.length * 5 + 4;
     });
@@ -287,9 +325,10 @@ function generateBoardPack() {
         var isNeg = kpi.delta.startsWith('-') && kpi.id !== 'churn' && kpi.id !== 'calldrop' && kpi.id !== 'capexratio';
         var deltaCol = kpi.delta.startsWith('+') ? [0, 160, 100] : (kpi.id === 'churn' || kpi.id === 'calldrop' ? [0, 160, 100] : PINK);
         doc.setTextColor.apply(doc, deltaCol);
-        doc.setFontSize(7.5);
+        doc.setFontSize(7);
         doc.setFont('helvetica', 'normal');
-        doc.text(kpi.delta + ' ' + kpi.deltaLabel, cx + 6, rowY + 23);
+        var deltaLines = doc.splitTextToSize(kpi.delta + ' ' + kpi.deltaLabel, cardW - 8);
+        doc.text(deltaLines.slice(0, 1), cx + 6, rowY + 23);
 
         col++;
         if (col === 2) {
@@ -360,7 +399,7 @@ function generateBoardPack() {
         var bg       = i % 2 === 0 ? null : [250, 250, 250];
         var churnCol = c.churn > 1.8 ? PINK : c.churn > 1.4 ? AMBER : null;
         y = tableRow(y, [
-            c.circle,
+            c.name,
             'Rs.' + c.revenue + ' Cr',
             'Rs.' + c.arpu,
             c.churn + '%',
@@ -458,12 +497,13 @@ function generateBoardPack() {
     ];
 
     plInsights.forEach(function(ins) {
-        doc.setFillColor.apply(doc, CYAN);
-        doc.circle(ml + 1.5, y - 1, 1, 'F');
         doc.setTextColor.apply(doc, DGREY);
         doc.setFontSize(8.5);
         doc.setFont('helvetica', 'normal');
         var lines = doc.splitTextToSize(ins, cw - 8);
+        y = checkPage(y, lines.length * 5 + 3);
+        doc.setFillColor.apply(doc, CYAN);
+        doc.circle(ml + 1.5, y - 1, 1, 'F');
         doc.text(lines, ml + 6, y);
         y += lines.length * 5 + 3;
     });
@@ -495,7 +535,8 @@ function generateBoardPack() {
     doc.setTextColor.apply(doc, DGREY);
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
-    doc.text('6 active alerts across RAFM, Fraud, PPP, and Regulatory categories', ml + 50, y + 5);
+    var exposureLines = doc.splitTextToSize('6 active alerts across RAFM, Fraud, PPP, and Regulatory categories', cw - 56);
+    doc.text(exposureLines, ml + 50, y + 5);
     y += 22;
 
     y = sectionHeader(y, 'Active Alerts · Ranked by Financial Exposure');
@@ -518,7 +559,8 @@ function generateBoardPack() {
 
         doc.setTextColor.apply(doc, BLACK);
         doc.setFontSize(9);
-        doc.text(alert.title, ml + 6, y + 9);
+        var titleLines = doc.splitTextToSize(alert.title, cw - 40);
+        doc.text(titleLines.slice(0, 1), ml + 6, y + 9);
 
         // Amount
         doc.setTextColor.apply(doc, sevColor);
@@ -613,7 +655,7 @@ function generateBoardPack() {
         doc.setTextColor.apply(doc, DGREY);
         doc.setFontSize(8);
         doc.setFont('helvetica', 'normal');
-        doc.text(filing.authority + ' · Due ' + formatDate(filing.dueDate), ml + 6, y + 11);
+        doc.text(filing.authority + ' · Due ' + formatDate(filing.due), ml + 6, y + 11);
 
         // Readiness score
         doc.setTextColor.apply(doc, readColor);
@@ -636,9 +678,10 @@ function generateBoardPack() {
 
         // Penalty
         doc.setTextColor.apply(doc, PINK);
-        doc.setFontSize(7.5);
+        doc.setFontSize(7);
         doc.setFont('helvetica', 'bold');
-        doc.text('Penalty: ' + filing.penalty, ml + 6, y + 29);
+        var penaltyLines = doc.splitTextToSize('Penalty: ' + filing.penalty, cw - 12);
+        doc.text(penaltyLines.slice(0, 1), ml + 6, y + 29);
 
         // Pending items
         doc.setTextColor.apply(doc, DGREY);
