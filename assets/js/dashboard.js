@@ -234,6 +234,11 @@ function renderAlertStripLeft() {
             'title="View all alerts">View all →</span>';
 }
 
+function hexToRgbObj(hex) {
+    var v = parseInt(hex.slice(1), 16);
+    return { r: (v >> 16) & 255, g: (v >> 8) & 255, b: v & 255 };
+}
+
 function renderAlertStripRight() {
     var el = document.getElementById('alert-strip-right');
     if (!el) return;
@@ -264,7 +269,7 @@ function renderAlertStripRight() {
 
     var barBlocks = '';
     for (var i = 0; i < 20; i++) {
-        barBlocks += '<div class="qtd-block' + (i < filled ? ' filled' : '') + '"></div>';
+        barBlocks += '<div class="qtd-block' + (i < filled ? ' filled' : '') + '" style="' + (i < filled ? 'background:#C3C2B7;' : '') + '"></div>';
     }
 
     var remaining = totalDays - elapsed;
