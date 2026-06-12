@@ -162,7 +162,11 @@
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                     Board Pack
                 </button>
-                <button class="theme-toggle" onclick="toggleTheme()" id="theme-toggle" style="background:transparent;border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:4px 10px;">
+                <div id="theme-switch" style="display:flex;border:1px solid var(--border-light);border-radius:var(--radius-sm);overflow:hidden;">
+    <button onclick="setTheme('dark')" id="theme-btn-dark" style="font-size:9px;font-family:var(--font-mono);font-weight:700;letter-spacing:1px;padding:4px 9px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">DARK</button>
+    <button onclick="setTheme('mid')" id="theme-btn-mid" style="font-size:9px;font-family:var(--font-mono);font-weight:700;letter-spacing:1px;padding:4px 9px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;border-left:1px solid var(--border-light);border-right:1px solid var(--border-light);">MID</button>
+    <button onclick="setTheme('light')" id="theme-btn-light" style="font-size:9px;font-family:var(--font-mono);font-weight:700;letter-spacing:1px;padding:4px 9px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">LIGHT</button>
+</div><div style="display:none;">
                     <!-- Sun icon — shown in dark mode (click to go light) -->
                     <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;">
                         <circle cx="12" cy="12" r="5"/>
@@ -179,8 +183,7 @@
                     <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;display:none;">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
                     </svg>
-                    <span id="theme-label">LIGHT MODE</span>
-                </button>
+                    </div>
                 <div class="topbar-timestamp" id="topbar-timestamp"></div>
                 <div style="position:relative;" id="notification-bell-wrapper">
                     <button onclick="toggleNotifications()" style="background:transparent;border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:4px 10px;cursor:pointer;display:flex;align-items:center;gap:6px;color:var(--text-muted);font-size:11px;position:relative;transition:all 0.15s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.30)';this.style.color='var(--text-primary)'" onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-muted)'">

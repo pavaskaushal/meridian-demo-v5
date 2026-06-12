@@ -5,23 +5,27 @@
 
 /* ── DARK / LIGHT MODE ────────────────────────────────────── */
 
-function toggleTheme() {
-    var body    = document.body;
-    var label   = document.getElementById('theme-label');
-    var isLight = body.classList.toggle('light-mode');
-
+function setTheme(mode) {
+    var body = document.body;
     var logo = document.getElementById('kpmg-logo');
-    if (isLight) {
-        label.textContent = 'DARK MODE';
-        updateChartsTheme(true);
-        if (logo) logo.src = 'assets/kpmg-blue.svg';
-    } else {
-        label.textContent = 'LIGHT MODE';
-        updateChartsTheme(false);
-        if (logo) logo.src = 'assets/kpmg-white.svg';
-    }
 
-    try { localStorage.setItem('meridian-theme', isLight ? 'light' : 'dark'); } catch(e) {}
+    body.classList.remove('light-mode', 'mid-mode');
+    if (mode === 'mid') body.classList.add('mid-mode');
+    if (mode === 'light') body.classList.add('light-mode');
+
+    var isLight = mode === 'light';
+    updateChartsTheme(isLight);
+    if (logo) logo.src = isLight ? 'assets/kpmg-blue.svg' : 'assets/kpmg-white.svg';
+
+    ['dark','mid','light'].forEach(function(m) {
+        var btn = document.getElementById('theme-btn-' + m);
+        if (btn) {
+            btn.style.background = (m === mode) ? 'rgba(255,255,255,0.08)' : 'transparent';
+            btn.style.color = (m === mode) ? 'var(--text-primary)' : 'var(--text-muted)';
+        }
+    });
+
+    try { localStorage.setItem('meridian-theme', mode); } catch(e) {}
 }
 
 
@@ -93,13 +97,7 @@ function initLayoutPreferences() {
         document.body.classList.add('compact');
 
         // Theme
-        if (themePref === 'light') {
-            document.body.classList.add('light-mode');
-            var themeLabel = document.getElementById('theme-label');
-            if (themeLabel) themeLabel.textContent = 'DARK MODE';
-            var logo = document.getElementById('kpmg-logo');
-            if (logo) logo.src = 'assets/kpmg-blue.svg';
-        }
+        setTheme(themePref === 'light' ? 'light' : themePref === 'mid' ? 'mid' : 'dark');
 
     } catch(e) {}
 }

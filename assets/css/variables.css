@@ -275,19 +275,15 @@ body.light-mode {
   --nav-active-text: #00338D;
 }
 
-
-/* ══════════════════════════════════════════════════════════
-   COMPACT MODE
-   Applied when <body class="compact"> — triggered by the
-   Compact button in the topbar or auto-applied on small
-   screens. Tightens spacing throughout without hiding data.
-   ══════════════════════════════════════════════════════════ */
-
-body.compact {
-  --space-xs:  3px;
-  --space-sm:  5px;
-  --space-md:  10px;
-  --space-lg:  14px;
-  --space-xl:  18px;
-  --space-2xl: 24px;
+body.mid-mode {
+    --bg: #1F1F1E;
+    --bg-card: #1D1D1D;
+    --bg-hover: #2A2A28;
+    --bg-sidebar: #1D1D1D;
+    --bg-input: #1D1D1D;
+    --border: rgba(255,255,255,0.08);
+    --border-light: rgba(255,255,255,0.12);
+    --text-primary: #ECECE6;
+    --text-secondary: #B0AFA8;
+    --text-muted: #7A7A74;
 }
