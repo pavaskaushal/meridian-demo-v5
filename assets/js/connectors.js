@@ -20,31 +20,25 @@ function renderConnectorSummary() {
     var el = document.getElementById('connector-summary');
     if (!el) return;
 
-    el.innerHTML =
-        '<div style="background:rgba(0,192,174,0.1);border:1px solid rgba(0,192,174,0.3);border-radius:8px;padding:12px 20px;display:flex;flex-direction:column;gap:2px;">' +
-            '<div style="font-family:var(--font-mono);font-size:28px;font-weight:700;color:#00C0AE;">' + live + '</div>' +
-            '<div style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">Live</div>' +
-        '</div>' +
-        '<div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:12px 20px;display:flex;flex-direction:column;gap:2px;">' +
-            '<div style="font-family:var(--font-mono);font-size:28px;font-weight:700;color:#F59E0B;">' + warning + '</div>' +
-            '<div style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">Warning</div>' +
-        '</div>' +
-        '<div style="background:rgba(253,52,156,0.1);border:1px solid rgba(253,52,156,0.3);border-radius:8px;padding:12px 20px;display:flex;flex-direction:column;gap:2px;">' +
-            '<div style="font-family:var(--font-mono);font-size:28px;font-weight:700;color:#FD349C;">' + error + '</div>' +
-            '<div style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">Error</div>' +
-        '</div>' +
-        '<div style="background:rgba(30,73,226,0.1);border:1px solid rgba(30,73,226,0.3);border-radius:8px;padding:12px 20px;display:flex;flex-direction:column;gap:2px;">' +
-            '<div style="font-family:var(--font-mono);font-size:28px;font-weight:700;color:#1E49E2;">' + window.CONNECTOR_DATA_LIST.length + '</div>' +
-            '<div style="font-size:11px;color:var(--text-muted);font-weight:600;letter-spacing:1px;text-transform:uppercase;">Total</div>' +
-        '</div>' +
-        '<div style="margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:4px;">' +
-            '<div style="display:flex;align-items:center;gap:8px;">' +
-                '<div style="width:8px;height:8px;border-radius:50%;background:#00C0AE;animation:livePulse 1.5s ease-in-out infinite alternate;"></div>' +
-                '<span style="font-size:12px;font-weight:600;color:#00C0AE;">' + (warning > 0 ? warning + ' warning · ' + live + ' live' : 'All ' + live + ' connectors live') + '</span>' +
-            '</div>' +
-            '<div style="font-size:10px;color:var(--text-muted);font-family:var(--font-mono);">Last sync · ' + new Date().toLocaleTimeString("en-IN", {hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}) + ' IST</div>' +
-            '<div style="font-size:10px;color:var(--text-muted);">Total records · <strong style="color:var(--text-secondary);font-family:var(--font-mono);">8.2M+</strong></div>' +
+    var metrics = [
+        { label: 'LIVE',    value: live,    color: '#00C0AE' },
+        { label: 'WARNING', value: warning, color: '#F59E0B' },
+        { label: 'ERROR',   value: error,   color: '#FD349C' },
+        { label: 'TOTAL',   value: window.CONNECTOR_DATA_LIST.length, color: 'var(--text-primary)' }
+    ];
+    el.innerHTML = metrics.map(function(m) {
+        return '<div style="flex:1;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;">' +
+            '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;">' + m.label + '</div>' +
+            '<div style="font-family:var(--font-mono);font-size:22px;font-weight:700;color:' + m.color + ';">' + m.value + '</div>' +
         '</div>';
+    }).join('') +
+    '<div style="flex:1.5;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 16px;display:flex;flex-direction:column;justify-content:center;gap:6px;">' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+            '<div style="width:8px;height:8px;border-radius:50%;background:' + (warning > 0 ? '#F59E0B' : '#00C0AE') + ';animation:livePulse 1.5s ease-in-out infinite alternate;"></div>' +
+            '<div style="font-size:14px;font-weight:700;color:var(--text-primary);">' + (warning > 0 ? warning + ' Warning · ' + live + ' Live' : 'All ' + live + ' Connectors Live') + '</div>' +
+        '</div>' +
+        '<div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);">Last sync ' + new Date().toLocaleTimeString("en-IN", {hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}) + ' IST · Total records <strong style="color:var(--text-secondary);">8.2M+</strong></div>' +
+    '</div>';
 }
 
 function renderConnectorTable() {
@@ -57,14 +51,14 @@ function renderConnectorTable() {
         var latencyColor = parseInt(c.latency) > 100 ? '#F59E0B' : '#00C0AE';
 
         var raiseBtn = c.status !== 'live'
-            ? '<button onclick="openRaiseIssueModal(\'Connector Warning\',\'' + c.name + '\',\'Connector ' + c.name + ' is showing ' + c.status + ' status. Last sync: ' + c.lastSync + '. Latency: ' + c.latency + '.\',\'' + (c.status === 'error' ? 'critical' : 'high') + '\')" style="font-size:10px;padding:3px 10px;background:' + statusColor + '18;border:1px solid ' + statusColor + '44;border-radius:4px;color:' + statusColor + ';cursor:pointer;">Raise Issue</button>'
+            ? '<button onclick="openRaiseIssueModal(\'Connector Warning\',\'' + c.name + '\',\'Connector ' + c.name + ' is showing ' + c.status + ' status. Last sync: ' + c.lastSync + '. Latency: ' + c.latency + '.\',\'' + (c.status === 'error' ? 'critical' : 'high') + '\')" class="btn btn-secondary" style="font-size:10px;padding:3px 10px;">Raise Issue</button>'
             : '';
 
         return '<tr style="border-bottom:1px solid var(--border);transition:background 0.15s;" ' +
             'onmouseover="this.style.background=\'var(--bg-hover)\'" onmouseout="this.style.background=\'transparent\'">' +
             '<td style="padding:12px 24px;"><div style="font-size:13px;font-weight:600;color:var(--text-primary);">' + c.name + '</div></td>' +
             '<td style="padding:12px 16px;"><span style="font-size:11px;color:var(--text-muted);background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 8px;">' + c.type + '</span></td>' +
-            '<td style="padding:12px 16px;"><div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:' + statusColor + ';' + (c.status === 'live' ? 'animation:livePulse 1.5s ease-in-out infinite alternate;' : '') + '"></div><span style="font-size:11px;font-weight:700;color:' + statusColor + ';letter-spacing:0.5px;">' + statusLabel + '</span></div></td>' +
+            '<td style="padding:12px 16px;"><div style="display:flex;align-items:center;gap:6px;"><div style="width:7px;height:7px;border-radius:50%;background:' + statusColor + ';' + (c.status === 'live' ? 'animation:livePulse 1.5s ease-in-out infinite alternate;' : '') + '"></div><span style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:' + (c.status === 'live' ? 'var(--text-muted)' : statusColor) + ';letter-spacing:0.5px;">' + statusLabel + '</span></div></td>' +
             '<td style="padding:12px 16px;font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);">' + c.lastSync + '</td>' +
             '<td style="padding:12px 16px;text-align:right;font-size:12px;color:var(--text-primary);font-family:var(--font-mono);">' + c.records + '</td>' +
             '<td style="padding:12px 16px;text-align:right;font-family:var(--font-mono);font-size:12px;font-weight:600;color:' + latencyColor + ';">' + c.latency + '</td>' +
@@ -80,7 +74,7 @@ function renderEngineGrid() {
 
     grid.innerHTML = window.ENGINE_DATA.map(function(e) {
         var color = e.status === 'live' ? '#00C0AE' : '#F59E0B';
-        return '<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:16px;border-left:3px solid ' + color + ';">' +
+        return '<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;">' +
             '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">' +
                 '<div style="font-size:12px;font-weight:600;color:var(--text-primary);">' + e.name + '</div>' +
                 '<div style="width:7px;height:7px;border-radius:50%;background:' + color + ';margin-top:3px;' + (e.status === 'live' ? 'animation:livePulse 1.5s ease-in-out infinite alternate;' : '') + '"></div>' +
@@ -134,8 +128,8 @@ function renderConnectorKPIMap() {
                 kpis.map(function(kpi) {
                     var pct = kpi.pctToTarget;
                     var color = pct >= 95 ? '#00C0AE' : pct >= 75 ? '#00B8F5' : pct >= 50 ? '#F59E0B' : pct >= 30 ? '#F97316' : '#FD349C';
-                    return '<div onclick="openKPIDetail(\'' + kpi.id + '\')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;border-top:2px solid ' + color + ';transition:all 0.15s;" onmouseover="this.style.borderColor=\'' + color + '\'" onmouseout="this.style.borderTopColor=\'' + color + '\';this.style.borderBottomColor=\'var(--border)\';this.style.borderLeftColor=\'var(--border)\';this.style.borderRightColor=\'var(--border)\'">' +
-                        '<div style="font-size:9px;font-weight:700;letter-spacing:1px;color:' + color + ';text-transform:uppercase;margin-bottom:4px;">' + kpi.system + '</div>' +
+                    return '<div onclick="openKPIDetail(\'' + kpi.id + '\')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor=\'rgba(255,255,255,0.30)\'" onmouseout="this.style.borderColor=\'var(--border)\'">' +
+                        '<div style="font-family:var(--font-mono);font-size:9px;font-weight:700;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px;">' + kpi.system + '</div>' +
                         '<div style="font-size:11px;font-weight:600;color:var(--text-primary);margin-bottom:6px;">' + kpi.label + '</div>' +
                         '<div style="font-size:16px;font-weight:700;color:var(--text-primary);font-family:var(--font-mono);">' + kpi.value + '<span style="font-size:10px;color:var(--text-muted);margin-left:2px;">' + kpi.unit + '</span></div>' +
                         '<div style="font-size:10px;color:' + (kpi.trend === 'up' ? '#00C0AE' : '#FD349C') + ';margin-top:2px;">' + kpi.delta + ' YoY</div>' +
